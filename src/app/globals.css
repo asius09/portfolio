@@ -4,15 +4,11 @@
   /* Tailwind's default light mode colors */
   --background: theme("colors.white");
   --foreground: theme("colors.neutral.900");
-  --font-sans: theme("fontFamily.sans");
-  --font-mono: theme("fontFamily.mono");
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,5 +19,39 @@
 }
 
 body {
-  @apply bg-background text-foreground font-sans;
+  @apply bg-background text-foreground;
+}
+
+/**
+ * Custom selection style for all text-related elements (h1, h2, h3, h4, h5, h6, p, span, a, li, strong, em, code, blockquote, etc.)
+ * Use white background and neutral-950 text color.
+ */
+h1::selection,
+h2::selection,
+h3::selection,
+h4::selection,
+h5::selection,
+h6::selection,
+p::selection,
+span::selection,
+a::selection,
+li::selection,
+strong::selection,
+em::selection,
+code::selection,
+blockquote::selection,
+pre::selection,
+label::selection,
+input::selection,
+textarea::selection,
+button::selection,
+div::selection {
+  background: #fff; /* white */
+  color: #09090b; /* Tailwind neutral-950 */
+}
+
+/* Fallback for general selection */
+::selection {
+  background: #fff;
+  color: #09090b;
 }

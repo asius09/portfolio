@@ -1,75 +1,54 @@
 import React from "react";
-import {
-  IconBrandReact,
-  IconBrandNextjs,
-  IconBrandTypescript,
-  IconBrandTailwind,
-  IconBrandFramerMotion,
-  IconBrandJavascript,
-  IconBrandHtml5,
-  IconBrandCss3,
-} from "@tabler/icons-react";
-
-const stackIcons: Record<string, React.ReactNode> = {
-  React: <IconBrandReact className="size-5" />,
-  "Next.js": <IconBrandNextjs className="size-5" />,
-  TypeScript: <IconBrandTypescript className="size-5" />,
-  TailwindCSS: <IconBrandTailwind className="size-5" />,
-  "Framer Motion": <IconBrandFramerMotion className="size-5" />,
-  JavaScript: <IconBrandJavascript className="size-5" />,
-  HTML: <IconBrandHtml5 className="size-5" />,
-  CSS: <IconBrandCss3 className="size-5" />,
-};
-
-const stackGradient: Record<string, string> = {
-  React: "bg-gradient-to-r from-cyan-500 to-blue-400",
-  "Next.js": "bg-gradient-to-r from-zinc-800 to-zinc-600",
-  TypeScript: "bg-gradient-to-r from-blue-500 to-blue-300",
-  TailwindCSS: "bg-gradient-to-r from-teal-400 to-cyan-300",
-  "Framer Motion": "bg-gradient-to-r from-pink-400 to-fuchsia-500",
-  JavaScript: "bg-gradient-to-r from-yellow-300 to-yellow-500",
-  HTML: "bg-gradient-to-r from-orange-400 to-yellow-400",
-  CSS: "bg-gradient-to-r from-blue-300 to-blue-500",
-};
-
-const stackTextColor: Record<string, string> = {
-  React: "text-cyan-100",
-  "Next.js": "text-white",
-  TypeScript: "text-blue-100",
-  TailwindCSS: "text-teal-50",
-  "Framer Motion": "text-pink-50",
-  JavaScript: "text-yellow-50",
-  HTML: "text-orange-50",
-  CSS: "text-blue-50",
-};
+import { stackItems } from "@/data/techStack";
 
 export const Stack = () => {
   return (
-    <section id="stack-section" className="mt-12 w-full">
-      <h2 className="text-2xl font-semibold text-white">Stack</h2>
-      <ul className="mt-3 flex flex-wrap gap-3">
-        {[
-          { name: "React", color: "text-cyan-400" },
-          { name: "Next.js", color: "text-white" },
-          { name: "TypeScript", color: "text-blue-400" },
-          { name: "TailwindCSS", color: "text-teal-300" },
-          { name: "Framer Motion", color: "text-pink-400" },
-          { name: "JavaScript", color: "text-yellow-300" },
-          { name: "HTML", color: "text-orange-400" },
-          { name: "CSS", color: "text-blue-300" },
-        ].map((stack, idx) => (
+    <section
+      id="stack-section"
+      className="mt-12 w-full"
+      aria-labelledby="stack-heading"
+      tabIndex={-1}
+      role="region"
+    >
+      <h2
+        id="stack-heading"
+        className="text-2xl font-semibold text-white"
+        tabIndex={0}
+      >
+        Stacks
+      </h2>
+      <ul
+        className="mt-3 flex flex-wrap gap-4"
+        aria-label="Technology stack"
+        role="list"
+      >
+        {stackItems.map(({ key, label, icon: Icon, className }) => (
           <li
-            key={idx}
-            className={`flex items-center gap-2 rounded px-3 py-1 text-base font-medium shadow-sm ${stackGradient[stack.name] || "bg-white/10"} ${stackTextColor[stack.name] || stack.color} `}
-            style={{
-              // fallback for browsers that don't support gradients
-              background: stackGradient[stack.name]
-                ? undefined
-                : "rgba(255,255,255,0.07)",
-            }}
+            key={key}
+            className="group relative flex cursor-pointer flex-col items-center justify-center"
+            role="listitem"
           >
-            {stackIcons[stack.name] && <span>{stackIcons[stack.name]}</span>}
-            <span>{stack.name}</span>
+            <button
+              type="button"
+              tabIndex={0}
+              aria-label={label}
+              className="flex items-center justify-center rounded-full bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              <Icon
+                className={`size-8 ${className}`}
+                aria-hidden="true"
+                focusable="false"
+                title={label}
+              />
+            </button>
+            {/* Tooltip */}
+            <span
+              className="pointer-events-none absolute -bottom-8 z-10 min-w-max rounded bg-zinc-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100"
+              role="tooltip"
+              id={`tooltip-${key}`}
+            >
+              {label}
+            </span>
           </li>
         ))}
       </ul>

@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ibmPlexMono.variable} antialiased`}>
-      <body>{children}</body>
+      <body className="font-['IBM_Plex_Mono',monospace]">{children}</body>
     </html>
   );
 }

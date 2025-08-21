@@ -1,19 +1,5 @@
 import React from "react";
-
-const education = [
-  {
-    level: "College",
-    institution: "Indira Gandhi National Open University (IGNOU)",
-    degree: "Bachelor of Computer Applications (BCA)",
-    status: "2nd Year (Pursuing)",
-  },
-  {
-    level: "School",
-    institution: "Shri Guru Tegh Bahadur Khalsa Boys Sr. Sec. School",
-    stream: "Science",
-    board: "CBSE",
-  },
-];
+import { education } from "@/data/education";
 
 export const Education = () => {
   return (
@@ -21,25 +7,28 @@ export const Education = () => {
       <h2 className="text-2xl font-semibold text-white">Education</h2>
       <div className="mt-6 w-full space-y-4">
         {education.map((edu, idx) => (
-          <div key={idx}>
-            <h3 className="text-lg font-bold text-white">{edu.institution}</h3>
-            <p className="mt-1 text-base font-medium text-white/90">
-              {edu.level === "College" ? (
-                <>
-                  {edu.degree}
-                  <span className="ml-2 text-sm font-normal text-blue-300">
-                    {edu.status}
-                  </span>
-                </>
-              ) : (
-                <>
-                  {edu.stream} Stream
-                  <span className="ml-2 text-sm font-normal text-blue-300">
-                    {edu.board}
-                  </span>
-                </>
-              )}
-            </p>
+          <div key={idx} className="flex items-start gap-2">
+            {/* Pointer/Arrow Icon */}
+            <span
+              className="mt-1 flex h-6 w-6 items-center justify-center text-white"
+              aria-hidden="true"
+            >
+              {/* Unicode arrow, or you can use an SVG if you prefer */}
+              <span className="text-xl select-none">➤</span>
+            </span>
+            <div className="flex w-full justify-between">
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  {edu.institution}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-white/80">
+                  {edu.qualification}
+                </p>
+              </div>
+              <span className="text-right text-sm font-normal text-blue-400">
+                {edu.details}
+              </span>
+            </div>
           </div>
         ))}
       </div>
