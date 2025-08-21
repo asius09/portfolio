@@ -15,7 +15,7 @@ export const Hero = () => {
     >
       <AnimateName />
       <header
-        className="flex h-full w-full flex-row gap-6 py-4"
+        className="flex h-full w-full flex-col md:flex-row gap-6 py-4 "
         id="personal-details"
         aria-label="Personal details"
       >
