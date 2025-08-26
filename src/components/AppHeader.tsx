@@ -82,8 +82,8 @@ export const AppHeader = () => {
                   stiffness: 320,
                   damping: 28,
                   duration: 0.48,
-                  filter: { duration: 0.32, ease: [0.22, 0.68, 0.36, 1] },
-                  scale: { duration: 0.32, ease: [0.22, 0.68, 0.36, 1] },
+                  filter: { duration: 0.42, ease: [0.22, 0.68, 0.36, 1] },
+                  scale: { duration: 0.42, ease: [0.22, 0.68, 0.36, 1] },
                 }}
               >
                 asius
