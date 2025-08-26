@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { stackItems } from "@/data/techStack";
 import { motion, Transition, useAnimation } from "motion/react";
+import { Tooltip } from "./ui/Tooltip";
 
 // Animation configs (inspired by About.tsx, but for horizontal stretch)
 const fadeInUpInitial = {
@@ -99,7 +100,7 @@ export const Stack = () => {
     >
       <motion.h2
         id="stack-heading"
-        className="text-2xl font-semibold text-white"
+        className="text-foreground text-2xl font-semibold"
         tabIndex={0}
         initial="initial"
         animate={controls}
@@ -176,13 +177,13 @@ export const Stack = () => {
               />
             </motion.button>
             {/* Tooltip */}
-            <span
-              className="pointer-events-none absolute -bottom-8 z-10 min-w-max rounded bg-zinc-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100"
-              role="tooltip"
+            <Tooltip
+              className="-bottom-8 after:-top-1 text-nowrap"
               id={`tooltip-${key}`}
+              arrowDir="upward"
             >
               {label}
-            </span>
+            </Tooltip>
           </motion.li>
         ))}
       </motion.ul>

@@ -1,31 +1,70 @@
 @import "tailwindcss";
 
+/* 
+  Tailwind-friendly color system using CSS variables.
+  - Uses :root for light mode, [data-theme="dark"] for dark mode (next-themes)
+  - All variables use --color-* prefix for consistency
+  - Use Tailwind's theme() function for values (requires tailwindcss v3.2+)
+  - Custom shadow variables for buttons for both light and dark themes
+*/
+
 :root {
-  /* Tailwind's default light mode colors */
-  --background: theme("colors.white");
-  --foreground: theme("colors.neutral.900");
+  --background: theme(colors.neutral.50);
+  --background-hover: theme(colors.neutral.300);
+  --foreground: theme(colors.neutral.900);
+  --mute-foreground: theme(colors.neutral.500);
+  --card: theme(colors.white);
+  --card-foreground: theme(colors.zinc.900);
+  --accent: theme(colors.blue.600);
+  --accent-foreground: theme(colors.zinc.800);
+  --gradient-from: theme(colors.zinc.600);
+  --gradient-to: theme(colors.zinc.700);
+  --gradient-foreground: theme(colors.neutral.100);
+  --border: theme(colors.zinc.500);
+  --border-hover: theme(colors.zinc.400);
+}
+
+[data-theme="dark"] {
+  --background: theme(colors.neutral.950);
+  --background-hover: theme(colors.neutral.900);
+  --foreground: theme(colors.neutral.100);
+  --mute-foreground: theme(colors.neutral.500);
+  --card: theme(colors.neutral.900);
+  --card-foreground: theme(colors.white);
+  --accent: theme(colors.blue.400);
+  --accent-foreground: theme(colors.neutral.900);
+  --gradient-from: theme(colors.zinc.700);
+  --gradient-to: theme(colors.zinc.800);
+  --gradient-foreground: theme(colors.neutral.100);
+  --border: theme(colors.zinc.700);
+  --border-hover: theme(colors.zinc.600);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-hover: var(--background-hover);
   --color-foreground: var(--foreground);
+  --color-mute-foreground: var(--mute-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-gradient-from: var(--gradient-from);
+  --color-gradient-to: var(--gradient-to);
+  --color-gradient-foreground: var(--gradient-foreground);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-button-outline-shadow: var(--button-outline-shadow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: theme("colors.neutral.950");
-    --foreground: theme("colors.neutral.100");
-  }
-}
-
+/* Use CSS variables for Tailwind utility classes */
 body {
-  @apply bg-background text-foreground;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
-/**
- * Custom selection style for all text-related elements (h1, h2, h3, h4, h5, h6, p, span, a, li, strong, em, code, blockquote, etc.)
- * Use white background and neutral-950 text color.
- */
+/* Selection style: adapts to theme */
+::selection,
 h1::selection,
 h2::selection,
 h3::selection,
@@ -44,14 +83,7 @@ pre::selection,
 label::selection,
 input::selection,
 textarea::selection,
-button::selection,
-div::selection {
-  background: #fff; /* white */
-  color: #09090b; /* Tailwind neutral-950 */
-}
-
-/* Fallback for general selection */
-::selection {
-  background: #fff;
-  color: #09090b;
+button::selection {
+  color: var(--color-background);
+  background-color: var(--color-foreground);
 }

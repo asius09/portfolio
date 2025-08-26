@@ -1,14 +1,3 @@
-/**
- * About section animation:
- * - Matches Hero section's crisp fade-in-up spring animation.
- * - Animation is triggered when the About section comes into view (viewport).
- * - Staggered, springy, and lively, just like Hero.
- *
- * Implementation:
- * - Uses Framer Motion's `whileInView` and `viewport` props to trigger animation on scroll into view.
- * - No parent prop needed; animation is handled by intersection observer.
- */
-
 "use client";
 import { motion, Transition } from "motion/react";
 import React from "react";
@@ -49,7 +38,7 @@ export const About = () => {
       }}
     >
       <motion.h2
-        className="text-2xl font-semibold text-white"
+        className="text-2xl font-semibold text-foreground"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -61,7 +50,7 @@ export const About = () => {
         About
       </motion.h2>
       <motion.p
-        className="mt-3 text-sm font-normal text-white"
+        className="mt-3 text-sm font-normal text-foreground"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -74,7 +63,7 @@ export const About = () => {
         apps.
       </motion.p>
       <motion.p
-        className="mt-2 text-sm font-normal text-white"
+        className="mt-2 text-sm font-normal text-foreground"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -88,7 +77,7 @@ export const About = () => {
         game platforms.
       </motion.p>
       <motion.p
-        className="mt-2 text-sm font-normal text-white"
+        className="mt-2 text-sm font-normal text-foreground"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}

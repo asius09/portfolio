@@ -69,7 +69,7 @@ export const Education = () => {
       }}
     >
       <motion.h2
-        className="text-2xl font-semibold text-white"
+        className="text-2xl font-semibold text-foreground"
         initial={fadeInUpInitial}
         animate={controls}
         transition={{
@@ -105,7 +105,7 @@ export const Education = () => {
           >
             {/* Pointer/Arrow Icon */}
             <motion.span
-              className="mt-1 flex h-6 w-6 items-center justify-center text-white"
+              className="mt-1 flex h-6 w-6 items-center justify-center text-foreground"
               aria-hidden="true"
               initial={fadeInUpInitial}
               animate={controls}
@@ -119,7 +119,7 @@ export const Education = () => {
             <div className="flex w-full flex-col md:flex-row md:justify-between">
               <div>
                 <motion.h3
-                  className="text-base font-bold text-white"
+                  className="text-base font-bold text-foreground"
                   initial={fadeInUpInitial}
                   animate={controls}
                   transition={{
@@ -130,7 +130,7 @@ export const Education = () => {
                   {edu.institution}
                 </motion.h3>
                 <motion.p
-                  className="mt-1 text-sm font-medium text-white/80"
+                  className="mt-1 text-sm font-medium text-foreground/80"
                   initial={fadeInUpInitial}
                   animate={controls}
                   transition={{

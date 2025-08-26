@@ -46,7 +46,7 @@ export const Project = () => {
     >
       <motion.h2
         id="projects-heading"
-        className="text-2xl font-semibold text-white"
+        className="text-2xl font-semibold text-foreground"
         tabIndex={0}
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}

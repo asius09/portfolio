@@ -1,3 +1,4 @@
+
 import {
   IconBrandCss3,
   IconBrandFramerMotion,
@@ -21,7 +22,7 @@ export const stackItems = [
     key: "nextjs",
     label: "Next.js",
     icon: IconBrandNextjs,
-    className: "text-white",
+    className: "text-foreground",
   },
   {
     key: "typescript",

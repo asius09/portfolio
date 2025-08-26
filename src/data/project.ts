@@ -6,7 +6,7 @@ export const projects: Project[] = [
     description:
       "AI tool to transform images into various styles. Fast, easy, and creative.",
     features: ["Upload images", "10+ styles", "Download result", "AI powered"],
-    stacks: ["Next.js", "React", "TypeScript", "TailwindCSS", "AI API"],
+    stacks: ["Next.js", "React", "TypeScript", "TailwindCSS"],
     github: "https://github.com/example",
     live: "https://stylesnap-ai-demo.com",
     image: "/profile.png",

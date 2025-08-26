@@ -2,13 +2,14 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useEffect, useState } from "react";
 import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { Button } from "./ui/Button";
 import { IconCopy } from "@tabler/icons-react";
+import { Tooltip } from "./ui/Tooltip";
 
 // Types for motion configs
 type FadeInUp = {
@@ -164,7 +165,10 @@ export const Hero = () => {
                 ...fadeInUpSpring,
                 delay: 0.125,
               }}
-              className={cn("w-full", "text-base font-normal text-white/60")}
+              className={cn(
+                "w-full",
+                "text-foreground/60 text-base font-normal",
+              )}
             >
               Frontend Developer
             </motion.span>
@@ -195,14 +199,13 @@ export const Hero = () => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-b from-zinc-700 to-zinc-800 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
+                className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
                 aria-label={ariaLabel}
                 title={title}
               >
                 <Icon className={cn(iconClass, "size-5")} />
-                <span className="pointer-event-none absolute -top-6 left-1/2 -translate-x-1/2 rounded-sm bg-zinc-800 px-1 text-right text-[10px] opacity-0 transition-opacity duration-75 group-hover:opacity-100 after:absolute after:top-full after:left-1/2 after:h-0 after:w-0 after:-translate-x-1/2 after:border-x-4 after:border-t-4 after:border-b-0 after:border-x-transparent after:border-t-zinc-800 after:content-['']">
-                  {ariaLabel}
-                </span>
+
+                <Tooltip className="-top-6 after:top-full">{ariaLabel}</Tooltip>
               </Link>
             </motion.div>
           ))}
@@ -225,7 +228,7 @@ export const Hero = () => {
               return (
                 <motion.li
                   key={idx}
-                  className="flex items-center gap-2 text-sm text-white/80"
+                  className="text-foreground flex items-center gap-2 text-sm"
                   variants={itemVariants}
                 >
                   <motion.span
@@ -233,7 +236,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b from-zinc-700 to-zinc-800 text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
                     aria-hidden="true"
                   >
                     <Icon className={iconClass} />
@@ -245,7 +248,7 @@ export const Hero = () => {
                   >
                     <Link
                       href={item.href}
-                      className="underline-offset-2 transition-colors hover:text-white hover:underline"
+                      className="hover:text-foreground underline-offset-2 transition-colors hover:underline"
                       tabIndex={0}
                       aria-label={
                         item.type === "email"
@@ -266,16 +269,16 @@ export const Hero = () => {
                       {item.text}
                     </Link>
                     <Button
-                      className="relative size-5 rounded-full text-xs font-medium text-zinc-500 opacity-0 transition-colors group-hover:opacity-100 hover:text-white"
+                      className="hover:text-foreground relative size-5 rounded-full text-xs font-medium text-zinc-500 transition-colors group-hover:opacity-100 md:opacity-0"
                       variant="ghost"
                       onClick={() => handleCopy?.(item.text)}
                       aria-label={`Copy ${item.text} to clipboard`}
                       title="Copy to clipboard"
                     >
                       <IconCopy stroke={2} className="size-4" />
-                      <span className="pointer-event-none absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-zinc-800 px-1 text-right text-[10px] opacity-0 transition-opacity duration-75 group-hover:opacity-100 after:absolute after:top-full after:left-1/2 after:h-0 after:w-0 after:-translate-x-1/2 after:border-x-4 after:border-t-4 after:border-b-0 after:border-x-transparent after:border-t-zinc-800 after:content-['']">
+                      <Tooltip className="-top-4 after:-bottom-1">
                         {copied ? "Copied!" : "Copy"}
-                      </span>
+                      </Tooltip>
                     </Button>
                   </motion.span>
                 </motion.li>
@@ -284,7 +287,7 @@ export const Hero = () => {
               return (
                 <motion.li
                   key={idx}
-                  className="flex items-center gap-2 text-sm text-white/80"
+                  className="text-foreground/80 flex items-center gap-2 text-sm"
                   variants={itemVariants}
                 >
                   <motion.span
@@ -292,7 +295,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b from-zinc-700 to-zinc-800 text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
                     aria-hidden="true"
                   >
                     <Icon className={cn(iconClass, "size-5")} />
@@ -311,15 +314,6 @@ export const Hero = () => {
 };
 
 function AnimateName() {
-  // Tooltip state: visible on initial load, then only on hover/focus
-  const [showTooltip, setShowTooltip] = React.useState(true);
-
-  // Hide tooltip after initial animation (e.g., 2s)
-  React.useEffect(() => {
-    const timeout = setTimeout(() => setShowTooltip(false), 2000);
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <header
       className="relative flex h-56 w-full items-center justify-center [mask-image:radial-gradient(circle_at_center,white_85%,transparent_100%)]"
@@ -327,7 +321,7 @@ function AnimateName() {
     >
       {/* Animated background grid */}
       <motion.div
-        className="absolute inset-0 z-0 h-full w-full bg-neutral-950 [background-image:linear-gradient(to_right,#27272a_0.5px,transparent_0.5px),linear-gradient(to_bottom,#27272a_0.5px,transparent_0.5px)] bg-[size:16px_16px]"
+        className="bg-background absolute inset-0 z-0 h-full w-full [background-image:linear-gradient(to_right,#27272a_0.5px,transparent_0.5px),linear-gradient(to_bottom,#27272a_0.5px,transparent_0.5px)] bg-[size:16px_16px]"
         aria-hidden="true"
         tabIndex={-1}
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
@@ -338,7 +332,7 @@ function AnimateName() {
         }}
       />
       <motion.h1
-        className="group relative z-10 cursor-pointer p-1 text-8xl font-extrabold tracking-tighter text-white uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 focus:outline-none md:text-9xl"
+        className="group text-foreground selection:text-foreground relative z-10 cursor-pointer p-2 text-8xl font-extrabold tracking-tight uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 selection:bg-none focus:outline-none md:text-9xl"
         tabIndex={0}
         initial={{
           opacity: 0,
@@ -362,45 +356,16 @@ function AnimateName() {
           duration: 1.2,
           filter: { duration: 0.7, ease: [0.22, 0.68, 0.36, 1] },
         }}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        onFocus={() => setShowTooltip(true)}
-        onBlur={() => setShowTooltip(false)}
         aria-describedby="brand-tooltip"
-        style={{
-          letterSpacing: "-0.08em",
-          textShadow: "0 2px 24px rgba(0,0,0,0.18)",
-        }}
       >
         asius
-        {/* Tooltip */}
-        <motion.span
+        <Tooltip
+          className="-top-6 w-full tracking-normal capitalize after:-bottom-1.5"
           id="brand-tooltip"
-          className={cn(
-            "text-nowrap",
-            "pointer-events-none absolute -top-4 left-1/2 -translate-x-1/2 rounded bg-zinc-800 px-2 py-1 text-center text-[11px] font-light tracking-normal capitalize opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 group-focus:opacity-100 after:absolute after:top-full after:left-1/2 after:h-0 after:w-0 after:-translate-x-1/2 after:border-x-4 after:border-t-4 after:border-b-0 after:border-x-transparent after:border-t-zinc-800 after:content-['']",
-            showTooltip ? "opacity-100" : "opacity-0",
-          )}
-          role="tooltip"
           aria-live="polite"
-          aria-hidden={!showTooltip}
-          style={{
-            pointerEvents: "none",
-            transitionDelay: showTooltip ? "0s" : "0.1s",
-          }}
-          initial={{ filter: "blur(8px)", opacity: 0 }}
-          animate={{
-            filter: showTooltip ? "blur(0px)" : "blur(8px)",
-            opacity: showTooltip ? 1 : 0,
-          }}
-          transition={{
-            duration: 0.32,
-            ease: [0.22, 0.68, 0.36, 1],
-            filter: { duration: 0.32, ease: [0.22, 0.68, 0.36, 1] },
-          }}
         >
           A future brand name I intend to build showcasing my vision
-        </motion.span>
+        </Tooltip>
       </motion.h1>
     </header>
   );
