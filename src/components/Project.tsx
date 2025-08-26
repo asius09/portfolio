@@ -6,7 +6,6 @@ import { projects } from "@/data/project";
 import { motion, type Transition } from "motion/react";
 
 export const Project = () => {
-  // Animation configs (matching About/Hero/Stack)
   const fadeInUpInitial = {
     y: 12,
     opacity: 0,
@@ -59,7 +58,7 @@ export const Project = () => {
         Projects
       </motion.h2>
       <motion.ul
-        className="mt-6 grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2"
+        className="mt-6 grid grid-cols-1 gap-4 space-y-4"
         aria-label="Project list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
@@ -92,24 +91,26 @@ export const Project = () => {
           </motion.li>
         ))}
       </motion.ul>
-      <motion.div
-        className="my-8 grid w-full place-content-center"
-        initial={fadeInUpInitial}
-        whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * (3 + projects.length),
-        }}
-      >
-        <Button
-          variant="ghost"
-          className="max-w-2xs hover:underline"
-          aria-label="See more projects"
+      {projects.length > 2 && (
+        <motion.div
+          className="my-8 grid w-full place-content-center"
+          initial={fadeInUpInitial}
+          whileInView={fadeInUpAnimate}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{
+            ...fadeInUpSpring,
+            delay: baseDelay + step * (3 + projects.length),
+          }}
         >
-          See More <span aria-hidden="true">&#8594;</span>
-        </Button>
-      </motion.div>
+          <Button
+            variant="ghost"
+            className="max-w-2xs hover:underline"
+            aria-label="See more projects"
+          >
+            See More <span aria-hidden="true">&#8594;</span>
+          </Button>
+        </motion.div>
+      )}
     </motion.section>
   );
 };

@@ -11,6 +11,7 @@
     "prettier:fix": "prettier --write ."
   },
   "dependencies": {
+    "@lobehub/icons": "^2.30.0",
     "@tabler/icons-react": "^3.34.1",
     "clsx": "^2.1.1",
     "motion": "^12.23.12",

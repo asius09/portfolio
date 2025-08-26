@@ -3,34 +3,19 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "./ui/Button";
 import Link from "next/link";
-import { stackItems } from "@/data/techStack";
 import { cn } from "@/lib/utils";
-import { Project } from "@/types/project.type";
 import { AnimatePresence, motion } from "motion/react";
+import { Project, ProjectStack } from "@/types/project.type";
 
-type AnimatedButtonProps = {
-  Icon: React.ComponentType<{
-    className?: string;
-    "aria-hidden"?: boolean;
-    focusable?: boolean;
-  }> | null;
-  label: string;
+type AnimatedButtonProps = ProjectStack & {
   idx: number;
-  className?: string;
-  buttonKey: string;
 };
 
-function AnimatedButton({
-  Icon,
-  label,
-  idx,
-  className,
-  buttonKey,
-}: AnimatedButtonProps) {
+const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
+  const { buttonKey, label, Icon, className, idx } = props;
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
 
-  // Determine if the button is "active" (hovered or focused)
   const isActive = hovered || focused;
 
   return (
@@ -46,23 +31,26 @@ function AnimatedButton({
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       className={cn(
-        "group from-gradient-from to-gradient-to ring-border flex items-center justify-center rounded-full bg-gradient-to-b px-1 text-right shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] ring-1 outline-none",
-        "h-8 min-w-[2rem] cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out",
-        idx !== 0 && "-ml-3",
+        "group from-gradient-from to-gradient-to ring-border flex items-center justify-center rounded-full bg-gradient-to-b px-1 text-right ring-1 outline-none",
+        "cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out md:h-10 md:min-w-10",
+        idx !== 0 && "-ml-2 md:-ml-3",
         buttonKey === "nextjs" ? "text-gradient-foreground" : className,
         "relative",
+        "h-6 min-w-6",
+        isActive ? "z-[999]" : `z-[${20 + idx}]`,
+        "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
       )}
-      style={{
-        zIndex: isActive ? 999 : 20 + idx,
-      }}
       animate={{
         zIndex: isActive ? 999 : 20 + idx,
       }}
     >
       {Icon ? (
-        <Icon className={cn(className, "size-4 shrink-0")} aria-hidden={true} />
+        <Icon
+          className={cn(className, "size-3 shrink-0 md:size-5")}
+          aria-hidden={true}
+        />
       ) : (
-        <span className="text-gradient-foreground size-4 shrink-0 font-bold">
+        <span className="text-gradient-foreground flex size-3 shrink-0 items-center justify-center text-sm font-bold md:size-5 md:text-base">
           {label?.[0]}
         </span>
       )}
@@ -87,54 +75,28 @@ function AnimatedButton({
       </AnimatePresence>
     </motion.button>
   );
-}
+};
 
 export const ProjectCard = (project: Project) => {
-  const stackIcons = project.stacks.map((stackName) => {
-    const found =
-      stackItems.find(
-        (item) => item.label.toLowerCase() === stackName.toLowerCase(),
-      ) ||
-      stackItems.find(
-        (item) => item.key.toLowerCase() === stackName.toLowerCase(),
-      );
-    return found
-      ? {
-          key: found.key,
-          label: found.label,
-          Icon: found.icon,
-          className:
-            found.key === "nextjs"
-              ? "text-gradient-foreground"
-              : found.className,
-        }
-      : {
-          key: stackName,
-          label: stackName,
-          Icon: null,
-          className: "text-gradient-foreground",
-        };
-  });
-
   return (
     <div
-      className="w-full p-3 md:max-w-sm md:p-4"
+      className="w-full p-3"
       aria-labelledby="project-title"
       tabIndex={-1}
       role="region"
     >
       <motion.div
         whileHover={{
-          scale: 1.01,
-          boxShadow: "0 4px 32px 0 rgba(0,0,0,0.18)",
-          borderColor: "#a1a1aa",
+          scale: 1.015,
+          boxShadow:
+            "0 8px 32px 0 rgba(36,37,46,0.22), 0 1.5px 8px 0 rgba(0,0,0,0.10)",
         }}
         transition={{
           type: "spring",
           stiffness: 120,
           damping: 12,
         }}
-        className="relative aspect-video w-full overflow-hidden rounded-lg border border-solid border-zinc-600"
+        className="border-border relative aspect-video w-full overflow-hidden rounded-lg border border-solid"
       >
         <Image
           src={project.image}
@@ -175,21 +137,21 @@ export const ProjectCard = (project: Project) => {
           id="project-card-footer"
           className="mt-6 flex flex-col items-start justify-center gap-3"
         >
-          <div
-            className="relative mb-3 flex h-10 items-center"
-            tabIndex={-1}
-            style={{ overflow: "visible", justifyContent: "flex-start" }}
-          >
-            {stackIcons.map(({ key, label, Icon, className }, idx) => (
-              <AnimatedButton
-                key={key}
-                buttonKey={key}
-                Icon={Icon}
-                label={label}
-                idx={idx}
-                className={className}
-              />
-            ))}
+          <div className="relative mb-3 flex h-10 flex-wrap items-center justify-start overflow-visible">
+            {project.stacks.map(
+              ({ buttonKey, label, Icon, className }, idx) => {
+                return (
+                  <AnimatedButton
+                    key={buttonKey}
+                    buttonKey={buttonKey}
+                    Icon={Icon}
+                    label={label}
+                    className={className}
+                    idx={idx}
+                  />
+                );
+              },
+            )}
           </div>
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:gap-3">
             <Link
@@ -202,13 +164,13 @@ export const ProjectCard = (project: Project) => {
               title="View project on GitHub"
             >
               <Button
-                className="flex w-full items-center justify-center gap-2"
+                className="w-full md:py-5"
                 variant="default"
                 tabIndex={-1}
                 aria-label="View project on GitHub"
               >
                 <IconBrandGithubFilled
-                  className="size-5"
+                  className="size-4"
                   aria-hidden="true"
                   focusable="false"
                 />
@@ -225,7 +187,7 @@ export const ProjectCard = (project: Project) => {
               title="Visit live demo"
             >
               <Button
-                className="flex w-full items-center justify-center gap-2"
+                className="w-full md:py-5"
                 variant="outline"
                 tabIndex={-1}
                 aria-label="Visit live demo"

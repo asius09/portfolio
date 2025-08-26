@@ -131,11 +131,10 @@ export const Hero = () => {
               type: "spring",
               stiffness: 100,
             }}
-            className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full"
-            aria-label="Profile picture"
+            className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full shadow-xl drop-shadow-[0_6px_24px_rgba(0,0,0,0.18)]"
           >
             <Image
-              src="/profile.png"
+              src="/profile.webp"
               alt="Bobby Tiwari profile picture"
               className="object-cover"
               width={64}
@@ -203,7 +202,6 @@ export const Hero = () => {
                 title={title}
               >
                 <Icon className={cn(iconClass, "size-5")} />
-
                 <Tooltip className="-top-6 after:top-full">{ariaLabel}</Tooltip>
               </Link>
             </motion.div>
@@ -227,7 +225,7 @@ export const Hero = () => {
               return (
                 <motion.li
                   key={idx}
-                  className="text-foreground flex items-center gap-2 text-sm"
+                  className="flex items-center gap-2 text-sm"
                   variants={itemVariants}
                 >
                   <motion.span
@@ -240,10 +238,11 @@ export const Hero = () => {
                   >
                     <Icon className={iconClass} />
                   </motion.span>
+
                   <motion.span
                     initial={false}
                     animate={false}
-                    className="group flex items-center justify-start gap-1"
+                    className="group text-foreground flex items-center justify-start gap-1"
                   >
                     <Link
                       href={item.href}
@@ -268,7 +267,7 @@ export const Hero = () => {
                       {item.text}
                     </Link>
                     <Button
-                      className="hover:text-foreground relative size-5 rounded-full text-xs font-medium text-zinc-500 transition-colors group-hover:opacity-100 md:opacity-0"
+                      className="hover:text-foreground text-mute-foreground relative size-5 rounded-full text-xs font-medium transition-colors group-hover:opacity-100 md:opacity-0"
                       variant="ghost"
                       onClick={() => handleCopy?.(item.text)}
                       aria-label={`Copy ${item.text} to clipboard`}
@@ -331,7 +330,7 @@ function AnimateName() {
         }}
       />
       <motion.h1
-        className="group text-foreground selection:text-foreground relative z-10 cursor-pointer p-2 text-8xl font-extrabold tracking-tight uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 selection:bg-none focus:outline-none md:text-9xl"
+        className="group text-foreground selection:text-foreground relative z-10 cursor-pointer p-2 text-6xl font-bold tracking-tight uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-8xl"
         tabIndex={0}
         initial={{
           opacity: 0,

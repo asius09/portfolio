@@ -7,7 +7,9 @@ import {
   IconBrandReact,
   IconBrandSupabase,
   IconBrandTailwind,
+  IconBrandThreejs,
   IconBrandTypescript,
+  IconBrandVercel,
 } from "@tabler/icons-react";
 
 export const stackItems = [
@@ -64,5 +66,17 @@ export const stackItems = [
     label: "Supabase",
     icon: IconBrandSupabase,
     className: "text-green-400",
+  },
+  {
+    key: "vercel",
+    label: "Vercel",
+    icon: IconBrandVercel,
+    className: "text-foreground",
+  },
+  {
+    key: "threejs",
+    label: "Three.js",
+    icon: IconBrandThreejs,
+    className: "text-indigo-400",
   },
 ];

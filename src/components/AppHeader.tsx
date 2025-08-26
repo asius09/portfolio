@@ -32,7 +32,6 @@ export const AppHeader = () => {
   useMotionValueEvent(scrollY, "change", () => {
     if (!heroHeaderRef.current) return;
     const rect = heroHeaderRef.current.getBoundingClientRect();
-    console.log(rect);
     setShowLogo(rect.bottom <= 70);
   });
   useEffect(() => {
@@ -59,10 +58,10 @@ export const AppHeader = () => {
 
   return (
     <header
-      className="bg-background border-border fixed top-0 left-0 z-50 flex w-full items-center border-b-[1px] px-4 py-2"
+      className="bg-background border-border fixed top-0 left-0 z-50 flex w-full items-center justify-center border-b-[1px] px-4 py-2"
       role="banner"
     >
-      <div className="flex w-full max-w-3xl items-center justify-between">
+      <div className="flex w-full max-w-3xl items-center justify-between px-4">
         <div className="flex min-w-0 items-center overflow-hidden">
           <AnimatePresence>
             {showLogo && (
