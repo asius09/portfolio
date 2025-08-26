@@ -330,7 +330,7 @@ function AnimateName() {
         }}
       />
       <motion.h1
-        className="group text-foreground selection:text-foreground relative z-10 cursor-pointer p-2 text-6xl font-bold tracking-tight uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-8xl"
+        className="group font-asius text-foreground selection:text-foreground relative z-10 w-full cursor-pointer p-2 text-center text-6xl font-bold tracking-wide lowercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-8xl"
         tabIndex={0}
         initial={{
           opacity: 0,
@@ -342,7 +342,7 @@ function AnimateName() {
         animate={{
           opacity: 1,
           y: 0,
-          letterSpacing: "-0.08em",
+          letterSpacing: "-0.2rem",
           scale: 1,
           filter: "blur(0px)",
         }}
@@ -358,7 +358,7 @@ function AnimateName() {
       >
         asius
         <Tooltip
-          className="-top-6 w-full tracking-normal capitalize after:-bottom-1.5"
+          className="-top-6 w-full capitalize after:-bottom-1.5"
           id="brand-tooltip"
           aria-live="polite"
         >

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Zain } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+
+export const zain = Zain({
+  variable: "--font-asius",
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "700", "800", "900"],
+  display: "swap",
+  preload: true,
+});
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",

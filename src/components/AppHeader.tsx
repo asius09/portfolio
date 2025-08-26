@@ -67,7 +67,7 @@ export const AppHeader = () => {
             {showLogo && (
               <motion.span
                 key="asius-header"
-                className="text-foreground text-2xl font-bold tracking-tight uppercase select-none"
+                className="font-asius text-foreground text-2xl font-bold tracking-tight lowercase select-none"
                 initial={{
                   y: 20,
                   opacity: 0,
