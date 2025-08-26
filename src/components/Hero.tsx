@@ -2,7 +2,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
@@ -41,7 +40,7 @@ const fadeInUpTransition: Transition = {
 
 const fadeInUpSpring: Transition = {
   ...fadeInUpTransition,
-  type: "spring" as any, // 'spring' is not in the type, so we cast
+  type: "spring", // 'spring' is not in the type, so we cast
   stiffness: 80,
 };
 
@@ -59,7 +58,7 @@ const iconTransition = (idx: number): Transition => ({
   duration: 0.6,
   ease: [0.25, 0.1, 0.25, 1],
   delay: (idx + 1) * 0.175,
-  type: "spring" as any,
+  type: "spring",
   stiffness: 80,
 });
 
@@ -129,7 +128,7 @@ export const Hero = () => {
               duration: 0.3,
               ease: [0.25, 0.1, 0.25, 1],
               delay: 0.2,
-              type: "spring" as any,
+              type: "spring",
               stiffness: 100,
             }}
             className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full"

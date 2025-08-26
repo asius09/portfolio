@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { education } from "@/data/education";
 import { motion, useAnimation, Transition } from "motion/react";
 
-// Animation configs (match About.tsx)
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
@@ -17,7 +16,7 @@ const fadeInUpAnimate = {
 const fadeInUpSpring: Transition = {
   duration: 0.6,
   ease: [0.25, 0.1, 0.25, 1],
-  type: "spring" as any,
+  type: "spring",
   stiffness: 80,
 };
 
@@ -28,7 +27,6 @@ function isElementInViewport(el: HTMLElement | null) {
 }
 
 export const Education = () => {
-  // Match About's stagger rhythm
   const baseDelay = 0.18;
   const step = 0.13;
 
@@ -43,7 +41,6 @@ export const Education = () => {
         setHasAnimated(true);
       }
     }
-    // Run on mount in case already in view
     handleScroll();
     if (!hasAnimated) {
       window.addEventListener("scroll", handleScroll, { passive: true });
@@ -53,7 +50,6 @@ export const Education = () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnimated, controls]);
 
   return (
@@ -69,7 +65,7 @@ export const Education = () => {
       }}
     >
       <motion.h2
-        className="text-2xl font-semibold text-foreground"
+        className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         animate={controls}
         transition={{
@@ -105,7 +101,7 @@ export const Education = () => {
           >
             {/* Pointer/Arrow Icon */}
             <motion.span
-              className="mt-1 flex h-6 w-6 items-center justify-center text-foreground"
+              className="text-foreground mt-1 flex h-6 w-6 items-center justify-center"
               aria-hidden="true"
               initial={fadeInUpInitial}
               animate={controls}
@@ -119,7 +115,7 @@ export const Education = () => {
             <div className="flex w-full flex-col md:flex-row md:justify-between">
               <div>
                 <motion.h3
-                  className="text-base font-bold text-foreground"
+                  className="text-foreground text-base font-bold"
                   initial={fadeInUpInitial}
                   animate={controls}
                   transition={{
@@ -130,7 +126,7 @@ export const Education = () => {
                   {edu.institution}
                 </motion.h3>
                 <motion.p
-                  className="mt-1 text-sm font-medium text-foreground/80"
+                  className="text-foreground/80 mt-1 text-sm font-medium"
                   initial={fadeInUpInitial}
                   animate={controls}
                   transition={{
@@ -142,7 +138,7 @@ export const Education = () => {
                 </motion.p>
               </div>
               <motion.span
-                className="md:text-right text-sm font-normal text-blue-400"
+                className="text-sm font-normal text-blue-400 md:text-right"
                 initial={fadeInUpInitial}
                 animate={controls}
                 transition={{

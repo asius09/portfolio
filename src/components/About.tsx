@@ -16,7 +16,7 @@ const fadeInUpAnimate = {
 const fadeInUpSpring: Transition = {
   duration: 0.6,
   ease: [0.25, 0.1, 0.25, 1],
-  type: "spring" as any,
+  type: "spring",
   stiffness: 80,
 };
 
@@ -38,7 +38,7 @@ export const About = () => {
       }}
     >
       <motion.h2
-        className="text-2xl font-semibold text-foreground"
+        className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -50,7 +50,7 @@ export const About = () => {
         About
       </motion.h2>
       <motion.p
-        className="mt-3 text-sm font-normal text-foreground"
+        className="text-foreground mt-3 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -63,7 +63,7 @@ export const About = () => {
         apps.
       </motion.p>
       <motion.p
-        className="mt-2 text-sm font-normal text-foreground"
+        className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}
@@ -77,7 +77,7 @@ export const About = () => {
         game platforms.
       </motion.p>
       <motion.p
-        className="mt-2 text-sm font-normal text-foreground"
+        className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.6 }}

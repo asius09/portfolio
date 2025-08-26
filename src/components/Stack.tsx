@@ -18,15 +18,14 @@ const fadeInUpAnimate = {
 const fadeInUpSpring: Transition = {
   duration: 0.6,
   ease: [0.25, 0.1, 0.25, 1],
-  type: "spring" as any,
+  type: "spring",
   stiffness: 80,
 };
 
-// For the stack list: horizontal "stretch" animation
 const listInitial = {
   scaleX: 0,
   opacity: 0,
-  originX: 0, // stretch from left
+  originX: 0,
   filter: "blur(8px)",
 };
 const listAnimate = {
@@ -38,11 +37,10 @@ const listAnimate = {
 const listTransition: Transition = {
   duration: 0.7,
   ease: [0.25, 0.1, 0.25, 1],
-  type: "spring" as any,
+  type: "spring",
   stiffness: 60,
 };
 
-// Utility to check if element is in viewport
 function isElementInViewport(el: HTMLElement | null) {
   if (!el) return false;
   const rect = el.getBoundingClientRect();
@@ -50,11 +48,8 @@ function isElementInViewport(el: HTMLElement | null) {
 }
 
 export const Stack = () => {
-  // Stagger for each stack item
   const baseDelay = 0.18;
   const step = 0.09;
-
-  // Animation controls for section and children
   const controls = useAnimation();
   const sectionRef = useRef<HTMLElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -66,7 +61,7 @@ export const Stack = () => {
         setHasAnimated(true);
       }
     }
-    // Run on mount in case already in view
+
     handleScroll();
     if (!hasAnimated) {
       window.addEventListener("scroll", handleScroll, { passive: true });
@@ -76,7 +71,6 @@ export const Stack = () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnimated, controls]);
 
   return (
@@ -178,7 +172,7 @@ export const Stack = () => {
             </motion.button>
             {/* Tooltip */}
             <Tooltip
-              className="-bottom-8 after:-top-1 text-nowrap"
+              className="-bottom-8 text-nowrap after:-top-1"
               id={`tooltip-${key}`}
               arrowDir="upward"
             >
