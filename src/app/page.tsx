@@ -9,7 +9,6 @@ import { Stack } from "@/components/Stack";
 import { WorkingIdea } from "@/components/WorkingIdea";
 import { motion } from "motion/react";
 
-// Container only controls sequencing (no section animation)
 const containerVariants = {
   hidden: {},
   show: {
