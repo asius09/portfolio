@@ -32,11 +32,11 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
       onBlur={() => setFocused(false)}
       className={cn(
         "group from-gradient-from to-gradient-to ring-border flex items-center justify-center rounded-full bg-gradient-to-b px-1 text-right ring-1 outline-none",
-        "cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out md:h-10 md:min-w-10",
+        "cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out",
         idx !== 0 && "-ml-2 md:-ml-3",
         buttonKey === "nextjs" ? "text-gradient-foreground" : className,
         "relative",
-        "h-6 min-w-6",
+        "h-8 min-w-8 md:h-10 md:min-w-10",
         isActive ? "z-[999]" : `z-[${20 + idx}]`,
         "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
       )}
@@ -85,7 +85,7 @@ export const ProjectCard = (project: Project) => {
       tabIndex={-1}
       role="region"
     >
-      <motion.div
+      <motion.figure
         whileHover={{
           scale: 1.015,
           boxShadow:
@@ -106,7 +106,7 @@ export const ProjectCard = (project: Project) => {
           sizes="(max-width: 768px) 100vw, 1152px"
           priority
         />
-      </motion.div>
+      </motion.figure>
       <div id="project-content" className="w-full px-1 pt-4">
         <h4
           id="project-title"

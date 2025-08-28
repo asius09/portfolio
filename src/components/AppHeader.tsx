@@ -32,14 +32,14 @@ export const AppHeader = () => {
   useMotionValueEvent(scrollY, "change", () => {
     if (!heroHeaderRef.current) return;
     const rect = heroHeaderRef.current.getBoundingClientRect();
-    setShowLogo(rect.bottom <= 70);
+    setShowLogo(rect.bottom <= 82);
   });
   useEffect(() => {
     if (!mounted) return;
     function handleResize() {
       if (!heroHeaderRef.current) return;
       const rect = heroHeaderRef.current.getBoundingClientRect();
-      setShowLogo(rect.bottom <= 70);
+      setShowLogo(rect.bottom <= 82);
     }
     window.addEventListener("resize", handleResize);
     // Initial check
@@ -58,16 +58,16 @@ export const AppHeader = () => {
 
   return (
     <header
-      className="bg-background border-border fixed top-0 left-0 z-50 flex w-full items-center justify-center border-b-[1px] px-4 py-2"
+      className="bg-background border-border/30 fixed top-0 left-0 z-50 flex min-h-12 w-full items-center justify-center border-b-[1px]"
       role="banner"
     >
-      <div className="flex w-full max-w-3xl items-center justify-between px-4">
+      <div className="flex w-full max-w-3xl items-center justify-between px-6">
         <div className="flex min-w-0 items-center overflow-hidden">
           <AnimatePresence>
             {showLogo && (
               <motion.span
                 key="asius-header"
-                className="font-asius text-foreground text-2xl font-bold tracking-tight lowercase select-none"
+                className="font-asius text-foreground text-3xl font-bold tracking-tight lowercase select-none"
                 initial={{
                   y: 20,
                   opacity: 0,
@@ -105,7 +105,7 @@ export const AppHeader = () => {
                 className="size-5"
                 style={{ color: "var(--color-foreground)" }}
               />
-              <Tooltip className="-bottom-6 after:-top-1" arrowDir="upward">
+              <Tooltip className="-bottom-6 after:-top-1.5" arrowDir="upward">
                 GitHub
               </Tooltip>
             </Link>
@@ -137,7 +137,7 @@ export const AppHeader = () => {
               aria-hidden={resolvedTheme !== "dark"}
             />
             <Tooltip
-              className="-bottom-9 text-wrap after:-top-1 md:-bottom-5 md:text-nowrap"
+              className="-bottom-6 text-wrap after:-top-1.5 md:text-nowrap"
               arrowDir="upward"
             >
               Toggle theme

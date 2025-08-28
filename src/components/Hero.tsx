@@ -314,12 +314,12 @@ export const Hero = () => {
 function AnimateName() {
   return (
     <header
-      className="relative flex h-56 w-full items-center justify-center [mask-image:radial-gradient(circle_at_center,white_85%,transparent_100%)]"
+      className="relative flex h-40 w-full items-center justify-center [mask-image:radial-gradient(circle_at_center,white_85%,transparent_100%)] md:h-56"
       aria-label="Hero name"
     >
       {/* Animated background grid */}
       <motion.div
-        className="bg-background absolute inset-0 z-0 h-full w-full [background-image:linear-gradient(to_right,#27272a_0.5px,transparent_0.5px),linear-gradient(to_bottom,#27272a_0.5px,transparent_0.5px)] bg-[size:16px_16px]"
+        className="bg-background bg-grid absolute inset-0 z-0 h-full w-full bg-[size:16px_16px]"
         aria-hidden="true"
         tabIndex={-1}
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
@@ -330,7 +330,7 @@ function AnimateName() {
         }}
       />
       <motion.h1
-        className="group font-asius text-foreground selection:text-foreground relative z-10 w-full cursor-pointer p-2 text-center text-6xl font-bold tracking-wide lowercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-8xl"
+        className="group font-asius text-foreground selection:text-foreground relative z-10 w-full cursor-pointer text-center text-9xl font-bold tracking-wide lowercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-[8rem]"
         tabIndex={0}
         initial={{
           opacity: 0,
@@ -358,7 +358,7 @@ function AnimateName() {
       >
         asius
         <Tooltip
-          className="-top-6 w-full capitalize after:-bottom-1.5"
+          className="-top-1 w-full tracking-wider capitalize after:-bottom-1.5 after:left-[50.6%] md:-top-2 md:text-xs"
           id="brand-tooltip"
           aria-live="polite"
         >

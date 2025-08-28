@@ -16,13 +16,32 @@
   --mute-foreground: theme(colors.neutral.500);
   --card: theme(colors.white);
   --card-foreground: theme(colors.zinc.900);
-  --accent: theme(colors.blue.600);
+  --accent: theme(colors.blue.800);
   --accent-foreground: theme(colors.zinc.800);
   --gradient-from: theme(colors.zinc.600);
   --gradient-to: theme(colors.zinc.700);
   --gradient-foreground: theme(colors.neutral.100);
   --border: theme(colors.zinc.500);
   --border-hover: theme(colors.zinc.400);
+}
+
+/* 
+  Common grid background class for smooth light/dark transitions.
+  - .bg-grid uses light grid in light mode, dark grid in dark mode.
+  - .bg-grid-light and .bg-grid-dark remain for explicit use if needed.
+*/
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(30, 30, 30, 0.28) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 30, 30, 0.28) 1px, transparent 1px);
+  background-size: 16px 16px;
+  transition: background-image 0.3s;
+}
+
+[data-theme="dark"] .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
 }
 
 [data-theme="dark"] {
