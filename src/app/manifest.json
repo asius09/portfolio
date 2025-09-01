@@ -3,7 +3,8 @@
   "short_name": "Asius",
   "description": "Personal portfolio of Bobby Tiwari. Frontend developer, React, Next.js, and more.",
   "category": "portfolio",
-  "start_url": "/",
+  "start_url": "https://asius.in/",
+  "scope": "https://asius.in/",
   "display": "standalone",
   "background_color": "#09090B",
   "theme_color": "#09090B",
@@ -46,5 +47,6 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }
-  ]
+  ],
+  "id": "https://asius.in/"
 }
