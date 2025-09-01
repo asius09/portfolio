@@ -325,7 +325,7 @@ function AnimateName() {
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{
-          duration: 1.4,
+          duration: 0.6,
           ease: [0.22, 0.68, 0.36, 1],
         }}
       />
@@ -348,11 +348,11 @@ function AnimateName() {
         }}
         transition={{
           type: "spring",
-          stiffness: 80,
-          damping: 18,
-          mass: 1.1,
-          duration: 1.2,
-          filter: { duration: 0.7, ease: [0.22, 0.68, 0.36, 1] },
+          stiffness: 120,
+          damping: 20,
+          mass: 0.9,
+          duration: 0.6,
+          filter: { duration: 0.4, ease: [0.22, 0.68, 0.36, 1] },
         }}
         aria-describedby="brand-tooltip"
       >
