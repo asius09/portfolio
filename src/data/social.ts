@@ -13,7 +13,7 @@ export const socials = [
     iconClass: "text-gradient-foreground",
   },
   {
-    href: "https://linkedin.com/bobby09",
+    href: "https://www.linkedin.com/in/bobby09/",
     ariaLabel: "LinkedIn",
     title: "LinkedIn",
     Icon: IconBrandLinkedinFilled,

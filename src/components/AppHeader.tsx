@@ -137,7 +137,7 @@ export const AppHeader = () => {
               aria-hidden={resolvedTheme !== "dark"}
             />
             <Tooltip
-              className="-bottom-6 text-wrap after:-top-1.5 md:text-nowrap"
+              className="-bottom-8 text-wrap after:-top-1.5 md:-bottom-6 md:text-nowrap"
               arrowDir="upward"
             >
               Toggle theme

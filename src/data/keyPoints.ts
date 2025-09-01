@@ -37,9 +37,9 @@ export const keyPoints = [
   {
     icon: IconWorld,
     iconClass: "text-purple-400",
-    text: "asius.com",
+    text: "asius.in",
     type: "site",
-    href: "https://asius.com",
+    href: "https://asius.in",
   },
   {
     icon: IconGenderMale,

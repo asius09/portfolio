@@ -138,7 +138,7 @@ export const Education = () => {
                 </motion.p>
               </div>
               <motion.span
-                className="text-sm font-normal text-accent md:text-right"
+                className="text-accent text-sm font-normal md:text-right"
                 initial={fadeInUpInitial}
                 animate={controls}
                 transition={{
