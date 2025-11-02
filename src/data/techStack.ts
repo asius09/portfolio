@@ -1,3 +1,6 @@
+// Tech stack simple list:
+// Node.js, Express.js, MongoDB, Expo, React Native, YAML, AWS EC2, React, Next.js, TypeScript, TailwindCSS, Framer Motion, JavaScript, HTML, CSS, Supabase, Vercel, Three.js
+
 import {
   IconBrandCss3,
   IconBrandFramerMotion,
@@ -10,9 +13,54 @@ import {
   IconBrandThreejs,
   IconBrandTypescript,
   IconBrandVercel,
+  IconBrandNodejs,
 } from "@tabler/icons-react";
 
+import {
+  IconBrandMongodb,
+  IconBrandReactNative,
+  IconBrandAws,
+} from "@tabler/icons-react";
+
+import { SiExpo, SiExpress } from "react-icons/si";
+
 export const stackItems = [
+  {
+    key: "nodejs",
+    label: "Node.js",
+    icon: IconBrandNodejs,
+    className: "text-green-700",
+  },
+  {
+    key: "expressjs",
+    label: "Express.js",
+    icon: SiExpress,
+    className: "text-gray-500",
+  },
+  {
+    key: "mongodb",
+    label: "MongoDB",
+    icon: IconBrandMongodb,
+    className: "text-green-600",
+  },
+  {
+    key: "expo",
+    label: "Expo",
+    icon: SiExpo,
+    className: "text-gray-700 dark:text-white",
+  },
+  {
+    key: "reactnative",
+    label: "React Native",
+    icon: IconBrandReactNative,
+    className: "text-blue-500",
+  },
+  {
+    key: "awsec2",
+    label: "AWS EC2",
+    icon: IconBrandAws,
+    className: "text-orange-500",
+  },
   {
     key: "react",
     label: "React",
