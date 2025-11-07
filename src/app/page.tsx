@@ -1,11 +1,12 @@
 "use client";
-import { About } from "@/components/About";
-import { AppHeader } from "@/components/AppHeader";
-import { Education } from "@/components/Education";
-import { Footer } from "@/components/Footer";
-import { Hero } from "@/components/Hero";
-import { Project } from "@/components/Project";
-import { Stack } from "@/components/Stack";
+import { About } from "@/components/section/About";
+import { AppHeader } from "@/components/section/AppHeader";
+import { Education } from "@/components/section/Education";
+import { Experience } from "@/components/section/Experience";
+import { Footer } from "@/components/section/Footer";
+import { Hero } from "@/components/section/Hero";
+import { Project } from "@/components/section/Project";
+import { Stack } from "@/components/section/Stack";
 import { WorkingIdea } from "@/components/WorkingIdea";
 import { motion } from "motion/react";
 
@@ -31,6 +32,7 @@ export default function Home() {
       >
         <Hero />
         <About />
+        <Experience />
         <Stack />
         <Project />
         <Education />

@@ -6,9 +6,9 @@ import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { Button } from "./ui/Button";
+import { Button } from "../ui/Button";
 import { IconCopy } from "@tabler/icons-react";
-import { Tooltip } from "./ui/Tooltip";
+import { Tooltip } from "../ui/Tooltip";
 
 // Types for motion configs
 type FadeInUp = {

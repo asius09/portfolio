@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { ProjectCard } from "./ProjectCard";
-import { Button } from "./ui/Button";
-import { projects } from "@/data/project";
+import { ExperienceCard } from "@/components/ExperienceCard";
+import { Button } from "../ui/Button";
+import { experience } from "@/data/experience";
 import { motion, type Transition } from "motion/react";
 
-export const Project = () => {
+export const Experience = () => {
   const fadeInUpInitial = {
     y: 12,
     opacity: 0,
@@ -33,7 +33,7 @@ export const Project = () => {
     <motion.section
       id="project-section"
       className="mt-12 w-full"
-      aria-labelledby="projects-heading"
+      aria-labelledby="experience-heading"
       tabIndex={-1}
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
@@ -44,7 +44,7 @@ export const Project = () => {
       }}
     >
       <motion.h2
-        id="projects-heading"
+        id="experience-heading"
         className="text-foreground text-2xl font-semibold"
         tabIndex={0}
         initial={fadeInUpInitial}
@@ -55,7 +55,7 @@ export const Project = () => {
           delay: baseDelay + step * 1,
         }}
       >
-        Projects
+        Experience
       </motion.h2>
       <motion.ul
         className="mt-6 grid grid-cols-1 gap-4 space-y-4"
@@ -68,9 +68,9 @@ export const Project = () => {
           delay: baseDelay + step * 2,
         }}
       >
-        {projects.map((project, idx) => (
+        {experience.map((experience, idx) => (
           <motion.li
-            key={project.name}
+            key={experience.companyName}
             initial={{
               y: 16,
               opacity: 0,
@@ -87,11 +87,11 @@ export const Project = () => {
               delay: baseDelay + step * (3 + idx),
             }}
           >
-            <ProjectCard {...project} />
+            <ExperienceCard {...experience} />
           </motion.li>
         ))}
       </motion.ul>
-      {projects.length > 2 && (
+      {experience.length > 2 && (
         <motion.div
           className="my-8 grid w-full place-content-center"
           initial={fadeInUpInitial}
@@ -99,13 +99,13 @@ export const Project = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{
             ...fadeInUpSpring,
-            delay: baseDelay + step * (3 + projects.length),
+            delay: baseDelay + step * (3 + experience.length),
           }}
         >
           <Button
             variant="ghost"
             className="max-w-2xs hover:underline"
-            aria-label="See more projects"
+            aria-label="See more experience"
           >
             See More <span aria-hidden="true">&#8594;</span>
           </Button>

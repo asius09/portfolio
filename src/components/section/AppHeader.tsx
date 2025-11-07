@@ -3,9 +3,9 @@ import Link from "next/link";
 import { IconBrandGithubFilled, IconSun, IconMoon } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
-import { Tooltip } from "./ui/Tooltip";
+import { Tooltip } from "../ui/Tooltip";
 import React, { useEffect, useState, useRef } from "react";
-import { Button } from "./ui/Button";
+import { Button } from "../ui/Button";
 import {
   motion,
   AnimatePresence,

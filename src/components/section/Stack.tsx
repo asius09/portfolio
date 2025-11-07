@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { stackItems } from "@/data/techStack";
 import { motion, Transition, useAnimation } from "motion/react";
-import { Tooltip } from "./ui/Tooltip";
+import { Tooltip } from "../ui/Tooltip";
 
 // Animation configs (inspired by About.tsx, but for horizontal stretch)
 const fadeInUpInitial = {
