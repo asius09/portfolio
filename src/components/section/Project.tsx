@@ -58,7 +58,7 @@ export const Project = () => {
         Projects
       </motion.h2>
       <motion.ul
-        className="mt-6 grid grid-cols-2 gap-4 space-y-4"
+        className="mt-6 grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2"
         aria-label="Project list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
