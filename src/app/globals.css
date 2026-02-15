@@ -14,6 +14,7 @@
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);
   --mute-foreground: theme(colors.neutral.500);
+  --mute: theme(colors.neutral.700);
   --card: theme(colors.white);
   --card-foreground: theme(colors.zinc.900);
   --accent: theme(colors.blue.800);
@@ -49,6 +50,7 @@
   --background-hover: theme(colors.neutral.900);
   --foreground: theme(colors.neutral.100);
   --mute-foreground: theme(colors.neutral.500);
+  --mute: theme(colors.neutral.800);
   --card: theme(colors.neutral.900);
   --card-foreground: theme(colors.white);
   --accent: theme(colors.blue.400);
@@ -65,6 +67,7 @@
   --color-background-hover: var(--background-hover);
   --color-foreground: var(--foreground);
   --color-mute-foreground: var(--mute-foreground);
+  --color-mute: var(--mute);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-accent: var(--accent);

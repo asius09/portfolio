@@ -3,12 +3,16 @@
 // - Fields: company name, companyDisplay (logo or url), role, employmentType, start, end, status (active/past/ongoing), 
 //   bulletPoints (with rich text or links), techBadges (tools/skills used).
 
+import { ReactNode } from "react";
+import type { IconType } from "react-icons";
+import { IoCodeSlashOutline } from "react-icons/io5";
+
 export interface ExperienceBullet {
   content: string;
-  links?: { label: string; url: string }[];
 }
 
 export interface ExperiencePosition {
+  icon: ReactNode | IconType;
   role: string;
   employmentType: "Full-time" | "Part-time" | "Internship" | "Contract" | "Freelance" | "Other";
   start: string; // ISO date or "MMM YYYY"
@@ -39,6 +43,7 @@ export const experience: ExperienceCompany[] = [
     },
     positions: [
       {
+        icon: IoCodeSlashOutline,
         role: "AI Research Engineer",
         employmentType: "Full-time",
         start: "2023-07",
@@ -46,13 +51,7 @@ export const experience: ExperienceCompany[] = [
         status: "active",
         bulletPoints: [
           {
-            content: "Build and maintain production-scale GPT-based APIs for customers.",
-            links: [
-              {
-                label: "GPT API",
-                url: "https://platform.openai.com/docs/guides/gpt",
-              },
-            ],
+            content: "Build and maintain production-scale [GPT-based APIs](https://platform.openai.com/docs/guides/gpt) for customers.",
           },
           {
             content: "Improved XYZ model efficiency by 20% by refactoring attention module.",
@@ -60,17 +59,12 @@ export const experience: ExperienceCompany[] = [
           {
             content:
               "Wrote technical blog posts such as [Training Large Language Models](https://openai.com/research/publications/training-large-language-models).",
-            links: [
-              {
-                label: "Training Large Language Models",
-                url: "https://openai.com/research/publications/training-large-language-models",
-              },
-            ],
           },
         ],
         techBadges: ["Python", "PyTorch", "TensorFlow", "Docker", "Kubernetes", "AWS"],
       },
       {
+        icon: IoCodeSlashOutline,
         role: "AI Intern",
         employmentType: "Internship",
         start: "2022-05",
@@ -79,13 +73,7 @@ export const experience: ExperienceCompany[] = [
         bulletPoints: [
           {
             content:
-              "Researched and implemented prototype for in-context learning improvements.",
-            links: [
-              {
-                label: "In-context paper",
-                url: "https://arxiv.org/abs/2208.12266",
-              },
-            ],
+              "Researched and implemented prototype for [in-context learning improvements](https://arxiv.org/abs/2208.12266).",
           },
         ],
         techBadges: ["Python", "NumPy"],
@@ -101,6 +89,7 @@ export const experience: ExperienceCompany[] = [
     },
     positions: [
       {
+        icon: IoCodeSlashOutline,
         role: "Frontend Developer",
         employmentType: "Full-time",
         start: "2021-03",
@@ -110,10 +99,6 @@ export const experience: ExperienceCompany[] = [
           {
             content:
               "Built internal dashboard using [React](https://react.dev/) and [Next.js](https://nextjs.org/).",
-            links: [
-              { label: "React", url: "https://react.dev/" },
-              { label: "Next.js", url: "https://nextjs.org/" },
-            ],
           },
           {
             content: "Improved CI/CD pipeline reducing deployment time by 30%.",
