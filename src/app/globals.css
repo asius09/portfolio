@@ -16,13 +16,13 @@
   --mute-foreground: theme(colors.neutral.500);
   --mute: theme(colors.neutral.700);
   --card: theme(colors.white);
-  --card-foreground: theme(colors.zinc.500);
+  --card-foreground: theme(colors.zinc.400);
   --accent: theme(colors.blue.800);
   --accent-foreground: theme(colors.zinc.800);
   --gradient-from: theme(colors.zinc.600);
   --gradient-to: theme(colors.zinc.700);
   --gradient-foreground: theme(colors.neutral.100);
-  --border: theme(colors.zinc.500);
+  --border: theme(colors.zinc.200);
   --border-hover: theme(colors.zinc.400);
 }
 
@@ -49,7 +49,7 @@
   --background: theme(colors.neutral.950);
   --background-hover: theme(colors.neutral.900);
   --foreground: theme(colors.neutral.100);
-  --mute-foreground: theme(colors.neutral.500);
+  --mute-foreground: theme(colors.neutral.400);
   --mute: theme(colors.neutral.800);
   --card: theme(colors.neutral.900);
   --card-foreground: theme(colors.white);

@@ -27,7 +27,7 @@ export const ExperienceCard = (company: ExperienceCompany) => {
   const firstPosition = positions[0];
 
   return (
-    <div className={cn('w-full', 'bg-background', 'rounded-md', 'mb-2', 'shadow', 'transition')}>
+    <div className={cn('w-full', 'mb-2')}>
       <button
         className={cn('w-full', 'flex', 'items-center', 'gap-2', 'focus:outline-none', 'rounded-md', 'hover:bg-muted', 'transition', 'py-3')}
         onClick={() => setOpen(o => !o)}
@@ -46,7 +46,7 @@ export const ExperienceCard = (company: ExperienceCompany) => {
           />
         </span>
         <span className={cn('flex-1', 'min-w-0 text-left', 'flex flex-row')}>
-          <Link className={cn('block', 'text-lg', 'font-semibold', 'text-foreground', 'truncate', 'hover:underline underline-offset-2', 'cursor-pointer')} href={companyUrl} target="_blank" rel="noopener noreferrer">{companyDisplay.displayName || companyName}</Link>
+          <Link className={cn('block', 'text-lg', 'font-semibold', 'text-foreground', 'truncate', 'hover:underline underline-offset-2', 'cursor-pointer')} href={companyUrl ?? '/'} target="_blank" rel="noopener noreferrer">{companyDisplay.displayName || companyName}</Link>
           {company.status === "active" && (
             <span className={cn('ml-3', 'inline-flex', 'items-center')} title="Currently active">
               <span className={cn('relative', 'flex', 'size-1.5')}>
@@ -159,7 +159,7 @@ export const ExperienceCard = (company: ExperienceCompany) => {
           {company.techBadges.map((tech, i) => (
             <span
               key={tech + i}
-              className={cn('bg-background/50', 'text-muted-foreground', 'rounded-lg', 'px-1.5', 'py-1', 'text-[11px]', 'font-mono', 'dark:bg-mute', 'dark:text-card-foreground')}
+              className={cn('bg-card', 'text-mute-foreground', 'rounded-lg', 'px-1.5', 'py-1', 'text-[11px]', 'font-mono', 'border', 'border-border')}
             >
               {tech}
             </span>

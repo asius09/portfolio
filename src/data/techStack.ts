@@ -1,6 +1,7 @@
 // Tech stack simple list:
 // Node.js, Express.js, MongoDB, Expo, React Native, YAML, AWS EC2, React, Next.js, TypeScript, TailwindCSS, Framer Motion, JavaScript, HTML, CSS, Supabase, Vercel, Three.js
 
+import { Antigravity } from "@/components/icons/antigravity";
 import {
   IconBrandCss3,
   IconBrandFramerMotion,
@@ -29,7 +30,7 @@ export const stackItems = [
     key: "nodejs",
     label: "Node.js",
     icon: IconBrandNodejs,
-    className: "text-green-700",
+    className: "text-green-500",
   },
   {
     key: "expressjs",
@@ -47,7 +48,7 @@ export const stackItems = [
     key: "expo",
     label: "Expo",
     icon: SiExpo,
-    className: "text-gray-700 dark:text-white",
+    className: "text-foreground/80",
   },
   {
     key: "reactnative",
@@ -126,5 +127,11 @@ export const stackItems = [
     label: "Three.js",
     icon: IconBrandThreejs,
     className: "text-indigo-400",
+  },
+  {
+    key: "Antigravity",
+    label: "Antigravity",
+    icon: Antigravity,
+    className: "",
   },
 ];

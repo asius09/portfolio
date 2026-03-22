@@ -10,7 +10,6 @@ import { Button } from "../ui/Button";
 import { IconCopy } from "@tabler/icons-react";
 import { Tooltip } from "../ui/Tooltip";
 
-// Types for motion configs
 type FadeInUp = {
   y: number;
   opacity: number;
@@ -314,7 +313,7 @@ export const Hero = () => {
 function AnimateName() {
   return (
     <header
-      className="relative flex h-40 w-full items-center justify-center [mask-image:radial-gradient(circle_at_center,white_85%,transparent_100%)] md:h-56"
+      className="relative flex h-40 w-full items-center justify-center mask-[radial-gradient(circle_at_center,white_85%,transparent_100%)] md:h-56"
       aria-label="Hero name"
     >
       {/* Animated background grid */}

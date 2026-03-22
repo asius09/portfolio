@@ -128,7 +128,7 @@ export const Stack = () => {
         {stackItems.map(({ key, label, icon: Icon, className }, idx) => (
           <motion.li
             key={key}
-            className="group relative flex cursor-pointer flex-col items-center justify-center"
+            className="group relative flex cursor-pointer flex-col items-center justify-center hover:z-50"
             role="listitem"
             initial="initial"
             animate={controls}
@@ -172,7 +172,7 @@ export const Stack = () => {
             </motion.button>
             {/* Tooltip */}
             <Tooltip
-              className="-bottom-8 text-nowrap after:-top-1"
+              className="-bottom-8 text-nowrap after:-top-1 z-[10000]"
               id={`tooltip-${key}`}
               arrowDir="upward"
             >
