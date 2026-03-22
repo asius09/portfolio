@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { ExperienceCard } from "@/components/ExperienceCard";
 import { Button } from "../ui/Button";
 import { experience } from "@/data/experience";
@@ -16,7 +15,6 @@ export const Experience = () => {
     opacity: 1,
     filter: "blur(0px)",
   };
-  // Make animation even snappier and faster
   const fadeInUpSpring: Transition = {
     duration: 0.18,
     ease: [0.4, 0, 0.2, 1],
@@ -24,8 +22,6 @@ export const Experience = () => {
     stiffness: 160,
     damping: 16,
   };
-
-  // Reduce delays for much faster stagger
   const baseDelay = 0.01;
   const step = 0.03;
 
@@ -58,7 +54,7 @@ export const Experience = () => {
         Experience
       </motion.h2>
       <motion.ul
-        className="mt-6 grid grid-cols-1 gap-4 space-y-4"
+        className="mt-6 grid grid-cols-1 gap-4 space-y-2"
         aria-label="Project list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}

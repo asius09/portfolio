@@ -16,7 +16,7 @@
   --mute-foreground: theme(colors.neutral.500);
   --mute: theme(colors.neutral.700);
   --card: theme(colors.white);
-  --card-foreground: theme(colors.zinc.900);
+  --card-foreground: theme(colors.zinc.500);
   --accent: theme(colors.blue.800);
   --accent-foreground: theme(colors.zinc.800);
   --gradient-from: theme(colors.zinc.600);

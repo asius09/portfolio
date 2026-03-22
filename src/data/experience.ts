@@ -1,8 +1,3 @@
-// Experience data structure following requirements:
-// - Multiple positions per company (timeline at same company)
-// - Fields: company name, companyDisplay (logo or url), role, employmentType, start, end, status (active/past/ongoing), 
-//   bulletPoints (with rich text or links), techBadges (tools/skills used).
-
 import { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import { IoCodeSlashOutline } from "react-icons/io5";
@@ -14,97 +9,87 @@ export interface ExperienceBullet {
 export interface ExperiencePosition {
   icon: ReactNode | IconType;
   role: string;
-  employmentType: "Full-time" | "Part-time" | "Internship" | "Contract" | "Freelance" | "Other";
+  employmentType:
+    | "Full-time"
+    | "Part-time"
+    | "Internship"
+    | "Contract"
+    | "Freelance"
+    | "Other";
   start: string; // ISO date or "MMM YYYY"
   end?: string; // ISO date or "Present"
   status: "active" | "past" | "ongoing";
   bulletPoints: ExperienceBullet[];
-  techBadges: string[]; // List of tech/skill names
 }
 
 export interface ExperienceCompany {
   companyName: string;
   companyDisplay: {
-    logoUrl?: string; // Logo image url
+    logoUrl?: string;
     websiteUrl?: string;
-    displayName?: string; // Optional alt display (e.g., "OpenAI" vs "openai.com")
+    displayName?: string;
   };
-  positions: ExperiencePosition[]; // Allow timeline at same company
+  status: "active" | "past" | "ongoing";
+  techBadges?: string[];
+  positions: ExperiencePosition[];
 }
 
-// Example
 export const experience: ExperienceCompany[] = [
   {
-    companyName: "OpenAI",
+    companyName: "Babysteps",
+    status: "active",
     companyDisplay: {
-      logoUrl: "/chatgpt.png",
-      websiteUrl: "https://openai.com",
-      displayName: "OpenAI",
+      logoUrl: "/babysteps.png",
+      websiteUrl: "https://www.babysteps.world",
+      displayName: "Babysteps",
     },
+    techBadges: [
+      "React",
+      "React Native",
+      "Express",
+      "Payload CMS",
+      "TypeScript",
+      "Monorepo",
+      "AWS",
+      "Docker",
+      "Nginx",
+      "CI/CD",
+      "Git",
+    ],
     positions: [
       {
         icon: IoCodeSlashOutline,
-        role: "AI Research Engineer",
-        employmentType: "Full-time",
-        start: "2023-07",
+        role: "Software Engineering Intern",
+        employmentType: "Internship",
+        start: "2025-01",
         end: "Present",
         status: "active",
         bulletPoints: [
           {
-            content: "Build and maintain production-scale [GPT-based APIs](https://platform.openai.com/docs/guides/gpt) for customers.",
-          },
-          {
-            content: "Improved XYZ model efficiency by 20% by refactoring attention module.",
+            content:
+              "Architected and introduced the [Monorepo](https://monorepo.tools/) foundation across [companion](https://www.babysteps.world/), [mobile](https://testflight.apple.com/join/8QD6rj24), and [carehub](https://carehub.babysteps.world/) apps to unify codebase management.",
           },
           {
             content:
-              "Wrote technical blog posts such as [Training Large Language Models](https://openai.com/research/publications/training-large-language-models).",
+              "Built [Express](https://expressjs.com/) RESTful APIs and integrated [Payload CMS](https://payloadcms.com/) with secure **authentication**, learning advanced patterns on the go.",
           },
-        ],
-        techBadges: ["Python", "PyTorch", "TensorFlow", "Docker", "Kubernetes", "AWS"],
-      },
-      {
-        icon: IoCodeSlashOutline,
-        role: "AI Intern",
-        employmentType: "Internship",
-        start: "2022-05",
-        end: "2022-08",
-        status: "past",
-        bulletPoints: [
           {
             content:
-              "Researched and implemented prototype for [in-context learning improvements](https://arxiv.org/abs/2208.12266).",
+              "Managed real-world **production recoveries** and engineered `ErrorBoundary` systems to resolve critical runtime failures and incorrect code pushes.",
           },
-        ],
-        techBadges: ["Python", "NumPy"],
-      },
-    ],
-  },
-  {
-    companyName: "Acme Corp",
-    companyDisplay: {
-      logoUrl: "/chatgpt.png",
-      websiteUrl: "https://acme.com",
-      displayName: "Acme",
-    },
-    positions: [
-      {
-        icon: IoCodeSlashOutline,
-        role: "Frontend Developer",
-        employmentType: "Full-time",
-        start: "2021-03",
-        end: "2023-06",
-        status: "past",
-        bulletPoints: [
           {
             content:
-              "Built internal dashboard using [React](https://react.dev/) and [Next.js](https://nextjs.org/).",
+              "Optimized [AWS EC2](https://aws.amazon.com/ec2/) instances for cost-efficiency and implemented [Docker](https://www.docker.com/) + [Nginx](https://nginx.org/) for robust CI/CD flows.",
           },
           {
-            content: "Improved CI/CD pipeline reducing deployment time by 30%.",
+            content:
+              "Delivered core features in a **fast-paced environment**, refactoring legacy modules to improve overall performance and code maintainability.",
+          },
+          {
+            content:
+              "Maintained clean Git history via advanced **cherry-picking** and authored technical docs for **CI/CD** pipelines and deployment scripts.",
           },
         ],
-        techBadges: ["React", "Next.js", "TypeScript", "Jest", "GitHub Actions"],
       },
     ],
   },

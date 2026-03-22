@@ -197,7 +197,7 @@ export const Hero = () => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
+                className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
                 aria-label={ariaLabel}
                 title={title}
               >
@@ -233,7 +233,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
                     aria-hidden="true"
                   >
                     <Icon className={iconClass} />
@@ -293,7 +293,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
                     aria-hidden="true"
                   >
                     <Icon className={cn(iconClass, "size-5")} />
@@ -319,7 +319,7 @@ function AnimateName() {
     >
       {/* Animated background grid */}
       <motion.div
-        className="bg-background bg-grid absolute inset-0 z-0 h-full w-full bg-[size:16px_16px]"
+        className="bg-background bg-grid absolute inset-0 z-0 h-full w-full bg-size[16px_16px]"
         aria-hidden="true"
         tabIndex={-1}
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
