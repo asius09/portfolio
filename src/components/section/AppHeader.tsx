@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IconBrandGithubFilled, IconSun, IconMoon } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 import React, { useEffect, useState, useRef } from "react";
 import { Button } from "../ui/Button";
 import {
@@ -58,7 +58,7 @@ export const AppHeader = () => {
 
   return (
     <header
-      className="bg-background border-border/30 fixed top-0 left-0 z-50 flex min-h-12 w-full items-center justify-center border-b-[1px]"
+      className="bg-background border-border/30 fixed top-0 left-0 z-50 flex min-h-12 w-full items-center justify-center border-b"
       role="banner"
     >
       <div className="flex w-full max-w-3xl items-center justify-between px-6">
@@ -91,58 +91,63 @@ export const AppHeader = () => {
           </AnimatePresence>
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <Button
-            className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
-            variant="ghost"
-          >
-            <Link
-              href="https://github.com/asius09"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <IconBrandGithubFilled
-                className="size-5"
-                style={{ color: "var(--color-foreground)" }}
-              />
-              <Tooltip className="-bottom-6 after:-top-1.5" arrowDir="upward">
-                GitHub
-              </Tooltip>
-            </Link>
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                variant="ghost"
+              >
+                <Link
+                  href="https://github.com/asius09"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <IconBrandGithubFilled
+                    className="size-5"
+                    style={{ color: "var(--color-foreground)" }}
+                  />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              GitHub
+            </TooltipContent>
+          </Tooltip>
 
-          <Button
-            onClick={handleToggleTheme}
-            aria-label="Toggle theme"
-            className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
-            type="button"
-            variant="ghost"
-          >
-            <IconMoon
-              className={cn(
-                "absolute size-4.5 text-blue-400 transition-transform duration-300",
-                resolvedTheme === "light"
-                  ? "scale-100 rotate-0 opacity-100"
-                  : "scale-75 rotate-90 opacity-0",
-              )}
-              aria-hidden={resolvedTheme !== "light"}
-            />
-            <IconSun
-              className={cn(
-                "absolute size-5 text-yellow-400 transition-transform duration-300",
-                resolvedTheme === "dark"
-                  ? "scale-100 rotate-0 opacity-100"
-                  : "scale-75 -rotate-90 opacity-0",
-              )}
-              aria-hidden={resolvedTheme !== "dark"}
-            />
-            <Tooltip
-              className="-bottom-8 text-wrap after:-top-1.5 md:-bottom-6 md:text-nowrap"
-              arrowDir="upward"
-            >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={handleToggleTheme}
+                aria-label="Toggle theme"
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                type="button"
+                variant="ghost"
+              >
+                <IconMoon
+                  className={cn(
+                    "absolute size-4.5 text-blue-400 transition-transform duration-300",
+                    resolvedTheme === "light"
+                      ? "scale-100 rotate-0 opacity-100"
+                      : "scale-75 rotate-90 opacity-0",
+                  )}
+                  aria-hidden={resolvedTheme !== "light"}
+                />
+                <IconSun
+                  className={cn(
+                    "absolute size-5 text-yellow-400 transition-transform duration-300",
+                    resolvedTheme === "dark"
+                      ? "scale-100 rotate-0 opacity-100"
+                      : "scale-75 -rotate-90 opacity-0",
+                  )}
+                  aria-hidden={resolvedTheme !== "dark"}
+                />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
               Toggle theme
-            </Tooltip>
-          </Button>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </header>

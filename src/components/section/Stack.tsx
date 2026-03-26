@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { stackItems } from "@/data/techStack";
 import { motion, Transition, useAnimation } from "motion/react";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 
 // Animation configs (inspired by About.tsx, but for horizontal stretch)
 const fadeInUpInitial = {
@@ -149,34 +149,32 @@ export const Stack = () => {
               delay: baseDelay + step * (3 + idx),
             }}
           >
-            <motion.button
-              type="button"
-              tabIndex={0}
-              aria-label={label}
-              className="flex items-center justify-center rounded-full bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              whileHover={{ rotate: 18 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 15,
-              }}
-              style={{ willChange: "transform" }}
-            >
-              <Icon
-                className={`size-8 ${className}`}
-                aria-hidden="true"
-                focusable="false"
-                title={label}
-              />
-            </motion.button>
-            {/* Tooltip */}
-            <Tooltip
-              className="-bottom-8 text-nowrap after:-top-1 z-[10000]"
-              id={`tooltip-${key}`}
-              arrowDir="upward"
-            >
-              {label}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <motion.button
+                  type="button"
+                  tabIndex={0}
+                  aria-label={label}
+                  className="flex items-center justify-center rounded-full bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  whileHover={{ rotate: 18 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
+                  }}
+                  style={{ willChange: "transform" }}
+                >
+                  <Icon
+                    className={`size-8 ${className}`}
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                </motion.button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="z-10000">
+                {label}
+              </TooltipContent>
             </Tooltip>
           </motion.li>
         ))}

@@ -8,7 +8,7 @@ import { motion, Transition } from "motion/react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { Button } from "../ui/Button";
 import { IconCopy } from "@tabler/icons-react";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 
 type FadeInUp = {
   y: number;
@@ -184,7 +184,7 @@ export const Hero = () => {
             delay: 0.18,
           }}
         >
-          {socials.map(({ href, ariaLabel, title, Icon, iconClass }, idx) => (
+          {socials.map(({ href, ariaLabel, Icon, iconClass }, idx) => (
             <motion.div
               key={href}
               initial={iconInitial}
@@ -192,17 +192,22 @@ export const Hero = () => {
               viewport={{ once: true, amount: 0.6 }}
               transition={iconTransition(idx)}
             >
-              <Link
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
-                aria-label={ariaLabel}
-                title={title}
-              >
-                <Icon className={cn(iconClass, "size-5")} />
-                <Tooltip className="-top-6 after:top-full">{ariaLabel}</Tooltip>
-              </Link>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
+                    aria-label={ariaLabel}
+                  >
+                    <Icon className={cn(iconClass, "size-5")} />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  {ariaLabel}
+                </TooltipContent>
+              </Tooltip>
             </motion.div>
           ))}
         </motion.nav>
@@ -265,18 +270,21 @@ export const Hero = () => {
                     >
                       {item.text}
                     </Link>
-                    <Button
-                      className="hover:text-foreground text-mute-foreground relative size-5 rounded-full text-xs font-medium transition-colors group-hover:opacity-100 md:opacity-0"
-                      variant="ghost"
-                      onClick={() => handleCopy?.(item.text)}
-                      aria-label={`Copy ${item.text} to clipboard`}
-                      title="Copy to clipboard"
-                    >
-                      <IconCopy stroke={2} className="size-4" />
-                      <Tooltip className="-top-4 after:-bottom-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          className="hover:text-foreground text-mute-foreground relative size-5 rounded-full text-xs font-medium transition-colors group-hover:opacity-100 md:opacity-0"
+                          variant="ghost"
+                          onClick={() => handleCopy?.(item.text)}
+                          aria-label={`Copy ${item.text} to clipboard`}
+                        >
+                          <IconCopy stroke={2} className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
                         {copied ? "Copied!" : "Copy"}
-                      </Tooltip>
-                    </Button>
+                      </TooltipContent>
+                    </Tooltip>
                   </motion.span>
                 </motion.li>
               );
@@ -356,12 +364,16 @@ function AnimateName() {
         aria-describedby="brand-tooltip"
       >
         asius
-        <Tooltip
-          className="-top-1 w-full tracking-wider capitalize after:-bottom-1.5 after:left-[50.6%] md:-top-2 md:text-xs"
-          id="brand-tooltip"
-          aria-live="polite"
-        >
-          A future brand name I intend to build showcasing my vision
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="sr-only">asius information</span>
+          </TooltipTrigger>
+          <TooltipContent 
+            className="w-full max-w-xs tracking-normal normal-case text-center text-xs"
+            side="top"
+          >
+            A future brand name I intend to build showcasing my vision
+          </TooltipContent>
         </Tooltip>
       </motion.h1>
     </header>
