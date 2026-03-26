@@ -7,7 +7,7 @@ import { Footer } from "@/components/section/Footer";
 import { Hero } from "@/components/section/Hero";
 import { Project } from "@/components/section/Project";
 import { Stack } from "@/components/section/Stack";
-import { WorkingIdea } from "@/components/WorkingIdea";
+import { GithubContributionCard } from "@/components/GithubContributionCard";
 import { motion } from "motion/react";
 
 const containerVariants = {
@@ -32,11 +32,11 @@ export default function Home() {
       >
         <Hero />
         <About />
+        <GithubContributionCard />
         <Experience />
         <Stack />
         <Project />
         <Education />
-        <WorkingIdea />
         <Footer />
       </motion.main>
     </div>
