@@ -16,8 +16,8 @@ export interface ExperiencePosition {
     | "Contract"
     | "Freelance"
     | "Other";
-  start: string; // ISO date or "MMM YYYY"
-  end?: string; // ISO date or "Present"
+  start: string; // ISO date or "YYYY-MM-DD"
+  end?: string; // ISO date or "YYYY-MM-DD" or "Present"
   status: "active" | "past" | "ongoing";
   bulletPoints: ExperienceBullet[];
 }
@@ -59,9 +59,9 @@ export const experience: ExperienceCompany[] = [
     positions: [
       {
         icon: IoCodeSlashOutline,
-        role: "Software Engineering Intern",
+        role: "Full-Stack Developer",
         employmentType: "Internship",
-        start: "2025-01",
+        start: "2025-09-15",
         end: "Present",
         status: "active",
         bulletPoints: [

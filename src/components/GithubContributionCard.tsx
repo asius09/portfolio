@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/Tooltip";
 import Link from "next/link";
 
@@ -128,7 +128,7 @@ export const GithubContributionCard = () => {
                         </TooltipTrigger>
                         <TooltipContent side="top" className="text-[10px] py-1.5 px-2 bg-background/95 border-border backdrop-blur-md">
                           <div className="flex flex-col gap-0.5">
-                            {dayData.count} contributions on {dayData.date}
+                            {dayData.count} contributions on {formatDate(dayData.date)}
                           </div>
                         </TooltipContent>
                       </Tooltip>

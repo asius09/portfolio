@@ -2,19 +2,17 @@ import { useState } from "react";
 import { ExperienceCompany } from "@/data/experience";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-
+import { cn, formatDuration } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 function formatDateRange(start: string, end?: string) {
   if (!start) return "";
-  const s = start.match(/^\d{4}-\d{2}$/) ? start.split("-").reverse().join("/") : start;
+  const s = formatDate(start, { showDate: false });
   let formattedEnd = "";
   if (end) {
     formattedEnd =
       end === "Present"
         ? "Present"
-        : end.match(/^\d{4}-\d{2}$/)
-          ? end.split("-").reverse().join("/")
-          : end;
+        : formatDate(end, { showDate: false });
   }
   return formattedEnd ? `${s}-${formattedEnd}` : s;
 }
@@ -82,7 +80,10 @@ export const ExperienceCard = (company: ExperienceCompany) => {
               {firstPosition.employmentType} |
               {
                 firstPosition.start && (
-                  <span className="ml-2">{formatDateRange(firstPosition.start, firstPosition.end)}</span>
+                  <span className="ml-2">{formatDateRange(firstPosition.start, firstPosition.end)} <span className="text-[10px] font-medium tracking-tight">
+                    ({formatDuration(firstPosition.start, firstPosition.end === 'Present' ? new Date().toISOString() : firstPosition.end)})
+                  </span>
+                  </span>
                 )
               }
             </span>
