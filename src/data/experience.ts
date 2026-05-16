@@ -10,12 +10,12 @@ export interface ExperiencePosition {
   icon: ReactNode | IconType;
   role: string;
   employmentType:
-    | "Full-time"
-    | "Part-time"
-    | "Internship"
-    | "Contract"
-    | "Freelance"
-    | "Other";
+  | "Full-time"
+  | "Part-time"
+  | "Internship"
+  | "Contract"
+  | "Freelance"
+  | "Other";
   start: string; // ISO date or "YYYY-MM-DD"
   end?: string; // ISO date or "YYYY-MM-DD" or "Present"
   status: "active" | "past" | "ongoing";
@@ -35,6 +35,66 @@ export interface ExperienceCompany {
 }
 
 export const experience: ExperienceCompany[] = [
+   {
+    companyName: "Only2U Fashion",
+    status: "past",
+    companyDisplay: {
+      logoUrl: "/o2u.png",
+      websiteUrl: "https://only2u.com",
+      displayName: "Only2U",
+    },
+    techBadges: [
+      "React",
+      "React Native",
+      "TypeScript",
+      "Vercel",
+      "AWS",
+      "Git",
+      "Supabase",
+      "Framer Motion",
+      "Next.js",
+      "Tailwind CSS",
+      "Shadcn UI",
+      "CMS",
+      "Cron Jobs",
+    ],
+    positions: [
+      {
+        icon: IoCodeSlashOutline,
+        role: "Full-Stack Developer",
+        employmentType: "Freelance",
+        start: "2026-04-01",
+        end: "2026-05-12",
+        status: "past",
+        bulletPoints: [
+          {
+            content:
+              "Built and maintained scalable CMS and analytics platforms using [Next.js](https://nextjs.org/), [Supabase](https://supabase.com/), and [PostgreSQL](https://www.postgresql.org/) with focus on clean architecture and performance.",
+          },
+          {
+            content:
+              "Developed internal admin systems enabling teams and vendors to manage content, track analytics, and control platform operations through a centralized dashboard.",
+          },
+          {
+            content:
+              "Implemented secure authentication flows with email, username, and employee-code based access alongside structured **role-based permissions** for admins and vendors.",
+          },
+          {
+            content:
+              "Integrated external platforms including [Shopify](https://www.shopify.com/) and inventory management systems with custom backend services for streamlined data synchronization.",
+          },
+          {
+            content:
+              "Worked on mobile application improvements by fixing production bugs, optimizing existing flows, and implementing new user-facing features across the platform.",
+          },
+          {
+            content:
+              "Refactored reusable components, standardized folder structures, and improved overall code maintainability across frontend and backend systems.",
+          },
+        ]
+      },
+    ],
+  },
   {
     companyName: "Babysteps",
     status: "active",
