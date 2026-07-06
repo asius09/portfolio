@@ -94,7 +94,7 @@ export const projects: Project[] = [
     ],
     github: "https://github.com/asius09/stylesnap-ai",
     live: "https://stylesnap-ai.vercel.app/",
-    image: "/stylesnap.webp",
+    image: "/stylesnap-project.png",
     stacks: [
       {
         buttonKey: "nextjs",
@@ -142,7 +142,7 @@ export const projects: Project[] = [
   },
 
   {
-    name: "r0.asius.in",
+    name: "Resume Zero: A local resume builder",
     description:
       "Minimal resume builder focused on speed, simplicity, and clean PDF generation with a distraction-free editing experience.",
     features: [
@@ -154,7 +154,7 @@ export const projects: Project[] = [
     ],
     github: "",
     live: "https://r0.asius.in",
-    image: "/r0.png",
+    image: "/r0-project.png",
     stacks: [
       {
         buttonKey: "nextjs",
