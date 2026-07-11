@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Zain } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { Analytics } from "@vercel/analytics/react";
 
 export const zain = Zain({
   variable: "--font-asius",
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className="font-['IBM_Plex_Mono',monospace]">
         <ThemeProvider defaultTheme="system" enableSystem>
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

@@ -5,9 +5,17 @@ import {
   IconMapPin,
   IconPhone,
   IconWorld,
+  IconFileDescription
 } from "@tabler/icons-react";
 
 export const keyPoints = [
+  {
+    icon: IconFileDescription,
+    iconClass: "text-red-400",
+    text: "Resume",
+    type: "link",
+    href: "/bobby.pdf",
+  },
   {
     icon: IconBrandReact,
     iconClass: "text-cyan-400",

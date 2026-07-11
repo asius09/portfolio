@@ -13,6 +13,7 @@
   "dependencies": {
     "@lobehub/icons": "^2.30.0",
     "@tabler/icons-react": "^3.35.0",
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "motion": "^12.23.12",
     "next": "16.0.10",
@@ -28,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.10.43",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
     "prettier": "^3.6.2",
