@@ -1,8 +1,6 @@
 "use client";
 import { motion, Transition } from "motion/react";
-import React from "react";
 
-// Hero's fadeInUp animation config
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
@@ -21,7 +19,6 @@ const fadeInUpSpring: Transition = {
 };
 
 export const About = () => {
-  // Match Hero's stagger rhythm
   const baseDelay = 0.18;
   const step = 0.13;
 
@@ -59,7 +56,7 @@ export const About = () => {
           delay: baseDelay + step * 2,
         }}
       >
-        Hi, I’m Bobby — a frontend developer who turns 1 AM ideas into working
+        Hi, I’m Bobby — a full stack developer who turns 1 AM ideas into working
         apps.
       </motion.p>
       <motion.p
