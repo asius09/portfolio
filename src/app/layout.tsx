@@ -21,9 +21,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bobby Tiwari | Portfolio",
+  title: "Bobby Tiwari | Full Stack Developer",
   description:
-    "Personal portfolio of Bobby Tiwari. Frontend developer, React, Next.js, and more.",
+    "Personal portfolio of Bobby Tiwari. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
 };
 
 export default function RootLayout({

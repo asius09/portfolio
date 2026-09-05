@@ -167,7 +167,7 @@ export const Hero = () => {
                 "text-foreground/60 text-base font-normal",
               )}
             >
-              Frontend Developer
+              Full Stack Developer
             </motion.span>
           </div>
         </div>

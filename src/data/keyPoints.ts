@@ -19,7 +19,7 @@ export const keyPoints = [
   {
     icon: IconBrandReact,
     iconClass: "text-cyan-400",
-    text: "Frontend Developer",
+    text: "Full Stack Developer",
     type: "text",
   },
   {
