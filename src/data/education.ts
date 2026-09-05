@@ -2,7 +2,7 @@ export const education: { institution: string, qualification: string, details: s
   {
     institution: "Indira Gandhi National Open University (IGNOU)",
     qualification: "Bachelor of Computer Applications (BCA)",
-    details: "2nd Year (Pursuing)",
+    details: "3rd Year (Pursuing)",
   },
   {
     institution: "Shri Guru Tegh Bahadur Khalsa Boys Sr. Sec. School",
