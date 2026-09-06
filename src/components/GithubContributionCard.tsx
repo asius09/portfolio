@@ -90,11 +90,11 @@ export const GithubContributionCard = () => {
     return contributions[currentIdx];
   };
 
-  console.log(error);
   if (error) return null;
+
   return (
     <section id="working-idea-section" className="mt-12 w-full animate-in fade-in slide-in-from-bottom-2 duration-700">
-      <div className="bg-background/40 backdrop-blur-sm rounded-lg w-full overflow-hidden">
+      <div className="bg-background/40 backdrop-blur-sm rounded-lg w-full">
         <div className="flex flex-col gap-2 w-full">
           {/* Month Labels Container */}
           <div className="relative h-4 w-full">
@@ -111,9 +111,9 @@ export const GithubContributionCard = () => {
 
           <div className="flex gap-1">
             {/* Grid */}
-            <div className="flex flex-1 justify-between gap-px sm:gap-[2px]">
+            <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
               {weeks.map((_, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-px sm:gap-[2px] flex-1">
+                <div key={weekIndex} className="flex flex-col gap-px sm:gap-0.5 flex-1">
                   {days.map((_, dayIndex) => {
                     const dayData = getDayData(weekIndex, dayIndex);
                     return (
@@ -121,12 +121,12 @@ export const GithubContributionCard = () => {
                         <TooltipTrigger asChild>
                           <div
                             className={cn(
-                              "aspect-square w-full transition-all hover:scale-150 hover:z-999 cursor-pointer origin-center shadow-xs",
+                              "aspect-square w-full transition-all rounded-xs cursor-pointer origin-center shadow-xs",
                               getLevelClass(dayData.count)
                             )}
                           />
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="text-[10px] py-1.5 px-2 bg-background/95 border-border backdrop-blur-md">
+                        <TooltipContent side="top" className="text-[10px] py-1 px-1.5 bg-background/95 border-border backdrop-blur-md">
                           <div className="flex flex-col gap-0.5">
                             {dayData.count} contributions on {formatDate(dayData.date)}
                           </div>
@@ -170,8 +170,3 @@ export const GithubContributionCard = () => {
     </section>
   );
 };
-
-
-
-
-
