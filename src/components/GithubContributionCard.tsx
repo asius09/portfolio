@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { cn, formatDate } from "@/lib/utils";
-import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/Tooltip";
 import Link from "next/link";
 
 interface ContributionDay {
@@ -11,10 +10,26 @@ interface ContributionDay {
 }
 
 export const GithubContributionCard = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [totalContributions, setTotalContributions] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    isGliding: boolean;
+    x: number;
+    y: number;
+    count: number;
+    date: string;
+  }>({
+    visible: false,
+    isGliding: false,
+    x: 0,
+    y: 0,
+    count: 0,
+    date: "",
+  });
 
   useEffect(() => {
     const fetchContributions = async () => {
@@ -90,18 +105,53 @@ export const GithubContributionCard = () => {
     return contributions[currentIdx];
   };
 
+  const handleCellEnter = (
+    e: React.MouseEvent<HTMLDivElement>,
+    dayData: ContributionDay,
+  ) => {
+    const target = e.currentTarget;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const targetRect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const x = targetRect.left - containerRect.left + targetRect.width / 2;
+    const y = targetRect.top - containerRect.top;
+
+    setTooltip((prev) => ({
+      visible: true,
+      isGliding: prev.visible,
+      x,
+      y,
+      count: dayData.count,
+      date: dayData.date,
+    }));
+  };
+
+  const handleContainerLeave = () => {
+    setTooltip((prev) => ({
+      ...prev,
+      visible: false,
+      isGliding: false,
+    }));
+  };
+
   if (error) return null;
 
   return (
-    <section id="working-idea-section" className="mt-12 w-full animate-in fade-in slide-in-from-bottom-2 duration-700">
-      <div className="bg-background/40 backdrop-blur-sm rounded-lg w-full">
-        <div className="flex flex-col gap-2 w-full">
+    <section
+      id="working-idea-section"
+      className="animate-in fade-in slide-in-from-bottom-2 mt-12 w-full duration-700"
+    >
+      <div className="bg-background/40 w-full rounded-lg backdrop-blur-sm">
+        <div className="flex w-full flex-col gap-2">
           {/* Month Labels Container */}
           <div className="relative h-4 w-full">
             {monthLabels.map((month, idx) => (
               <span
                 key={`${month.name}-${idx}`}
-                className="absolute text-xs text-muted-foreground font-medium whitespace-nowrap"
+                className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
                 style={{ left: `${(month.col / 52) * 100}%` }}
               >
                 {month.name}
@@ -109,29 +159,66 @@ export const GithubContributionCard = () => {
             ))}
           </div>
 
-          <div className="flex gap-1">
+          <div
+            ref={containerRef}
+            className="relative flex gap-1"
+            onMouseLeave={handleContainerLeave}
+          >
+            <div
+              className={cn(
+                "pointer-events-none absolute top-0 left-0 z-50 select-none",
+                tooltip.isGliding
+                  ? "transition-transform duration-150 ease-out will-change-transform"
+                  : "transition-none",
+              )}
+              style={{
+                transform: `translate3d(${tooltip.x}px, ${tooltip.y - 8}px, 0) translate(-50%, -100%)`,
+              }}
+            >
+              <div
+                className={cn(
+                  "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
+                  tooltip.visible
+                    ? "translate-y-0 scale-100 opacity-100"
+                    : "pointer-events-none translate-y-1 scale-95 opacity-0",
+                )}
+              >
+                <div className="border-border/70 bg-background/95 text-foreground relative flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
+                  <span className="font-semibold text-blue-500">
+                    {tooltip.count}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {tooltip.count === 1 ? "contribution" : "contributions"} on
+                  </span>
+                  <span className="text-foreground font-medium">
+                    {tooltip.date !== "No data"
+                      ? formatDate(tooltip.date)
+                      : "No data"}
+                  </span>
+
+                  <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+                </div>
+              </div>
+            </div>
+
             {/* Grid */}
             <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
               {weeks.map((_, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-px sm:gap-0.5 flex-1">
+                <div
+                  key={weekIndex}
+                  className="flex flex-1 flex-col gap-px sm:gap-0.5"
+                >
                   {days.map((_, dayIndex) => {
                     const dayData = getDayData(weekIndex, dayIndex);
                     return (
-                      <Tooltip key={dayIndex} delayDuration={0}>
-                        <TooltipTrigger asChild>
-                          <div
-                            className={cn(
-                              "aspect-square w-full transition-all rounded-xs cursor-pointer origin-center shadow-xs",
-                              getLevelClass(dayData.count)
-                            )}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-[10px] py-1 px-1.5 bg-background/95 border-border backdrop-blur-md">
-                          <div className="flex flex-col gap-0.5">
-                            {dayData.count} contributions on {formatDate(dayData.date)}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
+                      <div
+                        key={dayIndex}
+                        onMouseEnter={(e) => handleCellEnter(e, dayData)}
+                        className={cn(
+                          "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-all duration-100 ease-out hover:z-10 hover:scale-110 hover:ring-1 hover:ring-blue-400/70",
+                          getLevelClass(dayData.count),
+                        )}
+                      />
                     );
                   })}
                 </div>
@@ -139,27 +226,33 @@ export const GithubContributionCard = () => {
             </div>
           </div>
 
-          {/* Footer Info */}
-          <div className="flex flex-row items-center justify-between mt-3 px-1">
-            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <div className="mt-3 flex flex-row items-center justify-between px-1">
+            <div className="text-muted-foreground flex items-center gap-2 text-[10px]">
               <span className="text-foreground/80 font-medium">
-                {loading ? "..." : totalContributions.toLocaleString()} contributions
+                {loading ? "..." : totalContributions.toLocaleString()}{" "}
+                contributions
               </span>
               <span className="opacity-40 select-none">•</span>
               <Link
                 href="https://github.com/asius09"
                 target="_blank"
-                className="hover:underline hover:text-blue-500 transition-colors flex items-center gap-1"
+                className="flex items-center gap-1 transition-colors hover:text-blue-500 hover:underline underline-offset-2"
               >
                 Github
               </Link>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground select-none">
+            <div className="text-muted-foreground flex items-center gap-1.5 text-[9px] select-none">
               <span className="opacity-50">Less</span>
               <div className="flex gap-0.5">
                 {[0, 2, 5, 8, 12].map((level) => (
-                  <div key={level} className={cn("size-2 sm:size-2.5 rounded-[1px]", getLevelClass(level))} />
+                  <div
+                    key={level}
+                    className={cn(
+                      "size-2 rounded-[1px] sm:size-2.5",
+                      getLevelClass(level),
+                    )}
+                  />
                 ))}
               </div>
               <span className="opacity-50">More</span>
