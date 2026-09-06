@@ -1,37 +1,40 @@
 import { useState } from "react";
 
-/**
- * This hooks will give hanldeCopyToClipboard function to use.
- *
- */
 export function useCopyToClipboard() {
-  const [copied, setCopied] = useState(false);
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+
   const handleCopy = async (content: string) => {
     if (!content) {
-      console.log("No Content present to copy.");
+      console.warn("No content provided to copy.");
+      return;
     }
     try {
       await navigator.clipboard.writeText(content);
-      setCopied(true);
-
-      //Reset: Copies state after 2000
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedText(content);
+      setTimeout(() => setCopiedText(null), 2000);
     } catch (err) {
-      console.log("Failed to copy the content", err);
-      const textArea = document.createElement("textarea");
-      textArea.value = content;
-      textArea.style.position = "fixed";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
+      console.warn("Failed to copy using clipboard API, trying fallback", err);
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = content;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
 
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+        setCopiedText(content);
+        setTimeout(() => setCopiedText(null), 2000);
+      } catch (fallbackErr) {
+        console.error("Failed to copy content", fallbackErr);
+      }
     }
   };
-  return { copied, handleCopy };
+
+  return {
+    copied: Boolean(copiedText),
+    copiedText,
+    handleCopy,
+  };
 }

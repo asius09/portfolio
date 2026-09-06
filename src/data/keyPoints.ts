@@ -15,6 +15,7 @@ export const keyPoints = [
     text: "Resume",
     type: "link",
     href: "/bobby.pdf",
+    copyValue: "https://asius.in/bobby.pdf",
   },
   {
     icon: IconBrandReact,
@@ -34,6 +35,7 @@ export const keyPoints = [
     text: "+91 93154 05304",
     type: "phone",
     href: "tel:+919315405304",
+    copyValue: "+91 93154 05304",
   },
   {
     icon: IconMail,
@@ -41,6 +43,7 @@ export const keyPoints = [
     text: "itsmeasius@gmail.com",
     type: "email",
     href: "mailto:itsmeasius@gmail.com",
+    copyValue: "itsmeasius@gmail.com",
   },
   {
     icon: IconWorld,
@@ -48,6 +51,7 @@ export const keyPoints = [
     text: "asius.in",
     type: "site",
     href: "https://asius.in",
+    copyValue: "https://asius.in",
   },
   {
     icon: IconGenderMale,

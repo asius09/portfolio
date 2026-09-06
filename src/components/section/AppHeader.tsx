@@ -26,7 +26,6 @@ export const AppHeader = () => {
     ) as HTMLElement | null;
   }, []);
 
-  // Use framer-motion's scrollY to determine if hero header is out of view
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", () => {
@@ -42,14 +41,12 @@ export const AppHeader = () => {
       setShowLogo(rect.bottom <= 82);
     }
     window.addEventListener("resize", handleResize);
-    // Initial check
     handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [mounted]);
 
-  // Animate icon on theme toggle
   const handleToggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };

@@ -5,9 +5,7 @@ import Link from "next/link";
 import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { Button } from "../ui/Button";
-import { IconCopy } from "@tabler/icons-react";
+import { CopyButton } from "../ui/CopyButton";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 
 type FadeInUp = {
@@ -34,12 +32,12 @@ const fadeInUpAnimate: FadeInUp = {
 };
 const fadeInUpTransition: Transition = {
   duration: 0.6,
-  ease: [0.25, 0.1, 0.25, 1], // cubic-bezier for "easeOut"
+  ease: [0.25, 0.1, 0.25, 1],
 };
 
 const fadeInUpSpring: Transition = {
   ...fadeInUpTransition,
-  type: "spring", // 'spring' is not in the type, so we cast
+  type: "spring",
   stiffness: 80,
 };
 
@@ -61,7 +59,6 @@ const iconTransition = (idx: number): Transition => ({
   stiffness: 80,
 });
 
-// Orchestration variants for ul and li
 const listVariants = {
   visible: {
     opacity: 1,
@@ -99,7 +96,6 @@ const itemVariants = {
 };
 
 export const Hero = () => {
-  const { copied, handleCopy } = useCopyToClipboard();
   return (
     <section
       className="flex flex-col items-center justify-start"
@@ -225,6 +221,7 @@ export const Hero = () => {
           {keyPoints.map((item, idx) => {
             const Icon = item.icon;
             const iconClass = item.iconClass;
+
             if (item.href) {
               return (
                 <motion.li
@@ -270,21 +267,7 @@ export const Hero = () => {
                     >
                       {item.text}
                     </Link>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          className="hover:text-foreground text-mute-foreground relative size-5 rounded-full text-xs font-medium transition-colors group-hover:opacity-100 md:opacity-0"
-                          variant="ghost"
-                          onClick={() => handleCopy?.(item.text)}
-                          aria-label={`Copy ${item.text} to clipboard`}
-                        >
-                          <IconCopy stroke={2} className="size-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="top">
-                        {copied ? "Copied!" : "Copy"}
-                      </TooltipContent>
-                    </Tooltip>
+                    {item.copyValue && <CopyButton value={item.copyValue} />}
                   </motion.span>
                 </motion.li>
               );
