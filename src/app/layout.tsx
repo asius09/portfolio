@@ -22,7 +22,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Bobby | Full Stack Developer",
+    default: "Bobby - Full Stack Developer",
     template: "%s | Bobby",
   },
   description:
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://asius.in",
     siteName: "Bobby",
-    title: "Bobby | Full Stack Developer",
+    title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     images: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Bobby | Full Stack Developer",
+    title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     images: ["/logo-512.png"],
