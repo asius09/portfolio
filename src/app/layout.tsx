@@ -21,9 +21,57 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bobby Tiwari | Full Stack Developer",
+  title: {
+    default: "Bobby Tiwari | Full Stack Developer",
+    template: "%s | Bobby Tiwari",
+  },
   description:
     "Personal portfolio of Bobby Tiwari. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
+  metadataBase: new URL("https://asius.in"),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://asius.in",
+    siteName: "Bobby Tiwari",
+    title: "Bobby Tiwari | Full Stack Developer",
+    description:
+      "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
+    images: [
+      {
+        url: "/logo-512.png",
+        width: 512,
+        height: 512,
+        alt: "Bobby Tiwari",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Bobby Tiwari | Full Stack Developer",
+    description:
+      "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
+    images: ["/logo-512.png"],
+    creator: "@_asius",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/logo-192.png",
+    apple: "/logo-512.png",
+  },
+  alternates: {
+    canonical: "https://asius.in",
+  },
 };
 
 export default function RootLayout({
@@ -42,6 +90,42 @@ export default function RootLayout({
           {children}
           <Analytics />
         </ThemeProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Bobby Tiwari",
+              url: "https://asius.in",
+              jobTitle: "Full Stack Developer",
+              email: "itsmeasius@gmail.com",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "New Delhi",
+                addressCountry: "IN",
+              },
+              sameAs: [
+                "https://github.com/asius09",
+                "https://www.linkedin.com/in/bobby09/",
+                "https://x.com/_asius",
+              ],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Bobby Tiwari",
+              url: "https://asius.in",
+              description:
+                "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
+            }),
+          }}
+        />
       </body>
     </html>
   );
