@@ -22,18 +22,18 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Bobby Tiwari | Full Stack Developer",
-    template: "%s | Bobby Tiwari",
+    default: "Bobby | Full Stack Developer",
+    template: "%s | Bobby",
   },
   description:
-    "Personal portfolio of Bobby Tiwari. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
+    "Personal portfolio of Bobby. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
   metadataBase: new URL("https://asius.in"),
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://asius.in",
-    siteName: "Bobby Tiwari",
-    title: "Bobby Tiwari | Full Stack Developer",
+    siteName: "Bobby",
+    title: "Bobby | Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     images: [
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
         url: "/logo-512.png",
         width: 512,
         height: 512,
-        alt: "Bobby Tiwari",
+        alt: "Bobby",
       },
     ],
   },
   twitter: {
     card: "summary",
-    title: "Bobby Tiwari | Full Stack Developer",
+    title: "Bobby | Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     images: ["/logo-512.png"],
@@ -96,7 +96,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              name: "Bobby Tiwari",
+              name: "Bobby",
               url: "https://asius.in",
               jobTitle: "Full Stack Developer",
               email: "itsmeasius@gmail.com",
@@ -119,7 +119,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Bobby Tiwari",
+              name: "Bobby",
               url: "https://asius.in",
               description:
                 "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",

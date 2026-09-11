@@ -16,7 +16,7 @@
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);
   --mute-foreground: theme(colors.neutral.500);
-  --mute: theme(colors.neutral.700);
+  --mute: theme(colors.neutral.200);
   --card: theme(colors.white);
   --card-foreground: theme(colors.zinc.400);
   --accent: theme(colors.blue.800);

@@ -24,25 +24,32 @@ export const ExperienceCard = (company: ExperienceCompany) => {
 
   return (
     <div className={cn("w-full", "mb-2")}>
-      <button
+      <div
         className={cn(
           "w-full",
           "flex",
           "items-center",
           "gap-2",
-          "focus:outline-none",
-          "rounded-md",
-          "hover:bg-muted",
-          "transition",
-          "py-3",
+          "rounded-lg",
+          "hover:bg-neutral-100/80 dark:hover:bg-neutral-900/60",
+          "transition-colors",
+          "p-2",
+          "cursor-pointer",
         )}
         onClick={() => setOpen((o) => !o)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((o) => !o);
+          }
+        }}
         aria-expanded={open}
         aria-controls={`exp-details-${companyName.replace(/\s+/g, "")}`}
         style={{ WebkitTapHighlightColor: "transparent" }}
-        type="button"
       >
-        <span className="relative size-8 shrink-0 overflow-hidden rounded-full">
+        <span className="border-border/50 relative size-8 shrink-0 overflow-hidden rounded-full border">
           <Image
             src={logoUrl}
             alt={companyDisplay.displayName || companyName}
@@ -51,7 +58,13 @@ export const ExperienceCard = (company: ExperienceCompany) => {
             className={cn("rounded-full", "h-full w-full object-contain")}
           />
         </span>
-        <span className={cn("flex-1", "min-w-0 text-left", "flex flex-row")}>
+        <span
+          className={cn(
+            "flex-1",
+            "min-w-0 text-left",
+            "flex flex-row items-center",
+          )}
+        >
           <Link
             className={cn(
               "block",
@@ -59,12 +72,14 @@ export const ExperienceCard = (company: ExperienceCompany) => {
               "font-semibold",
               "text-foreground",
               "truncate",
-              "underline-offset-2 hover:underline",
+              "underline-offset-4 hover:text-blue-600 hover:underline dark:hover:text-blue-400",
+              "transition-colors",
               "cursor-pointer",
             )}
             href={companyUrl ?? "/"}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
           >
             {companyDisplay.displayName || companyName}
           </Link>
@@ -99,13 +114,13 @@ export const ExperienceCard = (company: ExperienceCompany) => {
             </span>
           )}
         </span>
-      </button>
+      </div>
       <div className={cn("w-full", "flex", "items-start", "gap-1")}>
-        <span className="from-gradient-from to-gradient-to text-foreground mt-2 flex size-6 shrink-0 items-center justify-center rounded-md bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
+        <span className="border-border/60 bg-card text-foreground mt-2 flex size-6 shrink-0 items-center justify-center rounded-md border shadow-xs">
           {typeof firstPosition.icon === "function" ? (
             <firstPosition.icon
-              className="text-foreground/60 size-3"
-              strokeWidth={0.25}
+              className="text-foreground/70 size-3"
+              strokeWidth={1.5}
             />
           ) : (
             firstPosition.icon
@@ -119,11 +134,11 @@ export const ExperienceCard = (company: ExperienceCompany) => {
             "gap-2",
             "focus:outline-none",
             "justify-between",
-            "rounded-md",
-            "hover:bg-muted",
-            "transition",
+            "rounded-lg",
+            "hover:bg-neutral-100/80 dark:hover:bg-neutral-900/60",
+            "transition-colors",
             "p-2",
-            "hover:bg-foreground/5 h-full min-h-0",
+            "h-full min-h-0 cursor-pointer",
           )}
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}

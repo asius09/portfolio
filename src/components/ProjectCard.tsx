@@ -31,15 +31,17 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       className={cn(
-        "group from-gradient-from to-gradient-to ring-border flex items-center justify-center rounded-full bg-gradient-to-b px-1 text-right ring-1 outline-none",
-        "cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out",
+        "group border-border/80 bg-card/95 flex items-center justify-center rounded-full border px-1 text-right shadow-xs outline-none hover:bg-neutral-100 dark:border-white/15 dark:bg-neutral-900/90 dark:hover:bg-neutral-800",
+        "cursor-pointer gap-2 p-2 transition-colors duration-200",
         idx !== 0 && "-ml-2 md:-ml-3",
-        buttonKey === "nextjs" ? "text-gradient-foreground" : className,
+        buttonKey === "nextjs" ? "text-foreground" : className,
         "relative",
         "h-8 min-w-8 md:h-10 md:min-w-10",
         isActive ? "z-[999]" : `z-[${20 + idx}]`,
-        "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
       )}
+      transition={{
+        layout: { type: "spring", stiffness: 380, damping: 26 },
+      }}
       animate={{
         zIndex: isActive ? 999 : 20 + idx,
       }}
@@ -50,7 +52,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
           aria-hidden={true}
         />
       ) : (
-        <span className="text-gradient-foreground flex size-3 shrink-0 items-center justify-center text-sm font-bold md:size-5 md:text-base">
+        <span className="text-foreground flex size-3 shrink-0 items-center justify-center text-sm font-bold md:size-5 md:text-base">
           {label?.[0]}
         </span>
       )}
@@ -61,6 +63,10 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
+            transition={{
+              width: { type: "spring", stiffness: 380, damping: 26 },
+              opacity: { duration: 0.15 },
+            }}
             style={{
               overflow: "hidden",
               display: "inline-block",
@@ -85,19 +91,7 @@ export const ProjectCard = (project: Project) => {
       tabIndex={-1}
       role="region"
     >
-      <motion.figure
-        whileHover={{
-          scale: 1.015,
-          boxShadow:
-            "0 8px 32px 0 rgba(36,37,46,0.22), 0 1.5px 8px 0 rgba(0,0,0,0.10)",
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 120,
-          damping: 12,
-        }}
-        className="border-border relative aspect-video w-full overflow-hidden rounded-lg border border-solid"
-      >
+      <figure className="border-border relative aspect-video w-full overflow-hidden rounded-lg border border-solid shadow-xs">
         <Image
           src={project.image}
           alt={`Screenshot of ${project.name}`}
@@ -106,7 +100,7 @@ export const ProjectCard = (project: Project) => {
           sizes="(max-width: 768px) 100vw, 1152px"
           priority
         />
-      </motion.figure>
+      </figure>
       <div id="project-content" className="w-full px-1 pt-4">
         <h4
           id="project-title"

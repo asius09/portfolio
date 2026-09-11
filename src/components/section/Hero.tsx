@@ -130,7 +130,7 @@ export const Hero = () => {
           >
             <Image
               src="/profile.webp"
-              alt="Bobby Tiwari profile picture"
+              alt="Bobby profile picture"
               className="object-cover"
               width={64}
               height={64}
@@ -148,7 +148,7 @@ export const Hero = () => {
               viewport={{ once: true, amount: 0.6 }}
               transition={fadeInUpTransition}
             >
-              Bobby Tiwari
+              Bobby
             </motion.h2>
             <motion.span
               initial={fadeInUpInitial}
