@@ -47,8 +47,43 @@ export const AppHeader = () => {
     };
   }, [mounted]);
 
+  const playThemeSound = (nextTheme: string) => {
+    try {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
+      if (!AudioContextClass) return;
+      const ctx = new AudioContextClass();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      if (nextTheme === "dark") {
+        osc.frequency.setValueAtTime(540, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.09);
+      } else {
+        osc.frequency.setValueAtTime(320, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(540, ctx.currentTime + 0.09);
+      }
+
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.09);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 0.09);
+    } catch {
+      return;
+    }
+  };
+
   const handleToggleTheme = () => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+    playThemeSound(nextTheme);
+    setTheme(nextTheme);
   };
 
   if (!mounted) return null;
@@ -91,7 +126,7 @@ export const AppHeader = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
                 variant="ghost"
               >
                 <Link
@@ -100,16 +135,11 @@ export const AppHeader = () => {
                   rel="noopener noreferrer"
                   aria-label="GitHub"
                 >
-                  <IconBrandGithubFilled
-                    className="size-5"
-                    style={{ color: "var(--color-foreground)" }}
-                  />
+                  <IconBrandGithubFilled className="group-hover:text-foreground dark:group-hover:text-foreground size-5 text-neutral-700 transition-colors dark:text-neutral-300" />
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              GitHub
-            </TooltipContent>
+            <TooltipContent side="bottom">GitHub</TooltipContent>
           </Tooltip>
 
           <Tooltip>
@@ -117,13 +147,13 @@ export const AppHeader = () => {
               <Button
                 onClick={handleToggleTheme}
                 aria-label="Toggle theme"
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
                 type="button"
                 variant="ghost"
               >
                 <IconMoon
                   className={cn(
-                    "absolute size-4.5 text-blue-400 transition-transform duration-300",
+                    "absolute size-4.5 text-indigo-600 transition-all duration-300 group-hover:scale-110 dark:text-indigo-400",
                     resolvedTheme === "light"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-75 rotate-90 opacity-0",
@@ -132,7 +162,7 @@ export const AppHeader = () => {
                 />
                 <IconSun
                   className={cn(
-                    "absolute size-5 text-yellow-400 transition-transform duration-300",
+                    "absolute size-5 text-amber-500 transition-all duration-300 group-hover:scale-110 dark:text-amber-400",
                     resolvedTheme === "dark"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-75 -rotate-90 opacity-0",
@@ -141,9 +171,7 @@ export const AppHeader = () => {
                 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              Toggle theme
-            </TooltipContent>
+            <TooltipContent side="bottom">Toggle theme</TooltipContent>
           </Tooltip>
         </div>
       </div>

@@ -56,12 +56,12 @@ export const CopyButton = ({
           onMouseLeave={handleMouseLeave}
           aria-label={copied ? "Copied!" : label}
           className={cn(
-            "relative size-5 rounded-full inline-flex items-center justify-center transition-opacity duration-150 cursor-pointer",
-            "group-hover:opacity-100 md:opacity-0 focus-visible:opacity-100",
+            "relative inline-flex size-5 cursor-pointer items-center justify-center rounded-full transition-opacity duration-150",
+            "group-hover:opacity-100 focus-visible:opacity-100 md:opacity-0",
             copied
               ? "text-green-500 opacity-100"
               : "text-mute-foreground hover:text-foreground",
-            className
+            className,
           )}
         >
           {copied ? (
@@ -71,9 +71,7 @@ export const CopyButton = ({
           )}
         </button>
       </TooltipTrigger>
-      <TooltipContent side="top">
-        {copied ? "Copied!" : label}
-      </TooltipContent>
+      <TooltipContent side="top">{copied ? "Copied!" : label}</TooltipContent>
     </Tooltip>
   );
 };

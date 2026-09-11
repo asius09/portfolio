@@ -5,7 +5,7 @@ import {
   IconMapPin,
   IconPhone,
   IconWorld,
-  IconFileDescription
+  IconFileDescription,
 } from "@tabler/icons-react";
 
 export const keyPoints = [

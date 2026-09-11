@@ -200,9 +200,7 @@ export const Hero = () => {
                     <Icon className={cn(iconClass, "size-5")} />
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent side="top">
-                  {ariaLabel}
-                </TooltipContent>
+                <TooltipContent side="top">{ariaLabel}</TooltipContent>
               </Tooltip>
             </motion.div>
           ))}
@@ -309,7 +307,7 @@ function AnimateName() {
     >
       {/* Animated background grid */}
       <motion.div
-        className="bg-background bg-grid absolute inset-0 z-0 h-full w-full bg-size[16px_16px]"
+        className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
@@ -351,8 +349,8 @@ function AnimateName() {
           <TooltipTrigger asChild>
             <span className="sr-only">asius information</span>
           </TooltipTrigger>
-          <TooltipContent 
-            className="w-full max-w-xs tracking-normal normal-case text-center text-xs"
+          <TooltipContent
+            className="w-full max-w-xs text-center text-xs tracking-normal normal-case"
             side="top"
           >
             A future brand name I intend to build showcasing my vision

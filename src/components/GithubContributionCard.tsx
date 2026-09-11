@@ -1,19 +1,177 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { cn, formatDate } from "@/lib/utils";
+import { motion, AnimatePresence, type Variants } from "motion/react";
+import { cn } from "cn";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 
-interface ContributionDay {
+export type ContributionTheme =
+  | "blue"
+  | "green"
+  | "violet"
+  | "amber"
+  | "rose"
+  | "monochrome";
+
+export interface ThemeConfig {
+  name: ContributionTheme;
+  label: string;
+  levels: [string, string, string, string, string];
+  glowBoxShadow: string;
+  glowRestingShadow: string;
+  accentText: string;
+  activeRing: string;
+}
+
+export const THEMES: Record<ContributionTheme, ThemeConfig> = {
+  blue: {
+    name: "blue",
+    label: "Blue",
+    levels: [
+      "bg-blue-950/5 dark:bg-blue-500/10",
+      "bg-blue-500/25 dark:bg-blue-500/30",
+      "bg-blue-500/50 dark:bg-blue-500/55",
+      "bg-blue-500/75 dark:bg-blue-500/85",
+      "bg-blue-600 shadow-[0_0_6px_rgba(37,99,235,0.35)] dark:bg-blue-500 dark:shadow-[0_0_6px_rgba(59,130,246,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(96, 165, 250, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(37, 99, 235, 0.35)",
+    accentText: "text-blue-600 dark:text-blue-400",
+    activeRing: "hover:ring-blue-400/70 dark:hover:ring-blue-400/70",
+  },
+  green: {
+    name: "green",
+    label: "Green",
+    levels: [
+      "bg-emerald-950/5 dark:bg-emerald-500/10",
+      "bg-emerald-500/25 dark:bg-emerald-500/30",
+      "bg-emerald-500/50 dark:bg-emerald-500/55",
+      "bg-emerald-500/75 dark:bg-emerald-500/85",
+      "bg-emerald-600 shadow-[0_0_6px_rgba(16,185,129,0.35)] dark:bg-emerald-500 dark:shadow-[0_0_6px_rgba(16,185,129,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(52, 211, 153, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(16, 185, 129, 0.35)",
+    accentText: "text-emerald-600 dark:text-emerald-400",
+    activeRing: "hover:ring-emerald-400/70 dark:hover:ring-emerald-400/70",
+  },
+  violet: {
+    name: "violet",
+    label: "Violet",
+    levels: [
+      "bg-purple-950/5 dark:bg-violet-500/10",
+      "bg-violet-500/25 dark:bg-violet-500/30",
+      "bg-violet-500/50 dark:bg-violet-500/55",
+      "bg-violet-500/75 dark:bg-violet-500/85",
+      "bg-violet-600 shadow-[0_0_6px_rgba(147,51,234,0.35)] dark:bg-violet-500 dark:shadow-[0_0_6px_rgba(168,85,247,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(192, 132, 252, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(147, 51, 234, 0.35)",
+    accentText: "text-violet-600 dark:text-violet-400",
+    activeRing: "hover:ring-violet-400/70 dark:hover:ring-violet-400/70",
+  },
+  amber: {
+    name: "amber",
+    label: "Amber",
+    levels: [
+      "bg-amber-950/5 dark:bg-amber-500/10",
+      "bg-amber-500/25 dark:bg-amber-500/30",
+      "bg-amber-500/50 dark:bg-amber-500/55",
+      "bg-amber-500/75 dark:bg-amber-500/85",
+      "bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.35)] dark:bg-amber-500 dark:shadow-[0_0_6px_rgba(245,158,11,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(251, 191, 36, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(245, 158, 11, 0.35)",
+    accentText: "text-amber-600 dark:text-amber-400",
+    activeRing: "hover:ring-amber-400/70 dark:hover:ring-amber-400/70",
+  },
+  rose: {
+    name: "rose",
+    label: "Rose",
+    levels: [
+      "bg-rose-950/5 dark:bg-rose-500/10",
+      "bg-rose-500/25 dark:bg-rose-500/30",
+      "bg-rose-500/50 dark:bg-rose-500/55",
+      "bg-rose-500/75 dark:bg-rose-500/85",
+      "bg-rose-600 shadow-[0_0_6px_rgba(225,29,72,0.35)] dark:bg-rose-500 dark:shadow-[0_0_6px_rgba(244,63,94,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(251, 113, 133, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(225, 29, 72, 0.35)",
+    accentText: "text-rose-600 dark:text-rose-400",
+    activeRing: "hover:ring-rose-400/70 dark:hover:ring-rose-400/70",
+  },
+  monochrome: {
+    name: "monochrome",
+    label: "Mono",
+    levels: [
+      "bg-zinc-950/5 dark:bg-white/5",
+      "bg-zinc-400/35 dark:bg-zinc-600/40",
+      "bg-zinc-500/60 dark:bg-zinc-400/60",
+      "bg-zinc-700/80 dark:bg-zinc-200/85",
+      "bg-zinc-900 shadow-[0_0_6px_rgba(24,24,27,0.25)] dark:bg-white dark:shadow-[0_0_6px_rgba(255,255,255,0.45)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(115, 115, 115, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(115, 115, 115, 0.35)",
+    accentText: "text-neutral-900 dark:text-zinc-100",
+    activeRing: "hover:ring-neutral-400/70 dark:hover:ring-zinc-400/70",
+  },
+};
+
+export interface ContributionDay {
   date: string;
   count: number;
 }
 
-export const GithubContributionCard = () => {
+export interface GithubContributionCardProps {
+  username?: string;
+  endpoint?: string;
+  data?: ContributionDay[];
+  totalContributions?: number;
+  className?: string;
+  animate?: boolean;
+  theme?: ContributionTheme;
+  allowThemeSelection?: boolean;
+  onThemeChange?: (theme: ContributionTheme) => void;
+}
+
+const columnVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    filter: "blur(2px)",
+  },
+  visible: (i: number) => ({
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.08,
+      delay: i * 0.012,
+      ease: "linear",
+    },
+  }),
+};
+
+export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
+  username = "asius09",
+  endpoint = "/api/github/contributions",
+  data: initialData,
+  totalContributions: initialTotal,
+  className,
+  animate = true,
+  theme = "blue",
+  allowThemeSelection = true,
+  onThemeChange,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [contributions, setContributions] = useState<ContributionDay[]>([]);
-  const [totalContributions, setTotalContributions] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const [activeTheme, setActiveTheme] = useState<ContributionTheme>(theme);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [contributions, setContributions] = useState<ContributionDay[]>(
+    initialData || [],
+  );
+  const [totalContributions, setTotalContributions] = useState<number>(
+    initialTotal || 0,
+  );
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(false);
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
@@ -32,9 +190,43 @@ export const GithubContributionCard = () => {
   });
 
   useEffect(() => {
+    setActiveTheme(theme);
+  }, [theme]);
+
+  useEffect(() => {
+    if (!isPopoverOpen) return;
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
+        setIsPopoverOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsPopoverOpen(false);
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPopoverOpen]);
+
+  useEffect(() => {
+    if (initialData) {
+      setContributions(initialData);
+      setTotalContributions(
+        initialTotal ?? initialData.reduce((acc, c) => acc + c.count, 0),
+      );
+      setLoading(false);
+      return;
+    }
+
     const fetchContributions = async () => {
       try {
-        const res = await fetch("/api/github/contributions");
+        const res = await fetch(endpoint);
         if (!res.ok) throw new Error();
         const data = await res.json();
         setContributions(data.contributions || []);
@@ -46,7 +238,7 @@ export const GithubContributionCard = () => {
       }
     };
     fetchContributions();
-  }, []);
+  }, [endpoint, initialData, initialTotal]);
 
   const monthLabels = useMemo(() => {
     if (contributions.length === 0) return [];
@@ -86,12 +278,39 @@ export const GithubContributionCard = () => {
   const weeks = Array.from({ length: 52 });
   const days = Array.from({ length: 7 });
 
-  const getLevelClass = (count: number) => {
-    if (count >= 10) return "bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.4)]";
-    if (count >= 5) return "bg-blue-500/80";
-    if (count >= 2) return "bg-blue-500/50";
-    if (count >= 1) return "bg-blue-500/30";
-    return "bg-blue-500/10";
+  const currentThemeConfig = THEMES[activeTheme] || THEMES.blue;
+
+  const getLevelIndex = (count: number): number => {
+    if (count >= 10) return 4;
+    if (count >= 6) return 3;
+    if (count >= 3) return 2;
+    if (count >= 1) return 1;
+    return 0;
+  };
+
+  const getLevelClass = (count: number, themeKey: ContributionTheme) => {
+    const activeCfg = THEMES[themeKey] || THEMES.blue;
+    return activeCfg.levels[getLevelIndex(count)];
+  };
+
+  const getGlowAnimation = (count: number, weekIndex: number) => {
+    if (!animate || count < 10) return undefined;
+    return {
+      animate: {
+        boxShadow: [
+          "0 0 0px rgba(0, 0, 0, 0)",
+          currentThemeConfig.glowBoxShadow,
+          currentThemeConfig.glowRestingShadow,
+        ],
+        filter: ["brightness(1)", "brightness(1.4)", "brightness(1)"],
+      },
+      transition: {
+        delay: weekIndex * 0.012 + 0.01,
+        duration: 0.14,
+        times: [0, 0.35, 1],
+        ease: "easeOut" as const,
+      },
+    };
   };
 
   const getDayData = (weekIndex: number, dayIndex: number) => {
@@ -142,12 +361,17 @@ export const GithubContributionCard = () => {
   return (
     <section
       id="working-idea-section"
-      className="animate-in fade-in slide-in-from-bottom-2 mt-12 w-full duration-700"
+      className={cn("mt-12 w-full", className)}
     >
       <div className="bg-background/40 w-full rounded-lg backdrop-blur-sm">
         <div className="flex w-full flex-col gap-2">
-          {/* Month Labels Container */}
-          <div className="relative h-4 w-full">
+          <motion.div
+            initial={animate ? { opacity: 0, y: -4 } : false}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="relative h-4 w-full"
+          >
             {monthLabels.map((month, idx) => (
               <span
                 key={`${month.name}-${idx}`}
@@ -157,7 +381,7 @@ export const GithubContributionCard = () => {
                 {month.name}
               </span>
             ))}
-          </div>
+          </motion.div>
 
           <div
             ref={containerRef}
@@ -184,7 +408,12 @@ export const GithubContributionCard = () => {
                 )}
               >
                 <div className="border-border/70 bg-background/95 text-foreground relative flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
-                  <span className="font-semibold text-blue-500">
+                  <span
+                    className={cn(
+                      "font-semibold",
+                      currentThemeConfig.accentText,
+                    )}
+                  >
                     {tooltip.count}
                   </span>
                   <span className="text-muted-foreground">
@@ -201,32 +430,48 @@ export const GithubContributionCard = () => {
               </div>
             </div>
 
-            {/* Grid */}
             <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
               {weeks.map((_, weekIndex) => (
-                <div
+                <motion.div
                   key={weekIndex}
+                  custom={weekIndex}
+                  initial={animate ? "hidden" : false}
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.1 }}
+                  variants={columnVariants}
                   className="flex flex-1 flex-col gap-px sm:gap-0.5"
                 >
                   {days.map((_, dayIndex) => {
                     const dayData = getDayData(weekIndex, dayIndex);
+                    const glow = getGlowAnimation(dayData.count, weekIndex);
+                    const isTop = dayData.count >= 10;
                     return (
-                      <div
+                      <motion.div
                         key={dayIndex}
+                        animate={glow?.animate}
+                        transition={glow?.transition}
                         onMouseEnter={(e) => handleCellEnter(e, dayData)}
                         className={cn(
-                          "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-all duration-100 ease-out hover:z-10 hover:scale-110 hover:ring-1 hover:ring-blue-400/70",
-                          getLevelClass(dayData.count),
+                          "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1",
+                          currentThemeConfig.activeRing,
+                          isTop && "z-10",
+                          getLevelClass(dayData.count, activeTheme),
                         )}
                       />
                     );
                   })}
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
-          <div className="mt-3 flex flex-row items-center justify-between px-1">
+          <motion.div
+            initial={animate ? { opacity: 0, y: 4 } : false}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
+            className="mt-3 flex flex-row items-center justify-between px-1"
+          >
             <div className="text-muted-foreground flex items-center gap-2 text-[10px]">
               <span className="text-foreground/80 font-medium">
                 {loading ? "..." : totalContributions.toLocaleString()}{" "}
@@ -234,30 +479,110 @@ export const GithubContributionCard = () => {
               </span>
               <span className="opacity-40 select-none">•</span>
               <Link
-                href="https://github.com/asius09"
+                href={`https://github.com/${username}`}
                 target="_blank"
-                className="flex items-center gap-1 transition-colors hover:text-blue-500 hover:underline underline-offset-2"
+                className={cn(
+                  "flex items-center gap-1 underline-offset-2 transition-colors hover:underline",
+                  activeTheme === "blue" && "hover:text-blue-500",
+                  activeTheme === "green" && "hover:text-emerald-500",
+                  activeTheme === "violet" && "hover:text-violet-500",
+                  activeTheme === "amber" && "hover:text-amber-500",
+                  activeTheme === "rose" && "hover:text-rose-500",
+                  activeTheme === "monochrome" && "hover:text-foreground",
+                )}
               >
                 Github
               </Link>
             </div>
 
-            <div className="text-muted-foreground flex items-center gap-1.5 text-[9px] select-none">
-              <span className="opacity-50">Less</span>
-              <div className="flex gap-0.5">
-                {[0, 2, 5, 8, 12].map((level) => (
-                  <div
-                    key={level}
-                    className={cn(
-                      "size-2 rounded-[1px] sm:size-2.5",
-                      getLevelClass(level),
-                    )}
-                  />
-                ))}
-              </div>
-              <span className="opacity-50">More</span>
+            <div className="relative flex items-center" ref={popoverRef}>
+              <button
+                type="button"
+                onClick={() =>
+                  allowThemeSelection && setIsPopoverOpen((prev) => !prev)
+                }
+                className={cn(
+                  "text-muted-foreground flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[9px] transition-colors select-none",
+                  allowThemeSelection &&
+                    "hover:bg-muted/40 hover:text-foreground cursor-pointer",
+                )}
+                title={
+                  allowThemeSelection
+                    ? "Change contribution color theme"
+                    : undefined
+                }
+              >
+                <span className="opacity-50">Less</span>
+                <div className="flex gap-0.5">
+                  {[0, 1, 3, 6, 10].map((level) => (
+                    <div
+                      key={level}
+                      className={cn(
+                        "size-2 rounded-[1px] transition-colors duration-200 sm:size-2.5",
+                        getLevelClass(level, activeTheme),
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className="opacity-50">More</span>
+              </button>
+
+              <AnimatePresence>
+                {allowThemeSelection && isPopoverOpen && (
+                  <motion.div
+                    key="theme-popover"
+                    initial={{ opacity: 0, scale: 0.94, y: 6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.94, y: 6 }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="border-border/80 bg-background/95 absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
+                  >
+                    <div className="text-muted-foreground mb-1.5 flex items-center justify-between px-1 text-[10px] font-medium">
+                      <span>Palette</span>
+                      <span className="text-foreground font-semibold capitalize">
+                        {THEMES[activeTheme]?.label}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      {Object.entries(THEMES).map(([key, cfg]) => {
+                        const isSelected = activeTheme === key;
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() => {
+                              setActiveTheme(key as ContributionTheme);
+                              onThemeChange?.(key as ContributionTheme);
+                              setIsPopoverOpen(false);
+                            }}
+                            className={cn(
+                              "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
+                              isSelected
+                                ? "bg-muted text-foreground ring-border shadow-xs ring-1"
+                                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                            )}
+                          >
+                            <div className="flex gap-0.5">
+                              {cfg.levels.map((lvlClass, idx) => (
+                                <div
+                                  key={idx}
+                                  className={cn(
+                                    "size-1.5 rounded-[1px]",
+                                    lvlClass,
+                                  )}
+                                />
+                              ))}
+                            </div>
+                            <span>{cfg.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
