@@ -49,13 +49,13 @@ export const ExperienceCard = (company: ExperienceCompany) => {
         aria-controls={`exp-details-${companyName.replace(/\s+/g, "")}`}
         style={{ WebkitTapHighlightColor: "transparent" }}
       >
-        <span className="border-border/50 relative size-8 shrink-0 overflow-hidden rounded-full border">
+        <span className="border-border/60 relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-neutral-100 dark:bg-neutral-900">
           <Image
             src={logoUrl}
             alt={companyDisplay.displayName || companyName}
             fill
             sizes="32px"
-            className={cn("rounded-full", "h-full w-full object-contain")}
+            className={cn("rounded-full", "h-full w-full object-contain p-0.5")}
           />
         </span>
         <span

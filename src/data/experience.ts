@@ -40,7 +40,7 @@ export const experience: ExperienceCompany[] = [
     status: "past",
     companyDisplay: {
       logoUrl: "/o2u.png",
-      websiteUrl: "https://only2u.com",
+      websiteUrl: "https://only2u.app",
       displayName: "Only2U",
     },
     techBadges: [

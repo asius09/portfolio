@@ -18,12 +18,15 @@ export const AppHeader = () => {
   const [mounted, setMounted] = useState(false);
   const [showLogo, setShowLogo] = useState(false);
   const heroHeaderRef = useRef<HTMLElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     heroHeaderRef.current = document.querySelector(
       'h1[aria-describedby="brand-tooltip"]',
     ) as HTMLElement | null;
+    audioRef.current = new Audio("/switch-on.mp3");
+    audioRef.current.volume = 0.4;
   }, []);
 
   const { scrollY } = useScroll();
@@ -49,27 +52,14 @@ export const AppHeader = () => {
 
   const playThemeSound = () => {
     try {
-      const AudioContextClass =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext;
-      if (!AudioContextClass) return;
-      const ctx = new AudioContextClass();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(1200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.025);
-
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.025);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + 0.025);
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      } else {
+        const audio = new Audio("/switch-on.mp3");
+        audio.volume = 0.4;
+        audio.play().catch(() => {});
+      }
     } catch {
       return;
     }

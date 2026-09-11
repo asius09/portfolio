@@ -504,7 +504,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                 className={cn(
                   "text-muted-foreground flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[9px] transition-colors select-none",
                   allowThemeSelection &&
-                    "hover:bg-muted/40 hover:text-foreground cursor-pointer",
+                    "hover:text-foreground cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/80",
                 )}
                 title={
                   allowThemeSelection
@@ -535,7 +535,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.94, y: 6 }}
                     transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="border-border/80 bg-background/95 absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
+                    className="border-border bg-card/95 text-foreground absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
                   >
                     <div className="text-muted-foreground mb-1.5 flex items-center justify-between px-1 text-[10px] font-medium">
                       <span>Palette</span>
@@ -558,8 +558,8 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                             className={cn(
                               "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
                               isSelected
-                                ? "bg-muted text-foreground ring-border shadow-xs ring-1"
-                                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                                ? "text-foreground bg-neutral-100 shadow-xs ring-1 ring-neutral-300 dark:bg-neutral-800 dark:ring-neutral-700"
+                                : "text-muted-foreground hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/60",
                             )}
                           >
                             <div className="flex gap-0.5">

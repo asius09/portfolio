@@ -194,7 +194,7 @@ export const Hero = () => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
+                    className="group border-border/70 text-foreground relative flex h-10 w-10 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs transition-all duration-150 hover:scale-105 hover:bg-neutral-200/70 dark:border-white/10 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                     aria-label={ariaLabel}
                   >
                     <Icon className={cn(iconClass, "size-5")} />
@@ -232,7 +232,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
                     <Icon className={iconClass} />
@@ -281,7 +281,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
                     <Icon className={cn(iconClass, "size-5")} />

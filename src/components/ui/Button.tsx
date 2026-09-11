@@ -19,20 +19,19 @@ const baseClasses = [
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   default: [
-    "bg-gradient-to-b from-gradient-from to-gradient-to",
-    "shadow-lg",
-    "active:brightness-90",
+    "bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700 dark:border dark:border-white/10",
+    "shadow-xs",
+    "active:brightness-95",
     "transition-colors",
-    "text-gradient-foreground",
   ].join(" "),
   outline: [
     "border border-border bg-transparent text-foreground",
-    "hover:bg-background-hover active:bg-background-hover",
+    "hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700",
     "transition-colors",
   ].join(" "),
   ghost: [
     "bg-transparent text-foreground",
-    "hover:bg-background-hover active:bg-background-hover",
+    "hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700",
     "transition-colors",
   ].join(" "),
 };
