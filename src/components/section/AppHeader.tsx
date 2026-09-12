@@ -18,12 +18,15 @@ export const AppHeader = () => {
   const [mounted, setMounted] = useState(false);
   const [showLogo, setShowLogo] = useState(false);
   const heroHeaderRef = useRef<HTMLElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     heroHeaderRef.current = document.querySelector(
       'h1[aria-describedby="brand-tooltip"]',
     ) as HTMLElement | null;
+    audioRef.current = new Audio("/switch-on.mp3");
+    audioRef.current.volume = 0.4;
   }, []);
 
   const { scrollY } = useScroll();
@@ -47,7 +50,23 @@ export const AppHeader = () => {
     };
   }, [mounted]);
 
+  const playThemeSound = () => {
+    try {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      } else {
+        const audio = new Audio("/switch-on.mp3");
+        audio.volume = 0.4;
+        audio.play().catch(() => {});
+      }
+    } catch {
+      return;
+    }
+  };
+
   const handleToggleTheme = () => {
+    playThemeSound();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
@@ -91,7 +110,7 @@ export const AppHeader = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
                 variant="ghost"
               >
                 <Link
@@ -100,16 +119,11 @@ export const AppHeader = () => {
                   rel="noopener noreferrer"
                   aria-label="GitHub"
                 >
-                  <IconBrandGithubFilled
-                    className="size-5"
-                    style={{ color: "var(--color-foreground)" }}
-                  />
+                  <IconBrandGithubFilled className="group-hover:text-foreground dark:group-hover:text-foreground size-5 text-neutral-700 transition-colors dark:text-neutral-300" />
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              GitHub
-            </TooltipContent>
+            <TooltipContent side="bottom">GitHub</TooltipContent>
           </Tooltip>
 
           <Tooltip>
@@ -117,13 +131,13 @@ export const AppHeader = () => {
               <Button
                 onClick={handleToggleTheme}
                 aria-label="Toggle theme"
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2"
+                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
                 type="button"
                 variant="ghost"
               >
                 <IconMoon
                   className={cn(
-                    "absolute size-4.5 text-blue-400 transition-transform duration-300",
+                    "absolute size-4.5 text-indigo-600 transition-all duration-300 group-hover:scale-110 dark:text-indigo-400",
                     resolvedTheme === "light"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-75 rotate-90 opacity-0",
@@ -132,7 +146,7 @@ export const AppHeader = () => {
                 />
                 <IconSun
                   className={cn(
-                    "absolute size-5 text-yellow-400 transition-transform duration-300",
+                    "absolute size-5 text-amber-500 transition-all duration-300 group-hover:scale-110 dark:text-amber-400",
                     resolvedTheme === "dark"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-75 -rotate-90 opacity-0",
@@ -141,9 +155,7 @@ export const AppHeader = () => {
                 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              Toggle theme
-            </TooltipContent>
+            <TooltipContent side="bottom">Toggle theme</TooltipContent>
           </Tooltip>
         </div>
       </div>

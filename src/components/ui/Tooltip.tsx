@@ -26,16 +26,18 @@ const tooltipContentVariants = cva(
     defaultVariants: {
       side: "top",
     },
-  }
+  },
 );
 
 const arrowVariants = cva("absolute border-4 w-0 h-0", {
   variants: {
     side: {
       top: "top-full left-1/2 -translate-x-1/2 border-t-zinc-900 dark:border-t-zinc-100 border-x-transparent border-b-transparent",
-      bottom: "bottom-full left-1/2 -translate-x-1/2 border-b-zinc-900 dark:border-b-zinc-100 border-x-transparent border-t-transparent",
+      bottom:
+        "bottom-full left-1/2 -translate-x-1/2 border-b-zinc-900 dark:border-b-zinc-100 border-x-transparent border-t-transparent",
       left: "left-full top-1/2 -translate-y-1/2 border-l-zinc-900 dark:border-l-zinc-100 border-y-transparent border-r-transparent",
-      right: "right-full top-1/2 -translate-y-1/2 border-r-zinc-900 dark:border-r-zinc-100 border-y-transparent border-l-transparent",
+      right:
+        "right-full top-1/2 -translate-y-1/2 border-r-zinc-900 dark:border-r-zinc-100 border-y-transparent border-l-transparent",
     },
   },
   defaultVariants: {
@@ -43,13 +45,17 @@ const arrowVariants = cva("absolute border-4 w-0 h-0", {
   },
 });
 
-export const TooltipProvider = ({ children }: { children: React.ReactNode }) => {
+export const TooltipProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return <>{children}</>;
 };
 
 export const Tooltip = ({
   children,
-  delayDuration = 200
+  delayDuration = 200,
 }: {
   children: React.ReactNode;
   delayDuration?: number;
@@ -84,10 +90,10 @@ export const Tooltip = ({
 
 export const TooltipTrigger = ({
   children,
-  asChild = false
+  asChild = false,
 }: {
   children: React.ReactNode;
-  asChild?: boolean
+  asChild?: boolean;
 }) => {
   if (asChild && React.isValidElement(children)) {
     return children;
@@ -95,7 +101,8 @@ export const TooltipTrigger = ({
   return <div className="inline-block">{children}</div>;
 };
 
-export interface TooltipContentProps extends VariantProps<typeof tooltipContentVariants> {
+export interface TooltipContentProps
+  extends VariantProps<typeof tooltipContentVariants> {
   children: React.ReactNode;
   className?: string;
   sideOffset?: number;
@@ -114,14 +121,14 @@ export const TooltipContent = ({
       opacity: 0,
       scale: 0.96,
       y: side === "top" ? 4 : side === "bottom" ? -4 : 0,
-      x: side === "left" ? 4 : side === "right" ? -4 : 0
+      x: side === "left" ? 4 : side === "right" ? -4 : 0,
     },
     animate: { opacity: 1, scale: 1, y: 0, x: 0 },
     exit: {
       opacity: 0,
       scale: 0.96,
-      transition: { duration: 0.1 }
-    }
+      transition: { duration: 0.1 },
+    },
   };
 
   return (
@@ -142,7 +149,3 @@ export const TooltipContent = ({
     </AnimatePresence>
   );
 };
-
-
-
-

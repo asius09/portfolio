@@ -155,18 +155,18 @@ export const Stack = () => {
                   type="button"
                   tabIndex={0}
                   aria-label={label}
-                  className="flex items-center justify-center rounded-full bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                  whileHover={{ rotate: 18 }}
+                  className="flex cursor-pointer items-center justify-center rounded-full bg-transparent p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  whileHover={{ scale: 1.18, y: -3 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{
                     type: "spring",
-                    stiffness: 300,
-                    damping: 15,
+                    stiffness: 400,
+                    damping: 20,
                   }}
                   style={{ willChange: "transform" }}
                 >
                   <Icon
-                    className={`size-8 ${className}`}
+                    className={`size-8 transition-transform duration-200 ${className}`}
                     aria-hidden="true"
                     focusable="false"
                   />

@@ -130,7 +130,7 @@ export const Hero = () => {
           >
             <Image
               src="/profile.webp"
-              alt="Bobby Tiwari profile picture"
+              alt="Bobby profile picture"
               className="object-cover"
               width={64}
               height={64}
@@ -148,7 +148,7 @@ export const Hero = () => {
               viewport={{ once: true, amount: 0.6 }}
               transition={fadeInUpTransition}
             >
-              Bobby Tiwari
+              Bobby
             </motion.h2>
             <motion.span
               initial={fadeInUpInitial}
@@ -194,15 +194,13 @@ export const Hero = () => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group from-gradient-from to-gradient-to relative flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] duration-100 hover:scale-105`}
+                    className="group border-border/70 text-foreground relative flex h-10 w-10 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs transition-all duration-150 hover:scale-105 hover:bg-neutral-200/70 dark:border-white/10 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                     aria-label={ariaLabel}
                   >
                     <Icon className={cn(iconClass, "size-5")} />
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent side="top">
-                  {ariaLabel}
-                </TooltipContent>
+                <TooltipContent side="top">{ariaLabel}</TooltipContent>
               </Tooltip>
             </motion.div>
           ))}
@@ -234,7 +232,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
                     <Icon className={iconClass} />
@@ -283,7 +281,7 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="from-gradient-from to-gradient-to text-foreground flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] text-shadow-xs"
+                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
                     <Icon className={cn(iconClass, "size-5")} />
@@ -309,7 +307,7 @@ function AnimateName() {
     >
       {/* Animated background grid */}
       <motion.div
-        className="bg-background bg-grid absolute inset-0 z-0 h-full w-full bg-size[16px_16px]"
+        className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
         initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
@@ -351,8 +349,8 @@ function AnimateName() {
           <TooltipTrigger asChild>
             <span className="sr-only">asius information</span>
           </TooltipTrigger>
-          <TooltipContent 
-            className="w-full max-w-xs tracking-normal normal-case text-center text-xs"
+          <TooltipContent
+            className="w-full max-w-xs text-center text-xs tracking-normal normal-case"
             side="top"
           >
             A future brand name I intend to build showcasing my vision

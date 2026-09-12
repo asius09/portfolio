@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
+
 /* 
   Tailwind-friendly color system using CSS variables.
   - Uses :root for light mode, [data-theme="dark"] for dark mode (next-themes)
@@ -14,14 +16,14 @@
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);
   --mute-foreground: theme(colors.neutral.500);
-  --mute: theme(colors.neutral.700);
+  --mute: theme(colors.neutral.200);
   --card: theme(colors.white);
   --card-foreground: theme(colors.zinc.400);
   --accent: theme(colors.blue.800);
   --accent-foreground: theme(colors.zinc.800);
-  --gradient-from: theme(colors.zinc.600);
-  --gradient-to: theme(colors.zinc.700);
-  --gradient-foreground: theme(colors.neutral.100);
+  --gradient-from: theme(colors.neutral.100);
+  --gradient-to: theme(colors.neutral.200);
+  --gradient-foreground: theme(colors.neutral.900);
   --border: theme(colors.zinc.200);
   --border-hover: theme(colors.zinc.400);
 }
@@ -55,8 +57,8 @@
   --card-foreground: theme(colors.white);
   --accent: theme(colors.blue.400);
   --accent-foreground: theme(colors.neutral.900);
-  --gradient-from: theme(colors.zinc.700);
-  --gradient-to: theme(colors.zinc.800);
+  --gradient-from: theme(colors.neutral.800);
+  --gradient-to: theme(colors.neutral.900);
   --gradient-foreground: theme(colors.neutral.100);
   --border: theme(colors.zinc.700);
   --border-hover: theme(colors.zinc.600);
@@ -67,7 +69,9 @@
   --color-background-hover: var(--background-hover);
   --color-foreground: var(--foreground);
   --color-mute-foreground: var(--mute-foreground);
+  --color-muted-foreground: var(--mute-foreground);
   --color-mute: var(--mute);
+  --color-muted: var(--mute);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-accent: var(--accent);

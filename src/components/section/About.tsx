@@ -72,7 +72,7 @@ export const About = () => {
         I like building simple, animated interfaces with React, Next.js,
         TailwindCSS, and Framer Motion. On the backend, I work with Node.js,
         Express, PostgreSQL, and modern cloud platforms like AWS and Vercel.
-        I'm also interested in AI projects and game platforms.
+        I&apos;m also interested in AI projects and game platforms.
       </motion.p>
       <motion.p
         className="text-foreground mt-2 text-sm font-normal"

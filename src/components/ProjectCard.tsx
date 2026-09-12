@@ -1,208 +1,191 @@
-import { IconBrandGithubFilled, IconLink } from "@tabler/icons-react";
+import { IconBrandGithubFilled, IconArrowUpRight } from "@tabler/icons-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/Button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "motion/react";
-import { Project, ProjectStack } from "@/types/project.type";
+import { motion } from "motion/react";
+import { Project } from "@/types/project.type";
+import { AnimatedButton } from "./AnimatedButton";
 
-type AnimatedButtonProps = ProjectStack & {
-  idx: number;
-};
+const ProjectLinks = ({
+  project,
+  isList,
+}: {
+  project: Project;
+  isList: boolean;
+}) => (
+  <motion.div
+    layout
+    className={cn(
+      "flex shrink-0 items-center",
+      isList ? "gap-1.5 pt-0.5" : "gap-1",
+    )}
+  >
+    {project.github && (
+      <Link
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${project.name} source code on GitHub`}
+        title="View on GitHub"
+      >
+        <Button
+          variant="ghost"
+          className={cn(
+            "text-muted-foreground hover:bg-background-hover hover:text-foreground rounded-md p-0 transition-colors",
+            isList ? "h-auto w-auto p-1" : "h-6 w-6",
+          )}
+          tabIndex={-1}
+        >
+          <IconBrandGithubFilled
+            className={isList ? "size-4" : "size-3.5"}
+            aria-hidden="true"
+          />
+        </Button>
+      </Link>
+    )}
+    {project.live && (
+      <Link
+        href={project.live}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Visit ${project.name} live demo`}
+        title="Visit live demo"
+      >
+        <Button
+          variant="ghost"
+          className={cn(
+            "text-muted-foreground hover:bg-background-hover hover:text-foreground rounded-md p-0 transition-colors",
+            isList ? "h-auto w-auto p-1" : "h-6 w-6",
+          )}
+          tabIndex={-1}
+        >
+          <IconArrowUpRight
+            className={isList ? "size-4" : "size-3.5"}
+            aria-hidden="true"
+          />
+        </Button>
+      </Link>
+    )}
+  </motion.div>
+);
 
-const AnimatedButton: React.FC<AnimatedButtonProps> = (props) => {
-  const { buttonKey, label, Icon, className, idx } = props;
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-
-  const isActive = hovered || focused;
+export const ProjectCard = (
+  project: Project & { viewMode?: "grid" | "list" },
+) => {
+  const isList = project.viewMode === "list";
+  const transition = { type: "spring" as const, bounce: 0.2, duration: 0.6 };
 
   return (
-    <motion.button
+    <motion.article
       layout
-      key={buttonKey}
-      type="button"
-      aria-label={label}
-      title={label}
-      tabIndex={0}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
+      transition={transition}
       className={cn(
-        "group from-gradient-from to-gradient-to ring-border flex items-center justify-center rounded-full bg-gradient-to-b px-1 text-right ring-1 outline-none",
-        "cursor-pointer gap-2 p-2 transition-all duration-300 ease-in-out",
-        idx !== 0 && "-ml-2 md:-ml-3",
-        buttonKey === "nextjs" ? "text-gradient-foreground" : className,
-        "relative",
-        "h-8 min-w-8 md:h-10 md:min-w-10",
-        isActive ? "z-[999]" : `z-[${20 + idx}]`,
-        "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
+        "group relative flex overflow-hidden transition-colors duration-300",
+        isList
+          ? "hover:bg-background-hover/50 flex-col gap-1 rounded-lg border border-transparent p-2.5"
+          : "border-border/80 bg-card/60 hover:border-border hover:bg-card h-full flex-col rounded-xl border p-2.5 shadow-xs",
       )}
-      animate={{
-        zIndex: isActive ? 999 : 20 + idx,
-      }}
-    >
-      {Icon ? (
-        <Icon
-          className={cn(className, "size-3 shrink-0 md:size-5")}
-          aria-hidden={true}
-        />
-      ) : (
-        <span className="text-gradient-foreground flex size-3 shrink-0 items-center justify-center text-sm font-bold md:size-5 md:text-base">
-          {label?.[0]}
-        </span>
-      )}
-      <AnimatePresence>
-        {isActive && (
-          <motion.span
-            key="label"
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: "auto" }}
-            exit={{ opacity: 0, width: 0 }}
-            style={{
-              overflow: "hidden",
-              display: "inline-block",
-              whiteSpace: "nowrap",
-              verticalAlign: "middle",
-            }}
-            className={cn("pr-1 text-xs", className)}
-          >
-            {label}
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </motion.button>
-  );
-};
-
-export const ProjectCard = (project: Project) => {
-  return (
-    <div
-      className="w-full p-3"
-      aria-labelledby="project-title"
-      tabIndex={-1}
-      role="region"
+      aria-labelledby={`project-title-${project.name.toLowerCase().replace(/\s+/g, "-")}`}
     >
       <motion.figure
-        whileHover={{
-          scale: 1.015,
-          boxShadow:
-            "0 8px 32px 0 rgba(36,37,46,0.22), 0 1.5px 8px 0 rgba(0,0,0,0.10)",
+        layout
+        transition={transition}
+        initial={false}
+        animate={{
+          height: isList ? 0 : "auto",
+          opacity: isList ? 0 : 1,
+          scale: isList ? 0.9 : 1,
+          filter: isList ? "blur(8px)" : "blur(0px)",
+          marginBottom: isList ? 0 : 12,
         }}
-        transition={{
-          type: "spring",
-          stiffness: 120,
-          damping: 12,
-        }}
-        className="border-border relative aspect-video w-full overflow-hidden rounded-lg border border-solid"
+        className={cn(
+          "border-border/50 bg-background-hover/30 relative w-full shrink-0 overflow-hidden border",
+          !isList && "aspect-16/10 rounded-lg",
+        )}
       >
         <Image
           src={project.image}
           alt={`Screenshot of ${project.name}`}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 1152px"
+          sizes="(max-width: 768px) 100vw, 400px"
           priority
         />
       </motion.figure>
-      <div id="project-content" className="w-full px-1 pt-4">
-        <h4
-          id="project-title"
-          className="text-foreground text-base font-semibold"
-          tabIndex={0}
+
+      <motion.div
+        layout
+        transition={transition}
+        className={cn(
+          "flex flex-1 flex-col justify-between",
+          isList ? "w-full" : "px-0.5",
+        )}
+      >
+        <motion.div
+          layout
+          transition={transition}
+          className="flex w-full items-start justify-between gap-3"
         >
-          {project.name}
-        </h4>
-        <p
-          className="text-foreground/80 mt-1 line-clamp-3 overflow-hidden text-sm"
-          aria-label="Project description"
+          <motion.div
+            layout
+            transition={transition}
+            className="flex min-w-0 flex-1 flex-col"
+          >
+            <motion.h3
+              layout
+              transition={transition}
+              id={`project-title-${project.name.toLowerCase().replace(/\s+/g, "-")}`}
+              className={cn(
+                "text-foreground font-semibold tracking-tight transition-colors",
+                isList
+                  ? "group-hover:text-accent truncate text-base group-hover:underline group-hover:underline-offset-4"
+                  : "text-sm",
+              )}
+            >
+              {project.name}
+            </motion.h3>
+
+            <motion.p
+              layout
+              transition={transition}
+              className={cn(
+                "text-muted-foreground leading-relaxed tracking-tight",
+                isList
+                  ? "mt-0.5 line-clamp-1 text-sm"
+                  : "mt-1 line-clamp-2 text-xs",
+              )}
+            >
+              {project.description}
+            </motion.p>
+          </motion.div>
+
+          <ProjectLinks project={project} isList={isList} />
+        </motion.div>
+
+        <motion.div
+          layout
+          transition={transition}
+          className={cn(
+            "flex items-center overflow-visible",
+            isList
+              ? "mt-1 flex-wrap"
+              : "border-border/50 mt-3 flex-wrap border-t pt-3",
+          )}
         >
-          {project.description}
-        </p>
-        <ul
-          className="text-foreground/80 mt-3 flex list-disc flex-col gap-1 px-4"
-          aria-label="Project features"
-        >
-          {project.features.map((feature, idx) => (
-            <li key={idx} className="min-h-[1.5rem] text-sm" tabIndex={0}>
-              {feature}
-            </li>
+          {project.stacks.map(({ buttonKey, label, Icon, className }, idx) => (
+            <AnimatedButton
+              key={buttonKey}
+              buttonKey={buttonKey}
+              Icon={Icon}
+              label={label}
+              className={className}
+              idx={idx}
+            />
           ))}
-        </ul>
-      </div>
-      <div>
-        <div
-          id="project-card-footer"
-          className="mt-6 flex flex-col items-start justify-center gap-3"
-        >
-          <div className="relative mb-3 flex h-10 flex-wrap items-center justify-start overflow-visible">
-            {project.stacks.map(
-              ({ buttonKey, label, Icon, className }, idx) => {
-                return (
-                  <AnimatedButton
-                    key={buttonKey}
-                    buttonKey={buttonKey}
-                    Icon={Icon}
-                    label={label}
-                    className={className}
-                    idx={idx}
-                  />
-                );
-              },
-            )}
-          </div>
-          <div className="flex w-full flex-col gap-2 sm:flex-row sm:gap-3">
-            <Link
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full"
-              aria-label="View project on GitHub"
-              tabIndex={0}
-              title="View project on GitHub"
-            >
-              <Button
-                className="w-full md:py-5"
-                variant="default"
-                tabIndex={-1}
-                aria-label="View project on GitHub"
-              >
-                <IconBrandGithubFilled
-                  className="size-4"
-                  aria-hidden="true"
-                  focusable="false"
-                />
-                <span>GitHub</span>
-              </Button>
-            </Link>
-            <Link
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full"
-              aria-label="Visit live demo"
-              tabIndex={0}
-              title="Visit live demo"
-            >
-              <Button
-                className="w-full md:py-5"
-                variant="outline"
-                tabIndex={-1}
-                aria-label="Visit live demo"
-              >
-                <IconLink
-                  className="size-5"
-                  aria-hidden="true"
-                  focusable="false"
-                />
-                <span>Live</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.article>
   );
 };

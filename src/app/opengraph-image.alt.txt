@@ -1,1 +1,1 @@
-Bobby Tiwari | Full Stack Developer – React, Next.js, Node.js, TypeScript, TailwindCSS, and more.
+Bobby | Full Stack Developer – React, Next.js, Node.js, TypeScript, TailwindCSS, and more.

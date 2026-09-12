@@ -10,12 +10,12 @@ export interface ExperiencePosition {
   icon: ReactNode | IconType;
   role: string;
   employmentType:
-  | "Full-time"
-  | "Part-time"
-  | "Internship"
-  | "Contract"
-  | "Freelance"
-  | "Other";
+    | "Full-time"
+    | "Part-time"
+    | "Internship"
+    | "Contract"
+    | "Freelance"
+    | "Other";
   start: string; // ISO date or "YYYY-MM-DD"
   end?: string; // ISO date or "YYYY-MM-DD" or "Present"
   status: "active" | "past" | "ongoing";
@@ -35,12 +35,12 @@ export interface ExperienceCompany {
 }
 
 export const experience: ExperienceCompany[] = [
-   {
+  {
     companyName: "Only2U Fashion",
     status: "past",
     companyDisplay: {
       logoUrl: "/o2u.png",
-      websiteUrl: "https://only2u.com",
+      websiteUrl: "https://only2u.app",
       displayName: "Only2U",
     },
     techBadges: [
@@ -91,7 +91,7 @@ export const experience: ExperienceCompany[] = [
             content:
               "Refactored reusable components, standardized folder structures, and improved overall code maintainability across frontend and backend systems.",
           },
-        ]
+        ],
       },
     ],
   },
