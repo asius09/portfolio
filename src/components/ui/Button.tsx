@@ -18,7 +18,7 @@ const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   ghost:
     "bg-transparent text-foreground hover:bg-mute active:bg-neutral-200 dark:active:bg-neutral-700 transition-colors",
   social:
-    "border-border/70 text-foreground bg-neutral-100 shadow-xs hover:scale-105 hover:bg-neutral-200/70 dark:border-white/10 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-all duration-150 border",
+    "border-border/70 text-foreground bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800 transition-all duration-150 border",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
