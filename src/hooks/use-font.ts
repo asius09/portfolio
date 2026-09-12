@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-export type FontOption = "ibm" | "geist" | "inter" | "schibsted" | "space";
+export type FontOption = "geist" | "inter" | "schibsted";
 
 export function useFont() {
-  const [font, setFontState] = useState<FontOption>("ibm");
+  const [font, setFontState] = useState<FontOption>("geist");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

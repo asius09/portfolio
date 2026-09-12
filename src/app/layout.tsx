@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Zain, Inter, Schibsted_Grotesk, Space_Grotesk } from "next/font/google";
-import localFont from "next/font/local";
+import { Zain, Inter, Schibsted_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
@@ -13,10 +12,9 @@ export const zain = Zain({
   preload: true,
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const geist = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
   preload: true,
 });
@@ -34,24 +32,6 @@ const schibsted = Schibsted_Grotesk({
   display: "swap",
   preload: true,
 });
-
-const space = Space_Grotesk({
-  variable: "--font-space",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
-// Use local font for Geist since it's typically provided by geist package or next/font/local
-// Next 15+ has it in next/font/google but we fallback if not. Actually, let's use standard google fonts for all except Geist, which we can get via next/font/google if next >= 14.2
-import { Geist } from 'next/font/google';
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
 
 export const metadata: Metadata = {
   title: {
@@ -115,7 +95,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexMono.variable} ${inter.variable} ${schibsted.variable} ${space.variable} ${geistSans.variable} antialiased`}
+      className={`${geist.variable} ${inter.variable} ${schibsted.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -125,7 +105,7 @@ export default function RootLayout({
               try {
                 let font = localStorage.getItem('app-font');
                 if (!font) {
-                  font = 'ibm';
+                  font = 'geist';
                   localStorage.setItem('app-font', font);
                 }
                 document.documentElement.setAttribute('data-font', font);
