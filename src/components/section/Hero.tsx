@@ -7,6 +7,7 @@ import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
 import { CopyButton } from "../ui/CopyButton";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
+import { Button } from "../ui/Button";
 
 type FadeInUp = {
   y: number;
@@ -190,15 +191,16 @@ export const Hero = () => {
             >
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group border-border/70 text-foreground relative flex h-10 w-10 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs transition-all duration-150 hover:scale-105 hover:bg-neutral-200/70 dark:border-white/10 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                    aria-label={ariaLabel}
-                  >
-                    <Icon className={cn(iconClass, "size-5")} />
-                  </Link>
+                  <Button variant="social" size="icon" className="group" asChild>
+                    <Link
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={ariaLabel}
+                    >
+                      <Icon className={cn(iconClass, "size-5")} />
+                    </Link>
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top">{ariaLabel}</TooltipContent>
               </Tooltip>
