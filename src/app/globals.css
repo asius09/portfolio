@@ -12,6 +12,7 @@
 */
 
 :root {
+  --app-font: var(--font-ibm-plex-mono);
   --background: theme(colors.neutral.50);
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);
@@ -20,13 +21,20 @@
   --card: theme(colors.white);
   --card-foreground: theme(colors.zinc.400);
   --accent: theme(colors.blue.800);
-  --accent-foreground: theme(colors.zinc.800);
+  --accent-foreground: theme(colors.white);
   --gradient-from: theme(colors.neutral.100);
   --gradient-to: theme(colors.neutral.200);
   --gradient-foreground: theme(colors.neutral.900);
   --border: theme(colors.zinc.200);
   --border-hover: theme(colors.zinc.400);
 }
+
+:root[data-font="geist"] { --app-font: var(--font-geist-sans); }
+:root[data-font="inter"] { --app-font: var(--font-inter); }
+:root[data-font="schibsted"] { --app-font: var(--font-schibsted); }
+:root[data-font="space"] { --app-font: var(--font-space); }
+:root[data-font="ibm"] { --app-font: var(--font-ibm-plex-mono); }
+
 
 /* 
   Common grid background class for smooth light/dark transitions.
@@ -83,6 +91,7 @@
   --color-border-hover: var(--border-hover);
   --color-button-outline-shadow: var(--button-outline-shadow);
   --font-asius: "Zain", sans-serif;
+  --font-sans: var(--app-font), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 /* Use CSS variables for Tailwind utility classes */
 body {

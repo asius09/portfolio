@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Zain } from "next/font/google";
+import { IBM_Plex_Mono, Zain, Inter, Schibsted_Grotesk, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
@@ -19,6 +20,38 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
   preload: true,
 });
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+const space = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+// Use local font for Geist since it's typically provided by geist package or next/font/local
+// Next 15+ has it in next/font/google but we fallback if not. Actually, let's use standard google fonts for all except Geist, which we can get via next/font/google if next >= 14.2
+import { Geist } from 'next/font/google';
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
 
 export const metadata: Metadata = {
   title: {
@@ -82,10 +115,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexMono.variable} antialiased`}
+      className={`${ibmPlexMono.variable} ${inter.variable} ${schibsted.variable} ${space.variable} ${geistSans.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="font-['IBM_Plex_Mono',monospace]">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                let font = localStorage.getItem('app-font');
+                if (!font) {
+                  font = 'ibm';
+                  localStorage.setItem('app-font', font);
+                }
+                document.documentElement.setAttribute('data-font', font);
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="font-sans">
         <ThemeProvider defaultTheme="system" enableSystem>
           {children}
           <Analytics />
