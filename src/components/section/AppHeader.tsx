@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
-import { IconBrandGithubFilled, IconSun, IconMoon } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 import React, { useEffect, useState, useRef } from "react";
 import { Button } from "../ui/Button";
@@ -13,20 +11,20 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 
+import { IconBrandGithubFilled } from "@tabler/icons-react";
+import { FontSwitcher } from "../ui/FontSwitcher";
+import { ThemeToggle } from "../ui/ThemeToggle";
+
 export const AppHeader = () => {
-  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [showLogo, setShowLogo] = useState(false);
   const heroHeaderRef = useRef<HTMLElement | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     heroHeaderRef.current = document.querySelector(
       'h1[aria-describedby="brand-tooltip"]',
     ) as HTMLElement | null;
-    audioRef.current = new Audio("/switch-on.mp3");
-    audioRef.current.volume = 0.4;
   }, []);
 
   const { scrollY } = useScroll();
@@ -49,26 +47,6 @@ export const AppHeader = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [mounted]);
-
-  const playThemeSound = () => {
-    try {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
-      } else {
-        const audio = new Audio("/switch-on.mp3");
-        audio.volume = 0.4;
-        audio.play().catch(() => {});
-      }
-    } catch {
-      return;
-    }
-  };
-
-  const handleToggleTheme = () => {
-    playThemeSound();
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  };
 
   if (!mounted) return null;
 
@@ -110,53 +88,26 @@ export const AppHeader = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
+                className="group relative"
                 variant="ghost"
+                size="icon-sm"
+                asChild
               >
                 <Link
-                  href="https://github.com/asius09"
+                  href="https://github.com/asius09/portfolio"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="GitHub"
+                  aria-label="GitHub Portfolio"
                 >
-                  <IconBrandGithubFilled className="group-hover:text-foreground dark:group-hover:text-foreground size-5 text-neutral-700 transition-colors dark:text-neutral-300" />
+                  <IconBrandGithubFilled className="size-5 text-foreground" />
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">GitHub</TooltipContent>
+            <TooltipContent side="bottom">GitHub Portfolio</TooltipContent>
           </Tooltip>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={handleToggleTheme}
-                aria-label="Toggle theme"
-                className="group relative flex size-8 cursor-pointer items-center justify-center rounded-lg p-2 transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60"
-                type="button"
-                variant="ghost"
-              >
-                <IconMoon
-                  className={cn(
-                    "absolute size-4.5 text-indigo-600 transition-all duration-300 group-hover:scale-110 dark:text-indigo-400",
-                    resolvedTheme === "light"
-                      ? "scale-100 rotate-0 opacity-100"
-                      : "scale-75 rotate-90 opacity-0",
-                  )}
-                  aria-hidden={resolvedTheme !== "light"}
-                />
-                <IconSun
-                  className={cn(
-                    "absolute size-5 text-amber-500 transition-all duration-300 group-hover:scale-110 dark:text-amber-400",
-                    resolvedTheme === "dark"
-                      ? "scale-100 rotate-0 opacity-100"
-                      : "scale-75 -rotate-90 opacity-0",
-                  )}
-                  aria-hidden={resolvedTheme !== "dark"}
-                />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Toggle theme</TooltipContent>
-          </Tooltip>
+          <FontSwitcher />
+          <ThemeToggle />
         </div>
       </div>
     </header>

@@ -7,6 +7,7 @@ import { keyPoints } from "@/data/keyPoints";
 import { motion, Transition } from "motion/react";
 import { CopyButton } from "../ui/CopyButton";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
+import { Button } from "../ui/Button";
 
 type FadeInUp = {
   y: number;
@@ -19,7 +20,6 @@ type IconAnim = {
   rotate: number;
 };
 
-// Common motion configs with types
 const fadeInUpInitial: FadeInUp = {
   y: 12,
   opacity: 0,
@@ -180,7 +180,7 @@ export const Hero = () => {
             delay: 0.18,
           }}
         >
-          {socials.map(({ href, ariaLabel, Icon, iconClass }, idx) => (
+          {socials.map(({ href, ariaLabel, Icon }, idx) => (
             <motion.div
               key={href}
               initial={iconInitial}
@@ -190,15 +190,16 @@ export const Hero = () => {
             >
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group border-border/70 text-foreground relative flex h-10 w-10 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs transition-all duration-150 hover:scale-105 hover:bg-neutral-200/70 dark:border-white/10 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                    aria-label={ariaLabel}
-                  >
-                    <Icon className={cn(iconClass, "size-5")} />
-                  </Link>
+                  <Button variant="social" size="icon-sm" className="group" asChild>
+                    <Link
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={ariaLabel}
+                    >
+                      <Icon className="size-4.5 text-foreground" />
+                    </Link>
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top">{ariaLabel}</TooltipContent>
               </Tooltip>
@@ -224,7 +225,7 @@ export const Hero = () => {
               return (
                 <motion.li
                   key={idx}
-                  className="flex items-center gap-2 text-sm"
+                  className="flex items-center gap-2 text-sm text-foreground"
                   variants={itemVariants}
                 >
                   <motion.span
@@ -232,20 +233,20 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
+                    className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
-                    <Icon className={iconClass} />
+                    <Icon className={cn(iconClass, "size-4.5")} />
                   </motion.span>
 
                   <motion.span
                     initial={false}
                     animate={false}
-                    className="group text-foreground flex items-center justify-start gap-1"
+                    className="group flex items-center justify-start gap-1"
                   >
                     <Link
                       href={item.href}
-                      className="hover:text-foreground underline-offset-2 transition-colors hover:underline"
+                      className="hover:text-foreground text-foreground underline-offset-2 transition-colors hover:underline"
                       tabIndex={0}
                       aria-label={
                         item.type === "email"
@@ -273,7 +274,7 @@ export const Hero = () => {
               return (
                 <motion.li
                   key={idx}
-                  className="text-foreground/80 flex items-center gap-2 text-sm"
+                  className="flex items-center gap-2 text-sm text-foreground"
                   variants={itemVariants}
                 >
                   <motion.span
@@ -281,10 +282,10 @@ export const Hero = () => {
                     whileInView={iconAnimate}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={iconTransition(idx)}
-                    className="border-border/70 text-foreground flex h-8 w-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
+                    className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
                   >
-                    <Icon className={cn(iconClass, "size-5")} />
+                    <Icon className={cn(iconClass, "size-4.5")} />
                   </motion.span>
                   <motion.span initial={false} animate={false}>
                     {item.text}

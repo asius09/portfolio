@@ -56,17 +56,26 @@ export const TooltipProvider = ({
 export const Tooltip = ({
   children,
   delayDuration = 200,
+  disabled = false,
 }: {
   children: React.ReactNode;
   delayDuration?: number;
+  disabled?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleOpen = () => {
+    if (disabled) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setOpen(true), delayDuration);
   };
+
+  React.useEffect(() => {
+    if (disabled && open) {
+      setOpen(false);
+    }
+  }, [disabled, open]);
 
   const handleClose = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

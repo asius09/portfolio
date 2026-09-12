@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Zain } from "next/font/google";
+import { Zain, Inter, Schibsted_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
@@ -12,10 +12,23 @@ export const zain = Zain({
   preload: true,
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const geist = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  display: "swap",
+  preload: true,
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
+  subsets: ["latin"],
   display: "swap",
   preload: true,
 });
@@ -82,10 +95,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexMono.variable} antialiased`}
+      className={`${geist.variable} ${inter.variable} ${schibsted.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >
-      <body className="font-['IBM_Plex_Mono',monospace]">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                let font = localStorage.getItem('app-font');
+                if (!font) {
+                  font = 'geist';
+                  localStorage.setItem('app-font', font);
+                }
+                document.documentElement.setAttribute('data-font', font);
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="font-sans">
         <ThemeProvider defaultTheme="system" enableSystem>
           {children}
           <Analytics />
