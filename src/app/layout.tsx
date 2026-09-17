@@ -51,19 +51,20 @@ export const metadata: Metadata = {
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     images: [
       {
-        url: "/logo-512.png",
-        width: 512,
-        height: 512,
-        alt: "Bobby",
+        url: "https://asius.in/og",
+        width: 1200,
+        height: 630,
+        alt: "Bobby - Full Stack Developer",
+        type: "image/png",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: ["/logo-512.png"],
+    images: ["https://asius.in/og"],
     creator: "@_asius",
   },
   robots: {
