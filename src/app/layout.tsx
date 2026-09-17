@@ -49,22 +49,14 @@ export const metadata: Metadata = {
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: [
-      {
-        url: "https://asius.in/og",
-        width: 1200,
-        height: 630,
-        alt: "Bobby - Full Stack Developer",
-        type: "image/png",
-      },
-    ],
+    images: ["/logo-512.png"],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: ["https://asius.in/og"],
+    images: ["/logo-512.png"],
     creator: "@_asius",
   },
   robots: {
