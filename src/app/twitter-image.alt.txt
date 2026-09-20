@@ -1,1 +1,0 @@
-Bobby | Full Stack Developer – React, Next.js, Node.js, TypeScript, TailwindCSS, and more.
