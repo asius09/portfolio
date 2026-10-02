@@ -2,107 +2,208 @@ import { ImageResponse } from "next/og";
 import fs from "node:fs";
 import path from "node:path";
 
+export const runtime = "nodejs";
+
+export const alt =
+  "Bobby (asius) — Software Engineer building web, mobile & AI products";
+
 function loadFont(name: string) {
   return fs.readFileSync(path.join(process.cwd(), "src/app/og-fonts", name));
 }
 
 export default async function Image() {
-  const zain = loadFont("zain-800.ttf");
-  const mono = loadFont("ibm-plex-mono-400.ttf");
+  const interBold = loadFont("Inter-Bold.woff");
   const monoMedium = loadFont("ibm-plex-mono-500.ttf");
 
   return new ImageResponse(
     (
       <div
         style={{
-          width: 1200,
-          height: 630,
-          background: "#09090B",
+          width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
-          padding: "80px",
+          backgroundColor: "#080808",
+          fontFamily: "Inter",
           position: "relative",
           overflow: "hidden",
         }}
       >
+        {/* Ambient Gradient Glows */}
+        <div
+          style={{
+            position: "absolute",
+            top: "-20%",
+            left: "-10%",
+            width: "80%",
+            height: "80%",
+            background:
+              "radial-gradient(circle, rgba(56, 189, 248, 0.07) 0%, rgba(0,0,0,0) 60%)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-20%",
+            right: "-10%",
+            width: "80%",
+            height: "80%",
+            background:
+              "radial-gradient(circle, rgba(129, 140, 248, 0.07) 0%, rgba(0,0,0,0) 60%)",
+          }}
+        />
+
+        {/* Faint Architectural Grid/Lines */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px)," +
-              "linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
+              "linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
           }}
         />
 
+        {/* Top Left Branding Block */}
         <div
           style={{
             position: "absolute",
-            top: 180,
-            right: 200,
-            width: 300,
-            height: 300,
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)",
-            filter: "blur(60px)",
+            top: 40,
+            left: 40,
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
           }}
-        />
+        >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                color: "#555555",
+                fontFamily: "IBM Plex Mono",
+                fontSize: 16,
+                fontWeight: 500,
+                letterSpacing: "1px",
+              }}
+            >
+              Bobby (asius)
+            </span>
+            <span
+              style={{
+                color: "#333333",
+                fontFamily: "IBM Plex Mono",
+                fontSize: 14,
+              }}
+            >
+              Portfolio 2026
+            </span>
+          </div>
+        </div>
 
+        {/* Central Text Block */}
         <div
           style={{
             position: "relative",
             display: "flex",
             flexDirection: "column",
-            gap: 12,
+            alignItems: "flex-start",
+            padding: "40px",
           }}
         >
           <div
             style={{
-              fontSize: 120,
-              fontWeight: 800,
-              color: "#FAFAFA",
-              lineHeight: 1,
-              letterSpacing: "-4px",
-              fontFamily: "Zain",
+              display: "flex",
+              flexDirection: "column",
+              marginTop: 24,
+              marginBottom: 24,
+              gap: 8,
             }}
           >
-            asius
-          </div>
-          <div
-            style={{
-              fontSize: 22,
-              fontFamily: "IBM Plex Mono",
-              fontWeight: 500,
-              color: "#A1A1AA",
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              marginTop: 16,
-            }}
-          >
-            Bobby Tiwari · Full Stack Developer
+            <h1
+              style={{
+                fontSize: 84,
+                fontWeight: 800,
+                color: "#4a4a4a",
+                letterSpacing: "-2px",
+                margin: 0,
+                lineHeight: 1,
+              }}
+            >
+              Software Engineer building
+            </h1>
+            <h1
+              style={{
+                fontSize: 84,
+                fontWeight: 800,
+                color: "#ffffff",
+                letterSpacing: "-2px",
+                margin: 0,
+                lineHeight: 1,
+                textShadow: "0 0 40px rgba(255,255,255,0.3)",
+              }}
+            >
+              web, mobile &amp; AI products.
+            </h1>
           </div>
         </div>
 
+        {/* Small Bottom Left Technical Text */}
         <div
           style={{
             position: "absolute",
-            bottom: 60,
-            left: 80,
+            bottom: 40,
+            left: 40,
             display: "flex",
-            gap: 24,
-            fontFamily: "IBM Plex Mono",
-            fontSize: 16,
-            color: "#52525B",
+            flexDirection: "column",
+            maxWidth: 400,
+            gap: 8,
           }}
         >
-          <span>asius.in</span>
-          <span style={{ color: "#27272A" }}>·</span>
-          <span>github/asius09</span>
-          <span style={{ color: "#27272A" }}>·</span>
-          <span>x/_asius</span>
+          <span
+            style={{
+              color: "#444444",
+              fontFamily: "IBM Plex Mono",
+              fontSize: 16,
+              lineHeight: 1.4,
+            }}
+          >
+            System architectures, interactive frontends, and AI integrations
+            engineered for scale and impact.
+          </span>
+          <span
+            style={{
+              color: "#555555",
+              fontFamily: "IBM Plex Mono",
+              fontSize: 16,
+              marginTop: 16,
+            }}
+          >
+            {"// asius.in"}
+          </span>
+        </div>
+
+        {/* Right side simple CTA */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            right: 40,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              color: "#ffffff",
+              fontFamily: "IBM Plex Mono",
+              fontSize: 20,
+              fontWeight: 500,
+              letterSpacing: "1px",
+            }}
+          >
+            [ View Portfolio ]
+          </span>
         </div>
       </div>
     ),
@@ -110,8 +211,7 @@ export default async function Image() {
       width: 1200,
       height: 630,
       fonts: [
-        { name: "Zain", data: zain, style: "normal", weight: 800 },
-        { name: "IBM Plex Mono", data: mono, style: "normal", weight: 400 },
+        { name: "Inter", data: interBold, style: "normal", weight: 800 },
         {
           name: "IBM Plex Mono",
           data: monoMedium,

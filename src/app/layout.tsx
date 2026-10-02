@@ -49,14 +49,12 @@ export const metadata: Metadata = {
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: ["/opengraph-image.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: ["/opengraph-image.png"],
     creator: "@_asius",
   },
   robots: {
