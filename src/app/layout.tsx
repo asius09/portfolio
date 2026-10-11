@@ -44,8 +44,6 @@ export const metadata: Metadata = {
     default: "Bobby - Full Stack Developer",
     template: "%s | Bobby",
   },
-  description:
-    "Personal portfolio of Bobby. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
   metadataBase: new URL("https://asius.in"),
   openGraph: {
     type: "website",
