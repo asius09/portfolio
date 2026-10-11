@@ -45,7 +45,7 @@ const footerSocials = [
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
-  filter: "blur(8px)",
+  filter: "blur(4px)",
 };
 
 const fadeInUpAnimate = {
@@ -55,11 +55,12 @@ const fadeInUpAnimate = {
 };
 
 const fadeInUpSpring: Transition = {
-  duration: 0.25,
-  ease: [0.4, 0, 0.2, 1],
+  duration: 0.55,
+  ease: [0.25, 0.1, 0.25, 1],
   type: "spring",
-  stiffness: 140,
+  stiffness: 80,
   damping: 18,
+  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
 };
 
 export const Footer = () => {
@@ -72,10 +73,10 @@ export const Footer = () => {
       aria-label="Footer"
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
-        delay: 0.05,
+        delay: 0.04,
       }}
     >
       {/* Top Section: Asius heading, description, and social icons */}
