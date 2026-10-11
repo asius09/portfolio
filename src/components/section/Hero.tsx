@@ -23,7 +23,7 @@ type IconAnim = {
 const fadeInUpInitial: FadeInUp = {
   y: 12,
   opacity: 0,
-  filter: "blur(8px)",
+  filter: "blur(4px)",
 };
 const fadeInUpAnimate: FadeInUp = {
   y: 0,
@@ -31,7 +31,7 @@ const fadeInUpAnimate: FadeInUp = {
   filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.6,
+  duration: 0.55,
   ease: [0.25, 0.1, 0.25, 1],
 };
 
@@ -39,12 +39,14 @@ const fadeInUpSpring: Transition = {
   ...fadeInUpTransition,
   type: "spring",
   stiffness: 80,
+  damping: 18,
+  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
 };
 
 const iconInitial: IconAnim = {
-  scale: 0.92,
+  scale: 0.9,
   opacity: 0,
-  rotate: -13,
+  rotate: -8,
 };
 const iconAnimate: IconAnim = {
   scale: 1,
@@ -52,11 +54,10 @@ const iconAnimate: IconAnim = {
   rotate: 0,
 };
 const iconTransition = (idx: number): Transition => ({
-  duration: 0.6,
-  ease: [0.25, 0.1, 0.25, 1],
-  delay: (idx + 1) * 0.175,
   type: "spring",
-  stiffness: 80,
+  stiffness: 180,
+  damping: 18,
+  delay: 0.14 + idx * 0.03,
 });
 
 const listVariants = {
@@ -64,8 +65,8 @@ const listVariants = {
     opacity: 1,
     transition: {
       when: "beforeChildren",
-      delayChildren: 0.18,
-      staggerChildren: 0.13,
+      delayChildren: 0.12,
+      staggerChildren: 0.025,
     },
   },
   hidden: {
@@ -88,7 +89,7 @@ const itemVariants = {
   hidden: {
     y: 12,
     opacity: 0,
-    filter: "blur(8px)",
+    filter: "blur(4px)",
     transition: {
       ...fadeInUpSpring,
     },
@@ -111,20 +112,19 @@ export const Hero = () => {
         <div className="flex items-start justify-start gap-4">
           <motion.figure
             initial={{
-              scale: 0.75,
+              scale: 0.85,
               opacity: 0,
+              filter: "blur(6px)",
             }}
             whileInView={{
               scale: 1,
               opacity: 1,
+              filter: "blur(0px)",
             }}
-            viewport={{ once: true, amount: 0.6 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{
-              duration: 0.3,
-              ease: [0.25, 0.1, 0.25, 1],
-              delay: 0.2,
-              type: "spring",
-              stiffness: 100,
+              ...fadeInUpSpring,
+              delay: 0.06,
             }}
             className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full shadow-xl drop-shadow-[0_6px_24px_rgba(0,0,0,0.18)]"
           >
@@ -145,18 +145,21 @@ export const Hero = () => {
               className="text-2xl font-bold"
               initial={fadeInUpInitial}
               whileInView={fadeInUpAnimate}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={fadeInUpTransition}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{
+                ...fadeInUpSpring,
+                delay: 0.08,
+              }}
             >
               Bobby
             </motion.h2>
             <motion.span
               initial={fadeInUpInitial}
               whileInView={fadeInUpAnimate}
-              viewport={{ once: true, amount: 0.6 }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={{
                 ...fadeInUpSpring,
-                delay: 0.125,
+                delay: 0.11,
               }}
               className={cn(
                 "w-full",
@@ -174,10 +177,10 @@ export const Hero = () => {
           aria-label="Social links"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.6 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{
             ...fadeInUpSpring,
-            delay: 0.18,
+            delay: 0.14,
           }}
         >
           {socials.map(({ href, ariaLabel, Icon }, idx) => (
@@ -185,7 +188,7 @@ export const Hero = () => {
               key={href}
               initial={iconInitial}
               whileInView={iconAnimate}
-              viewport={{ once: true, amount: 0.6 }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={iconTransition(idx)}
             >
               <Tooltip>
@@ -215,7 +218,7 @@ export const Hero = () => {
           variants={listVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
+          viewport={{ once: true, amount: 0.15 }}
         >
           {keyPoints.map((item, idx) => {
             const Icon = item.icon;
@@ -231,7 +234,7 @@ export const Hero = () => {
                   <motion.span
                     initial={iconInitial}
                     whileInView={iconAnimate}
-                    viewport={{ once: true, amount: 0.6 }}
+                    viewport={{ once: true, amount: 0.15 }}
                     transition={iconTransition(idx)}
                     className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
@@ -280,7 +283,7 @@ export const Hero = () => {
                   <motion.span
                     initial={iconInitial}
                     whileInView={iconAnimate}
-                    viewport={{ once: true, amount: 0.6 }}
+                    viewport={{ once: true, amount: 0.15 }}
                     transition={iconTransition(idx)}
                     className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
                     aria-hidden="true"
@@ -311,11 +314,11 @@ function AnimateName() {
         className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
-        initial={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
+        initial={{ opacity: 0, scale: 1.04, filter: "blur(8px)" }}
         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{
-          duration: 0.6,
-          ease: [0.22, 0.68, 0.36, 1],
+          duration: 0.35,
+          ease: [0.22, 1, 0.36, 1],
         }}
       />
       <motion.h1
@@ -323,10 +326,10 @@ function AnimateName() {
         tabIndex={0}
         initial={{
           opacity: 0,
-          y: 56,
+          y: 28,
           letterSpacing: "-0.22em",
-          scale: 0.92,
-          filter: "blur(10px)",
+          scale: 0.95,
+          filter: "blur(8px)",
         }}
         animate={{
           opacity: 1,
@@ -337,11 +340,10 @@ function AnimateName() {
         }}
         transition={{
           type: "spring",
-          stiffness: 120,
-          damping: 20,
-          mass: 0.9,
-          duration: 0.6,
-          filter: { duration: 0.4, ease: [0.22, 0.68, 0.36, 1] },
+          stiffness: 160,
+          damping: 18,
+          mass: 0.8,
+          filter: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
         }}
         aria-describedby="brand-tooltip"
       >

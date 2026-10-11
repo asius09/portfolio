@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { ExperienceCompany } from "@/data/experience";
 import Image from "next/image";
 import Link from "next/link";
-import { cn, formatDuration } from "@/lib/utils";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDuration, formatDate } from "@/lib/utils";
 function formatDateRange(start: string, end?: string) {
   if (!start) return "";
   const s = formatDate(start, { showDate: false });
@@ -33,7 +33,7 @@ export const ExperienceCard = (company: ExperienceCompany) => {
           "rounded-lg",
           "hover:bg-neutral-100/80 dark:hover:bg-neutral-900/60",
           "transition-colors",
-          "p-2",
+          "py-2",
           "cursor-pointer",
         )}
         onClick={() => setOpen((o) => !o)}
@@ -49,13 +49,13 @@ export const ExperienceCard = (company: ExperienceCompany) => {
         aria-controls={`exp-details-${companyName.replace(/\s+/g, "")}`}
         style={{ WebkitTapHighlightColor: "transparent" }}
       >
-        <span className="border-border/60 relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-neutral-100 dark:bg-neutral-900">
+        <span className="border-border/60 relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-neutral-100 dark:bg-neutral-900">
           <Image
             src={logoUrl}
             alt={companyDisplay.displayName || companyName}
             fill
             sizes="32px"
-            className={cn("rounded-full", "h-full w-full object-contain p-0.5")}
+            className={cn("rounded-lg", "h-full w-full object-contain p-0.5")}
           />
         </span>
         <span
@@ -181,7 +181,7 @@ export const ExperienceCard = (company: ExperienceCompany) => {
             <svg
               width="18"
               height="18"
-              className={`transition-transform ${open ? "rotate-180" : ""}`}
+              className={`transition-transform duration-200 ease-out ${open ? "rotate-180" : ""}`}
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -197,11 +197,17 @@ export const ExperienceCard = (company: ExperienceCompany) => {
         </button>
       </div>
 
-      {open && (
-        <div
-          id={`exp-details-${companyName.replace(/\s+/g, "")}`}
-          className={cn("pl-6", "pr-2", "pt-1", "pb-1", "animate-fadein")}
-        >
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            id={`exp-details-${companyName.replace(/\s+/g, "")}`}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="pl-6 pr-2 pt-1 pb-1">
           {positions.map((position, idx) => (
             <section key={idx} className="mb-2" aria-label={position.role}>
               {position.bulletPoints.length > 0 && (
@@ -260,8 +266,10 @@ export const ExperienceCard = (company: ExperienceCompany) => {
               )}
             </section>
           ))}
-        </div>
-      )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {company.techBadges && company.techBadges.length > 0 && (
         <div className={cn("flex", "flex-wrap", "gap-1", "mt-1", "pl-6.5")}>
           {company.techBadges.map((tech, i) => (

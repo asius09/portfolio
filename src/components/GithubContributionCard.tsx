@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence, type Variants } from "motion/react";
+import { motion, AnimatePresence, useInView, type Variants } from "motion/react";
 import { cn } from "cn";
 import { formatDate } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import fallbackContributions from "@/data/contributionsFallback.json";
 import Link from "next/link";
+import {
+  IconX,
+  IconExternalLink,
+  IconLayoutGrid,
+  IconChartBar,
+} from "@tabler/icons-react";
 
 export type ContributionTheme =
   | "blue"
@@ -14,6 +20,8 @@ export type ContributionTheme =
   | "amber"
   | "rose"
   | "monochrome";
+
+export type ContributionViewMode = "timeline" | "grid";
 
 export interface ThemeConfig {
   name: ContributionTheme;
@@ -34,10 +42,10 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
       "bg-blue-500/25 dark:bg-blue-500/30",
       "bg-blue-500/50 dark:bg-blue-500/55",
       "bg-blue-500/75 dark:bg-blue-500/85",
-      "bg-blue-600 shadow-[0_0_6px_rgba(37,99,235,0.35)] dark:bg-blue-500 dark:shadow-[0_0_6px_rgba(59,130,246,0.5)]",
+      "bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.45)] dark:bg-blue-500 dark:shadow-[0_0_10px_rgba(59,130,246,0.6)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(96, 165, 250, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(37, 99, 235, 0.35)",
+    glowBoxShadow: "0 0 10px 2.5px rgba(96, 165, 250, 0.95), 0 0 18px 5px rgba(59, 130, 246, 0.45)",
+    glowRestingShadow: "0 0 4px 1px rgba(37, 99, 235, 0.45)",
     accentText: "text-blue-600 dark:text-blue-400",
     activeRing: "hover:ring-blue-400/70 dark:hover:ring-blue-400/70",
   },
@@ -49,10 +57,10 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
       "bg-emerald-500/25 dark:bg-emerald-500/30",
       "bg-emerald-500/50 dark:bg-emerald-500/55",
       "bg-emerald-500/75 dark:bg-emerald-500/85",
-      "bg-emerald-600 shadow-[0_0_6px_rgba(16,185,129,0.35)] dark:bg-emerald-500 dark:shadow-[0_0_6px_rgba(16,185,129,0.5)]",
+      "bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.45)] dark:bg-emerald-500 dark:shadow-[0_0_10px_rgba(16,185,129,0.6)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(52, 211, 153, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(16, 185, 129, 0.35)",
+    glowBoxShadow: "0 0 10px 2.5px rgba(52, 211, 153, 0.95), 0 0 18px 5px rgba(16, 185, 129, 0.45)",
+    glowRestingShadow: "0 0 4px 1px rgba(16, 185, 129, 0.45)",
     accentText: "text-emerald-600 dark:text-emerald-400",
     activeRing: "hover:ring-emerald-400/70 dark:hover:ring-emerald-400/70",
   },
@@ -64,10 +72,10 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
       "bg-violet-500/25 dark:bg-violet-500/30",
       "bg-violet-500/50 dark:bg-violet-500/55",
       "bg-violet-500/75 dark:bg-violet-500/85",
-      "bg-violet-600 shadow-[0_0_6px_rgba(147,51,234,0.35)] dark:bg-violet-500 dark:shadow-[0_0_6px_rgba(168,85,247,0.5)]",
+      "bg-violet-600 shadow-[0_0_8px_rgba(147,51,234,0.45)] dark:bg-violet-500 dark:shadow-[0_0_10px_rgba(168,85,247,0.6)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(192, 132, 252, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(147, 51, 234, 0.35)",
+    glowBoxShadow: "0 0 10px 2.5px rgba(192, 132, 252, 0.95), 0 0 18px 5px rgba(147, 51, 234, 0.45)",
+    glowRestingShadow: "0 0 4px 1px rgba(147, 51, 234, 0.45)",
     accentText: "text-violet-600 dark:text-violet-400",
     activeRing: "hover:ring-violet-400/70 dark:hover:ring-violet-400/70",
   },
@@ -79,10 +87,10 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
       "bg-amber-500/25 dark:bg-amber-500/30",
       "bg-amber-500/50 dark:bg-amber-500/55",
       "bg-amber-500/75 dark:bg-amber-500/85",
-      "bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.35)] dark:bg-amber-500 dark:shadow-[0_0_6px_rgba(245,158,11,0.5)]",
+      "bg-amber-600 shadow-[0_0_8px_rgba(217,119,6,0.45)] dark:bg-amber-500 dark:shadow-[0_0_10px_rgba(245,158,11,0.6)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(251, 191, 36, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(245, 158, 11, 0.35)",
+    glowBoxShadow: "0 0 10px 2.5px rgba(251, 191, 36, 0.95), 0 0 18px 5px rgba(245, 158, 11, 0.45)",
+    glowRestingShadow: "0 0 4px 1px rgba(245, 158, 11, 0.45)",
     accentText: "text-amber-600 dark:text-amber-400",
     activeRing: "hover:ring-amber-400/70 dark:hover:ring-amber-400/70",
   },
@@ -94,10 +102,10 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
       "bg-rose-500/25 dark:bg-rose-500/30",
       "bg-rose-500/50 dark:bg-rose-500/55",
       "bg-rose-500/75 dark:bg-rose-500/85",
-      "bg-rose-600 shadow-[0_0_6px_rgba(225,29,72,0.35)] dark:bg-rose-500 dark:shadow-[0_0_6px_rgba(244,63,94,0.5)]",
+      "bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.45)] dark:bg-rose-500 dark:shadow-[0_0_10px_rgba(244,63,94,0.6)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(251, 113, 133, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(225, 29, 72, 0.35)",
+    glowBoxShadow: "0 0 10px 2.5px rgba(251, 113, 133, 0.95), 0 0 18px 5px rgba(225, 29, 72, 0.45)",
+    glowRestingShadow: "0 0 4px 1px rgba(225, 29, 72, 0.45)",
     accentText: "text-rose-600 dark:text-rose-400",
     activeRing: "hover:ring-rose-400/70 dark:hover:ring-rose-400/70",
   },
@@ -105,22 +113,38 @@ export const THEMES: Record<ContributionTheme, ThemeConfig> = {
     name: "monochrome",
     label: "Mono",
     levels: [
-      "bg-zinc-950/5 dark:bg-white/5",
-      "bg-zinc-400/35 dark:bg-zinc-600/40",
-      "bg-zinc-500/60 dark:bg-zinc-400/60",
-      "bg-zinc-700/80 dark:bg-zinc-200/85",
-      "bg-zinc-900 shadow-[0_0_6px_rgba(24,24,27,0.25)] dark:bg-white dark:shadow-[0_0_6px_rgba(255,255,255,0.45)]",
+      "bg-neutral-950/5 dark:bg-white/[0.04]",
+      "bg-neutral-400/30 dark:bg-neutral-800",
+      "bg-neutral-500/55 dark:bg-neutral-600",
+      "bg-neutral-700/80 dark:bg-neutral-400",
+      "bg-neutral-900 dark:bg-neutral-100 dark:shadow-[0_0_6px_rgba(255,255,255,0.3)]",
     ],
-    glowBoxShadow: "0 0 5px 1.5px rgba(115, 115, 115, 0.85)",
-    glowRestingShadow: "0 0 3px 0px rgba(115, 115, 115, 0.35)",
-    accentText: "text-neutral-900 dark:text-zinc-100",
-    activeRing: "hover:ring-neutral-400/70 dark:hover:ring-zinc-400/70",
+    glowBoxShadow: "0 0 6px 1px rgba(255, 255, 255, 0.25)",
+    glowRestingShadow: "none",
+    accentText: "text-neutral-900 dark:text-neutral-100",
+    activeRing: "hover:ring-neutral-400/60 dark:hover:ring-neutral-400/60",
   },
 };
 
 export interface ContributionDay {
   date: string;
   count: number;
+}
+
+export interface WeekData {
+  weekNumber: number;
+  startDate: string;
+  endDate: string;
+  rangeShort: string;
+  rangeLong: string;
+  commits: number;
+  activeDays: number;
+  maxDayCount: number;
+  isFuture: boolean;
+  isCurrent: boolean;
+  heat: number;
+  rotation: number;
+  days: ContributionDay[];
 }
 
 export interface GithubContributionCardProps {
@@ -131,67 +155,107 @@ export interface GithubContributionCardProps {
   className?: string;
   animate?: boolean;
   theme?: ContributionTheme;
+  defaultView?: ContributionViewMode;
   allowThemeSelection?: boolean;
   onThemeChange?: (theme: ContributionTheme) => void;
+  onViewChange?: (view: ContributionViewMode) => void;
 }
 
-const columnVariants: Variants = {
+const ROTATIONS: Record<number, number> = {
+  1: 5,
+  3: -5,
+  5: 5,
+  8: -5,
+  11: 5,
+  14: -5,
+  18: 5,
+  21: -5,
+  25: 5,
+  28: -5,
+  32: 5,
+  35: -5,
+  38: 5,
+  42: -5,
+  46: 5,
+  49: -5,
+};
+
+const tickVariants: Variants = {
   hidden: {
     opacity: 0,
-    filter: "blur(2px)",
+    scaleY: 0.8,
   },
-  visible: (i: number) => ({
+  themeShift: {
+    opacity: 0.45,
+    scaleY: 0.85,
+    filter: "brightness(1.4)",
+  },
+  animate: (i: number) => ({
     opacity: 1,
-    filter: "blur(0px)",
+    scaleY: 1,
+    filter: "brightness(1)",
     transition: {
-      duration: 0.08,
+      duration: 0.24,
       delay: i * 0.012,
-      ease: "linear",
+      ease: [0.22, 1, 0.36, 1],
     },
   }),
 };
 
-/**
- * Below `sm`, squeezing 52 columns into a phone viewport leaves ~6px cells,
- * which are illegible and impossible to tap. Below this width the graph keeps
- * a readable minimum cell size and scrolls horizontally instead.
- */
-const COMPACT_QUERY = "(max-width: 639px)";
-/** 52 columns plus gaps; yields ~11px cells. */
-const SCROLL_GRAPH_WIDTH = 640;
+const columnVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scaleY: 0.85,
+  },
+  themeShift: {
+    opacity: 0.45,
+    scaleY: 0.9,
+    filter: "brightness(1.4)",
+  },
+  animate: (i: number) => ({
+    opacity: 1,
+    scaleY: 1,
+    filter: "brightness(1)",
+    transition: {
+      duration: 0.24,
+      delay: i * 0.012,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
 
-const TooltipBubble = ({
-  visible,
-  count,
-  date,
-  accentClass,
-}: {
-  visible: boolean;
-  count: number;
-  date: string;
-  accentClass: string;
-}) => (
-  <div
-    className={cn(
-      "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
-      visible
-        ? "translate-y-0 scale-100 opacity-100"
-        : "pointer-events-none translate-y-1 scale-95 opacity-0",
-    )}
-  >
-    <div className="border-border/70 bg-background/95 text-foreground flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
-      <span className={cn("font-semibold", accentClass)}>{count}</span>
-      <span className="text-muted-foreground">
-        {count === 1 ? "contribution" : "contributions"} on
-      </span>
-      <span className="text-foreground font-medium">
-        {date !== "No data" ? formatDate(date) : "No data"}
-      </span>
 
-      <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
-    </div>
-  </div>
-);
+const VIEW_MODES = [
+  { id: "timeline", label: "Timeline", Icon: IconChartBar },
+  { id: "grid", label: "Grid", Icon: IconLayoutGrid },
+] as const;
+
+function formatRangeShort(startStr: string, endStr: string): string {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return `${startStr} - ${endStr}`;
+  const startMonth = start.toLocaleDateString("en-US", { month: "short" });
+  const endMonth = end.toLocaleDateString("en-US", { month: "short" });
+  if (startMonth === endMonth) {
+    return `${startMonth} ${start.getDate()} - ${end.getDate()}`;
+  }
+  return `${startMonth} ${start.getDate()} - ${endMonth} ${end.getDate()}`;
+}
+
+function formatRangeLong(startStr: string, endStr: string): string {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return `${startStr} - ${endStr}`;
+  return `${start.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })} - ${end.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })}`;
+}
 
 export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   username = "asius09",
@@ -201,40 +265,80 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   className,
   animate = true,
   theme = "blue",
+  defaultView = "timeline",
   allowThemeSelection = true,
   onThemeChange,
+  onViewChange,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.25 });
   const popoverRef = useRef<HTMLDivElement>(null);
-  const isCompact = useMediaQuery(COMPACT_QUERY);
+
+  const [viewMode, setViewMode] = useState<ContributionViewMode>(defaultView);
   const [activeTheme, setActiveTheme] = useState<ContributionTheme>(theme);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [contributions, setContributions] = useState<ContributionDay[]>(
-    initialData || [],
-  );
-  const [totalContributions, setTotalContributions] = useState<number>(
-    initialTotal || 0,
-  );
-  const [loading, setLoading] = useState(!initialData);
-  const [error, setError] = useState(false);
+  const [contributions, setContributions] = useState<ContributionDay[]>(() => {
+    if (initialData && initialData.length > 0) return initialData;
+    return (fallbackContributions.contributions || []) as ContributionDay[];
+  });
+  const [totalCount, setTotalCount] = useState<number>(() => {
+    if (initialTotal !== undefined) return initialTotal;
+    return fallbackContributions.totalContributions || 0;
+  });
+  const [error] = useState(false);
+
+  const [activeWeekNumber, setActiveWeekNumber] = useState<number | null>(null);
+  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined);
+  const [themeWaveKey, setThemeWaveKey] = useState(0);
+
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
     isGliding: boolean;
     x: number;
     y: number;
+    title: string;
     count: number;
-    date: string;
+    activeDays?: number;
   }>({
     visible: false,
     isGliding: false,
     x: 0,
     y: 0,
+    title: "",
     count: 0,
-    date: "",
   });
 
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem("github-contributions-view") as ContributionViewMode;
+      if (stored === "timeline" || stored === "grid") {
+        setViewMode(stored);
+      }
+    } catch {}
+  }, []);
+
+  const handleViewModeChange = (mode: ContributionViewMode) => {
+    if (mode === viewMode) return;
+    setViewMode(mode);
+    onViewChange?.(mode);
+    try {
+      localStorage.setItem("github-contributions-view", mode);
+    } catch {}
+  };
+
+  const handleThemeChange = (newTheme: ContributionTheme) => {
+    setActiveTheme(newTheme);
+    setThemeWaveKey((prev) => prev + 1);
+    onThemeChange?.(newTheme);
+    setIsPopoverOpen(false);
+  };
+
+  useEffect(() => {
     setActiveTheme(theme);
+    setThemeWaveKey((prev) => prev + 1);
   }, [theme]);
 
   useEffect(() => {
@@ -259,34 +363,107 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   }, [isPopoverOpen]);
 
   useEffect(() => {
-    if (initialData) {
+    if (initialData && initialData.length > 0) {
       setContributions(initialData);
-      setTotalContributions(
+      setTotalCount(
         initialTotal ?? initialData.reduce((acc, c) => acc + c.count, 0),
       );
-      setLoading(false);
       return;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
     const fetchContributions = async () => {
       try {
-        const res = await fetch(endpoint);
-        if (!res.ok) throw new Error();
+        const res = await fetch(endpoint, { signal: controller.signal });
+        if (!res.ok) return;
         const data = await res.json();
-        setContributions(data.contributions || []);
-        setTotalContributions(data.totalContributions || 0);
+        if (data.contributions && data.contributions.length > 0) {
+          setContributions(data.contributions);
+          setTotalCount(data.totalContributions || 0);
+        }
       } catch {
-        setError(true);
       } finally {
-        setLoading(false);
+        clearTimeout(timeoutId);
       }
     };
     fetchContributions();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [endpoint, initialData, initialTotal]);
+
+  const weeksData = useMemo<WeekData[]>(() => {
+    const totalSlots = 52 * 7;
+    let daysSlice = contributions;
+
+    if (daysSlice.length > totalSlots) {
+      daysSlice = daysSlice.slice(daysSlice.length - totalSlots);
+    } else if (daysSlice.length < totalSlots) {
+      const padding = totalSlots - daysSlice.length;
+      const emptyDays: ContributionDay[] = Array.from({ length: padding }, () => ({
+        date: "",
+        count: 0,
+      }));
+      daysSlice = [...emptyDays, ...daysSlice];
+    }
+
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
+    const calculatedWeeks: WeekData[] = [];
+    let maxWeeklyCommits = 1;
+
+    for (let w = 0; w < 52; w++) {
+      const weekDays = daysSlice.slice(w * 7, (w + 1) * 7);
+      const commits = weekDays.reduce((acc, d) => acc + d.count, 0);
+      if (commits > maxWeeklyCommits) maxWeeklyCommits = commits;
+
+      const firstDate = weekDays.find((d) => d.date)?.date || "";
+      const lastDate = [...weekDays].reverse().find((d) => d.date)?.date || firstDate;
+
+      const startDate = firstDate ? new Date(firstDate) : new Date();
+      const endDate = lastDate ? new Date(lastDate) : startDate;
+      endDate.setHours(23, 59, 59, 999);
+
+      const isCurrent = today >= startDate && today <= endDate;
+      const isFuture = startDate > today;
+      const activeDays = weekDays.filter((d) => d.count > 0).length;
+      const maxDayCount = Math.max(0, ...weekDays.map((d) => d.count));
+
+      calculatedWeeks.push({
+        weekNumber: w + 1,
+        startDate: firstDate,
+        endDate: lastDate,
+        rangeShort: firstDate ? formatRangeShort(firstDate, lastDate) : `Week ${w + 1}`,
+        rangeLong: firstDate ? formatRangeLong(firstDate, lastDate) : `Week ${w + 1}`,
+        commits,
+        activeDays,
+        maxDayCount,
+        isFuture,
+        isCurrent,
+        heat: commits,
+        rotation: ROTATIONS[w + 1] ?? 0,
+        days: weekDays,
+      });
+    }
+
+    return calculatedWeeks.map((week) => ({
+      ...week,
+      heat: Math.round((week.commits / maxWeeklyCommits) * 100),
+    }));
+  }, [contributions]);
+
+  const activeWeek = useMemo(() => {
+    if (activeWeekNumber === null) return null;
+    return weeksData.find((w) => w.weekNumber === activeWeekNumber) ?? null;
+  }, [activeWeekNumber, weeksData]);
 
   const monthLabels = useMemo(() => {
     if (contributions.length === 0) return [];
-
     const totalSlots = 52 * 7;
     const startIndex = Math.max(0, contributions.length - totalSlots);
     const visibleData = contributions.slice(startIndex);
@@ -319,6 +496,26 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     });
   }, [contributions]);
 
+  useEffect(() => {
+    const activeEl = viewMode === "timeline" ? timelineRef.current : gridRef.current;
+    if (!activeEl) return;
+
+    const updateHeight = () => {
+      if (activeEl) {
+        setContainerHeight(activeEl.offsetHeight);
+      }
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(() => {
+      updateHeight();
+    });
+
+    observer.observe(activeEl);
+    return () => observer.disconnect();
+  }, [viewMode, activeWeekNumber]);
+
   const weeks = Array.from({ length: 52 });
   const days = Array.from({ length: 7 });
 
@@ -337,24 +534,22 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     return activeCfg.levels[getLevelIndex(count)];
   };
 
-  const getGlowAnimation = (count: number, weekIndex: number) => {
-    if (!animate || count < 10) return undefined;
-    return {
-      animate: {
-        boxShadow: [
-          "0 0 0px rgba(0, 0, 0, 0)",
-          currentThemeConfig.glowBoxShadow,
-          currentThemeConfig.glowRestingShadow,
-        ],
-        filter: ["brightness(1)", "brightness(1.4)", "brightness(1)"],
-      },
-      transition: {
-        delay: weekIndex * 0.012 + 0.01,
-        duration: 0.14,
-        times: [0, 0.35, 1],
-        ease: "easeOut" as const,
-      },
-    };
+  const getWeeklyLevelIndex = (commits: number, heat: number): number => {
+    if (commits === 0) return 0;
+    if (heat >= 75 || commits >= 100) return 4;
+    if (heat >= 50 || commits >= 50) return 3;
+    if (heat >= 25 || commits >= 20) return 2;
+    return 1;
+  };
+
+  const getWeeklyLevelClass = (
+    commits: number,
+    heat: number,
+    themeKey: ContributionTheme,
+  ) => {
+    if (commits === 0) return "bg-neutral-200 dark:bg-neutral-800";
+    const activeCfg = THEMES[themeKey] || THEMES.blue;
+    return activeCfg.levels[getWeeklyLevelIndex(commits, heat)];
   };
 
   const getDayData = (weekIndex: number, dayIndex: number) => {
@@ -368,31 +563,88 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     return contributions[currentIdx];
   };
 
+  const getTickGlowAnimation = (commits: number, index: number) => {
+    if (!animate || !isInView || commits === 0) return undefined;
+    const isMax = commits >= 10;
+    const isMed = commits >= 2;
+    return {
+      animate: {
+        boxShadow: isMax
+          ? [
+              "0 0 0px rgba(0, 0, 0, 0)",
+              currentThemeConfig.glowBoxShadow,
+              currentThemeConfig.glowRestingShadow,
+            ]
+          : isMed
+            ? [
+                "0 0 0px rgba(0, 0, 0, 0)",
+                currentThemeConfig.glowRestingShadow,
+                "0 0 0px rgba(0, 0, 0, 0)",
+              ]
+            : undefined,
+        filter: isMax
+          ? ["brightness(1)", "brightness(1.65)", "brightness(1)"]
+          : ["brightness(1)", "brightness(1.3)", "brightness(1)"],
+      },
+      transition: {
+        delay: index * 0.012 + 0.04,
+        duration: 0.35,
+        times: [0, 0.45, 1],
+        ease: "easeOut" as const,
+      },
+    };
+  };
+
   const handleCellEnter = (
     e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>,
     dayData: ContributionDay,
   ) => {
+    const card = cardRef.current;
+    if (!card) return;
+
     const target = e.currentTarget;
-    const container = containerRef.current;
-    if (!container) return;
-
     const targetRect = target.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
 
-    const x = targetRect.left - containerRect.left + targetRect.width / 2;
-    const y = targetRect.top - containerRect.top;
+    const x = targetRect.left - cardRect.left + targetRect.width / 2;
+    const y = targetRect.top - cardRect.top;
 
     setTooltip((prev) => ({
       visible: true,
       isGliding: prev.visible,
       x,
       y,
+      title: dayData.date && dayData.date !== "No data" ? formatDate(dayData.date) : "No data",
       count: dayData.count,
-      date: dayData.date,
     }));
   };
 
-  const handleContainerLeave = () => {
+  const handleBarEnter = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    week: WeekData,
+  ) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const target = e.currentTarget;
+    const targetRect = target.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+
+    const x = targetRect.left - cardRect.left + targetRect.width / 2;
+    const y = targetRect.top - cardRect.top;
+
+    setTooltip((prev) => ({
+      visible: true,
+      isGliding: prev.visible,
+      x,
+      y,
+      title: week.rangeShort,
+      count: week.commits,
+      activeDays: week.activeDays,
+    }));
+  };
+
+  const handleTooltipLeave = () => {
     setTooltip((prev) => ({
       ...prev,
       visible: false,
@@ -400,137 +652,308 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     }));
   };
 
-  /**
-   * Touch has no hover, so tapping a cell has to open the tooltip too. A tap
-   * that misses a cell, or any scroll, closes it again — otherwise it would
-   * stay stuck on screen with no way to dismiss it.
-   */
-  useEffect(() => {
-    if (!isCompact || !tooltip.visible) return;
-
-    const dismiss = () => handleContainerLeave();
-    const onPointerDown = (e: PointerEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) dismiss();
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("scroll", dismiss, true);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("scroll", dismiss, true);
-    };
-  }, [isCompact, tooltip.visible]);
-
   if (error) return null;
 
   return (
     <section
-      id="working-idea-section"
+      ref={sectionRef}
+      id="github-contributions-section"
       className={cn("mt-12 w-full", className)}
+      aria-label="GitHub Contributions"
+      tabIndex={-1}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          setActiveWeekNumber(null);
+        }
+      }}
     >
-      <div className="bg-background/40 w-full rounded-lg backdrop-blur-sm">
-        <div className="flex w-full flex-col gap-2">
+      <div
+        ref={cardRef}
+        className="bg-background/40 relative w-full rounded-lg backdrop-blur-xs"
+      >
+        <div
+          className={cn(
+            "pointer-events-none absolute top-0 left-0 z-50 select-none",
+            tooltip.isGliding
+              ? "transition-transform duration-150 ease-out will-change-transform"
+              : "transition-none",
+          )}
+          style={{
+            transform: `translate3d(${tooltip.x}px, ${tooltip.y - 8}px, 0) translate(-50%, -100%)`,
+          }}
+        >
           <div
             className={cn(
-              "text-muted-foreground flex items-center gap-1.5 pb-0.5 text-[10px] sm:hidden",
-              isCompact ? "opacity-100" : "hidden",
+              "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
+              tooltip.visible
+                ? "translate-y-0 scale-100 opacity-100"
+                : "translate-y-1 scale-95 opacity-0",
             )}
           >
-            <span className="opacity-60 select-none">&#8596;</span>
-            Swipe to see the full year
+            <div className="border-border/70 bg-background/95 text-foreground flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap shadow-md backdrop-blur-md">
+              <span className="text-foreground font-semibold">{tooltip.title}</span>
+              <span className="text-muted-foreground opacity-40">•</span>
+              <span className={cn("font-semibold", currentThemeConfig.accentText)}>
+                {tooltip.count} {tooltip.count === 1 ? "contribution" : "contributions"}
+              </span>
+              {typeof tooltip.activeDays === "number" && tooltip.activeDays > 0 && (
+                <span className="text-muted-foreground text-[10px]">
+                  ({tooltip.activeDays}d active)
+                </span>
+              )}
+              <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex w-full flex-col gap-3">
+          <div className="flex items-center justify-between px-1">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
+              <span className="text-foreground font-semibold">
+                {totalCount.toLocaleString()} contributions
+              </span>
+              <span className="opacity-40 select-none">•</span>
+              <Link
+                href={`https://github.com/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground inline-flex items-center gap-1 transition-colors hover:underline"
+              >
+                <span>GitHub</span>
+                <IconExternalLink className="size-3" />
+              </Link>
+            </div>
+
+            <div className="relative flex items-center gap-0.5 rounded-md border border-border/50 bg-card p-0.5 shadow-xs dark:border-white/10 dark:bg-neutral-900">
+              {VIEW_MODES.map(({ id, label, Icon }) => {
+                const isSelected = viewMode === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => handleViewModeChange(id as ContributionViewMode)}
+                    aria-label={`${label} view`}
+                    className={cn(
+                      "relative z-10 flex cursor-pointer items-center gap-1.5 rounded px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground select-none",
+                      isSelected && "text-foreground font-medium",
+                    )}
+                  >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="active-contribution-view-tab"
+                        className="absolute inset-0 z-[-1] rounded bg-neutral-200/60 dark:bg-neutral-800"
+                        transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                      />
+                    )}
+                    <Icon className="size-3.5" />
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div
-            className={cn(
-              "-mx-1 overflow-x-auto px-1",
-              "[-webkit-overflow-scrolling:touch] [scrollbar-width:thin]",
-              isCompact && "snap-x",
-            )}
-          >
+          <div className="relative w-full">
+            <div className="relative h-4 w-full select-none">
+              {monthLabels.map((month, idx) => (
+                <span
+                  key={`${month.name}-${idx}`}
+                  className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
+                  style={{ left: `${(month.col / 52) * 100}%` }}
+                >
+                  {month.name}
+                </span>
+              ))}
+            </div>
+
             <div
-              className="w-full"
-              style={isCompact ? { minWidth: SCROLL_GRAPH_WIDTH } : undefined}
+              className="relative w-full overflow-hidden transition-[height] duration-200 ease-out"
+              style={{ height: viewMode === "grid" && containerHeight !== undefined ? `${containerHeight}px` : "auto" }}
+              onMouseLeave={handleTooltipLeave}
             >
-              <motion.div
-                initial={animate ? { opacity: 0, y: -4 } : false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="relative h-4 w-full"
+              <div
+                ref={timelineRef}
+                className={cn(
+                  "w-full pt-1.5 pb-1 transition-all duration-200 ease-out select-none",
+                  viewMode === "timeline"
+                    ? "opacity-100 translate-y-0"
+                    : "pointer-events-none absolute inset-x-0 top-0 opacity-0 -translate-y-1.5",
+                )}
               >
-                {monthLabels.map((month, idx) => (
-                  <span
-                    key={`${month.name}-${idx}`}
-                    className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
-                    style={{ left: `${(month.col / 52) * 100}%` }}
-                  >
-                    {month.name}
-                  </span>
-                ))}
-              </motion.div>
+                <motion.div
+                  key={`timeline-ticks-${activeTheme}-${themeWaveKey}`}
+                  initial={themeWaveKey > 0 ? "themeShift" : "hidden"}
+                  animate={isInView ? "animate" : "hidden"}
+                  className="flex w-full items-center justify-between gap-px sm:gap-0.5"
+                >
+                  {weeksData.map((week, idx) => {
+                    const isActive = activeWeekNumber === week.weekNumber;
+                    const hasActive = activeWeekNumber !== null;
+                    const hasActivity = week.commits > 0;
+                    const glow = getTickGlowAnimation(week.commits, idx);
+
+                    return (
+                      <motion.button
+                        key={week.weekNumber}
+                        custom={idx}
+                        variants={tickVariants}
+                        type="button"
+                        tabIndex={week.isFuture ? -1 : 0}
+                        onClick={() =>
+                          setActiveWeekNumber((prev) =>
+                            prev === week.weekNumber ? null : week.weekNumber,
+                          )
+                        }
+                        onMouseEnter={(e) => handleBarEnter(e, week)}
+                        aria-label={`${week.rangeShort}: ${week.commits} commits`}
+                        className={cn(
+                          "group relative flex flex-1 cursor-pointer items-center justify-center focus-visible:outline-none",
+                          week.isFuture && "pointer-events-none opacity-20",
+                        )}
+                      >
+                        <span className="absolute -top-3 -bottom-3 -left-1 -right-1 z-10 block" />
+
+                        <motion.span
+                          animate={glow?.animate}
+                          transition={glow?.transition}
+                          style={{
+                            transform: `rotate(${week.rotation}deg)`,
+                          }}
+                          className={cn(
+                            "block h-9 sm:h-9.5 w-full max-w-0.75 sm:max-w-1 rounded-full transition-all duration-150 ease-out",
+                            getWeeklyLevelClass(week.commits, week.heat, activeTheme),
+                            "group-hover:scale-y-115 group-hover:brightness-125",
+                            isActive
+                              ? "opacity-100! scale-y-120! ring-1 ring-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+                              : hasActive
+                                ? "opacity-35"
+                                : "opacity-100",
+                          )}
+                        />
+                      </motion.button>
+                    );
+                  })}
+                </motion.div>
+
+                <AnimatePresence>
+                  {activeWeek && (
+                    <motion.div
+                      key="active-week-details"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-3">
+                        <div className="border-border/50 bg-card/60 rounded-lg border p-4 shadow-xs backdrop-blur-xs dark:border-white/10 dark:bg-neutral-900/60">
+                        <div className="border-border/40 flex items-center justify-between border-b pb-3">
+                          <span className="text-foreground text-sm font-medium">
+                            {activeWeek.rangeLong}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setActiveWeekNumber(null)}
+                            aria-label="Close details"
+                            className="text-muted-foreground hover:text-foreground cursor-pointer rounded-sm p-1 transition-colors"
+                          >
+                            <IconX className="size-4" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 pt-3.5 text-xs sm:grid-cols-2">
+                          <div className="space-y-1.5">
+                            <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                              Code Activity
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="text-foreground font-medium">
+                                {activeWeek.commits}
+                              </span>{" "}
+                              {activeWeek.commits === 1 ? "commit" : "commits"} across repositories
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="text-foreground font-medium">
+                                {activeWeek.activeDays}
+                              </span>{" "}
+                              out of 7 active days this week
+                            </p>
+                            {activeWeek.maxDayCount > 0 && (
+                              <p className="text-muted-foreground">
+                                Peak:{" "}
+                                <span className="text-foreground font-medium">
+                                  {activeWeek.maxDayCount}
+                                </span>{" "}
+                                contributions in a single day
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="space-y-1.5 sm:border-border/40 sm:border-l sm:pl-4">
+                            <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                              GitHub Profile
+                            </p>
+                            <p className="text-muted-foreground">
+                              Total yearly activity:{" "}
+                              <span className="text-foreground font-medium">
+                                {totalCount.toLocaleString()}
+                              </span>{" "}
+                              contributions
+                            </p>
+                            <div className="pt-1">
+                              <Link
+                                href={`https://github.com/${username}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline dark:text-blue-400"
+                              >
+                                <span>View profile on GitHub</span>
+                                <IconExternalLink className="size-3.5" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <div
-                ref={containerRef}
-                className="relative flex gap-1"
-                onMouseLeave={handleContainerLeave}
-              >
-                {isCompact ? (
-                  <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 select-none">
-                    <TooltipBubble
-                      visible={tooltip.visible}
-                      count={tooltip.count}
-                      date={tooltip.date}
-                      accentClass={currentThemeConfig.accentText}
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className={cn(
-                      "pointer-events-none absolute top-0 left-0 z-50 select-none",
-                      tooltip.isGliding
-                        ? "transition-transform duration-150 ease-out will-change-transform"
-                        : "transition-none",
-                    )}
-                    style={{
-                      transform: `translate3d(${tooltip.x}px, ${tooltip.y - 8}px, 0) translate(-50%, -100%)`,
-                    }}
-                  >
-                    <TooltipBubble
-                      visible={tooltip.visible}
-                      count={tooltip.count}
-                      date={tooltip.date}
-                      accentClass={currentThemeConfig.accentText}
-                    />
-                  </div>
+                ref={gridRef}
+                className={cn(
+                  "w-full pt-1.5 pb-1 transition-all duration-200 ease-out select-none",
+                  viewMode === "grid"
+                    ? "opacity-100 translate-y-0"
+                    : "pointer-events-none absolute inset-x-0 top-0 opacity-0 translate-y-1.5",
                 )}
-
-                <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
+              >
+                <motion.div
+                  key={`grid-columns-${activeTheme}-${themeWaveKey}`}
+                  initial={themeWaveKey > 0 ? "themeShift" : "hidden"}
+                  animate={isInView ? "animate" : "hidden"}
+                  className="flex w-full justify-between gap-px sm:gap-0.5"
+                >
                   {weeks.map((_, weekIndex) => (
                     <motion.div
                       key={weekIndex}
                       custom={weekIndex}
-                      initial={animate ? "hidden" : false}
-                      whileInView="visible"
-                      viewport={{ once: true, amount: 0.1 }}
                       variants={columnVariants}
                       className="flex flex-1 flex-col gap-px sm:gap-0.5"
                     >
                       {days.map((_, dayIndex) => {
                         const dayData = getDayData(weekIndex, dayIndex);
-                        const glow = getGlowAnimation(dayData.count, weekIndex);
-                        const isTop = dayData.count >= 10;
+
                         return (
-                          <motion.div
+                          <div
                             key={dayIndex}
-                            animate={glow?.animate}
-                            transition={glow?.transition}
                             onMouseEnter={(e) => handleCellEnter(e, dayData)}
                             onPointerDown={(e) => handleCellEnter(e, dayData)}
                             aria-label={`${dayData.count} contributions on ${dayData.date}`}
                             className={cn(
-                              "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
+                              "aspect-square w-full origin-center cursor-pointer rounded-[1px] shadow-xs transition-all duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
                               currentThemeConfig.activeRing,
-                              isTop && "z-10",
                               getLevelClass(dayData.count, activeTheme),
                             )}
                           />
@@ -538,41 +961,12 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                       })}
                     </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
 
-          <motion.div
-            initial={animate ? { opacity: 0, y: 4 } : false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
-            className="mt-3 flex flex-row items-center justify-between px-1"
-          >
-            <div className="text-muted-foreground flex items-center gap-2 text-[10px]">
-              <span className="text-foreground/80 font-medium">
-                {loading ? "..." : totalContributions.toLocaleString()}{" "}
-                contributions
-              </span>
-              <span className="opacity-40 select-none">•</span>
-              <Link
-                href={`https://github.com/${username}`}
-                target="_blank"
-                className={cn(
-                  "flex items-center gap-1 underline-offset-2 transition-colors hover:underline",
-                  activeTheme === "blue" && "hover:text-blue-500",
-                  activeTheme === "green" && "hover:text-emerald-500",
-                  activeTheme === "violet" && "hover:text-violet-500",
-                  activeTheme === "amber" && "hover:text-amber-500",
-                  activeTheme === "rose" && "hover:text-rose-500",
-                  activeTheme === "monochrome" && "hover:text-foreground",
-                )}
-              >
-                Github
-              </Link>
-            </div>
-
+          <div className="mt-1 flex flex-row items-center justify-end px-1 pb-1">
             <div className="relative flex items-center" ref={popoverRef}>
               <button
                 type="button"
@@ -628,11 +1022,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                           <button
                             key={key}
                             type="button"
-                            onClick={() => {
-                              setActiveTheme(key as ContributionTheme);
-                              onThemeChange?.(key as ContributionTheme);
-                              setIsPopoverOpen(false);
-                            }}
+                            onClick={() => handleThemeChange(key as ContributionTheme)}
                             className={cn(
                               "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
                               isSelected
@@ -660,7 +1050,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                 )}
               </AnimatePresence>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

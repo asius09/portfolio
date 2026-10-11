@@ -10,26 +10,11 @@ import { Stack } from "@/components/section/Stack";
 import { GithubContributionCard } from "@/components/GithubContributionCard";
 import { motion } from "motion/react";
 
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.5,
-      delayChildren: 0.5,
-    },
-  },
-};
-
 export default function Home() {
   return (
     <div className="relative flex h-screen min-h-dvh items-start justify-center">
       <AppHeader />
-      <motion.main
-        className="mt-12 w-full max-w-3xl px-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-      >
+      <main className="mt-12 w-full max-w-3xl px-6">
         <Hero />
         <About />
         <GithubContributionCard />
@@ -38,7 +23,7 @@ export default function Home() {
         <Project />
         <Education />
         <Footer />
-      </motion.main>
+      </main>
     </div>
   );
 }

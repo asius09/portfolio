@@ -1,12 +1,12 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
 import { education } from "@/data/education";
-import { motion, useAnimation, Transition } from "motion/react";
+import { motion, type Transition } from "motion/react";
 
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
-  filter: "blur(8px)",
+  filter: "blur(4px)",
 };
 const fadeInUpAnimate = {
   y: 0,
@@ -14,51 +14,25 @@ const fadeInUpAnimate = {
   filter: "blur(0px)",
 };
 const fadeInUpSpring: Transition = {
-  duration: 0.6,
+  duration: 0.55,
   ease: [0.25, 0.1, 0.25, 1],
   type: "spring",
   stiffness: 80,
+  damping: 18,
+  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
 };
 
-function isElementInViewport(el: HTMLElement | null) {
-  if (!el) return false;
-  const rect = el.getBoundingClientRect();
-  return rect.top < window.innerHeight && rect.bottom > 0;
-}
-
 export const Education = () => {
-  const baseDelay = 0.18;
-  const step = 0.13;
-
-  const controls = useAnimation();
-  const sectionRef = useRef<HTMLElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-
-  useEffect(() => {
-    function handleScroll() {
-      if (!hasAnimated && isElementInViewport(sectionRef.current)) {
-        controls.start(fadeInUpAnimate);
-        setHasAnimated(true);
-      }
-    }
-    handleScroll();
-    if (!hasAnimated) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      window.addEventListener("resize", handleScroll, { passive: true });
-    }
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, [hasAnimated, controls]);
+  const baseDelay = 0.02;
+  const step = 0.035;
 
   return (
     <motion.section
-      ref={sectionRef}
       id="education-section"
       className="mt-12 w-full"
       initial={fadeInUpInitial}
-      animate={controls}
+      whileInView={fadeInUpAnimate}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
         delay: baseDelay,
@@ -67,7 +41,8 @@ export const Education = () => {
       <motion.h2
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
-        animate={controls}
+        whileInView={fadeInUpAnimate}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 1,
@@ -78,7 +53,8 @@ export const Education = () => {
       <motion.div
         className="mt-6 w-full space-y-4"
         initial={fadeInUpInitial}
-        animate={controls}
+        whileInView={fadeInUpAnimate}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 2,
@@ -89,65 +65,40 @@ export const Education = () => {
             key={idx}
             className="flex items-start gap-2"
             initial={{
-              y: 16,
+              y: 12,
               opacity: 0,
-              filter: "blur(8px)",
+              filter: "blur(6px)",
             }}
-            animate={controls}
+            whileInView={{
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+            }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpSpring,
               delay: baseDelay + step * (3 + idx),
             }}
           >
             {/* Pointer/Arrow Icon */}
-            <motion.span
+            <span
               className="text-foreground mt-1 flex h-6 w-6 items-center justify-center"
               aria-hidden="true"
-              initial={fadeInUpInitial}
-              animate={controls}
-              transition={{
-                ...fadeInUpSpring,
-                delay: baseDelay + step * (3 + idx) + 0.04,
-              }}
             >
               <span className="text-xl select-none">➤</span>
-            </motion.span>
+            </span>
             <div className="flex w-full flex-col md:flex-row md:justify-between">
               <div>
-                <motion.h3
-                  className="text-foreground text-base font-bold"
-                  initial={fadeInUpInitial}
-                  animate={controls}
-                  transition={{
-                    ...fadeInUpSpring,
-                    delay: baseDelay + step * (3 + idx) + 0.08,
-                  }}
-                >
+                <h3 className="text-foreground text-base font-bold">
                   {edu.institution}
-                </motion.h3>
-                <motion.p
-                  className="text-foreground/80 mt-1 text-sm font-medium"
-                  initial={fadeInUpInitial}
-                  animate={controls}
-                  transition={{
-                    ...fadeInUpSpring,
-                    delay: baseDelay + step * (3 + idx) + 0.12,
-                  }}
-                >
+                </h3>
+                <p className="text-foreground/80 mt-1 text-sm font-medium">
                   {edu.qualification}
-                </motion.p>
+                </p>
               </div>
-              <motion.span
-                className="text-accent text-sm font-normal md:text-right"
-                initial={fadeInUpInitial}
-                animate={controls}
-                transition={{
-                  ...fadeInUpSpring,
-                  delay: baseDelay + step * (3 + idx) + 0.16,
-                }}
-              >
+              <span className="text-accent text-sm font-normal md:text-right">
                 {edu.details}
-              </motion.span>
+              </span>
             </div>
           </motion.div>
         ))}

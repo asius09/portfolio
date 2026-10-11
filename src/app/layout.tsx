@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Zain, Inter, Schibsted_Grotesk, Geist } from "next/font/google";
+import { Zain, Inter, Schibsted_Grotesk, Geist, Caveat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
@@ -10,6 +10,12 @@ export const zain = Zain({
   weight: ["200", "300", "400", "700", "800", "900"],
   display: "swap",
   preload: true,
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const geist = Geist({
@@ -38,8 +44,6 @@ export const metadata: Metadata = {
     default: "Bobby - Full Stack Developer",
     template: "%s | Bobby",
   },
-  description:
-    "Personal portfolio of Bobby. Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
   metadataBase: new URL("https://asius.in"),
   openGraph: {
     type: "website",
@@ -85,7 +89,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${inter.variable} ${schibsted.variable} bg-background font-app text-foreground antialiased`}
+      className={`${geist.variable} ${inter.variable} ${schibsted.variable} ${caveat.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >
       <head>

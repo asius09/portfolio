@@ -90,6 +90,7 @@
   --color-border: var(--border);
   --color-border-hover: var(--border-hover);
   --color-button-outline-shadow: var(--button-outline-shadow);
+  --font-caveat: var(--font-caveat), "Caveat", cursive;
   --font-asius: "Zain", sans-serif;
   --font-sans: var(--app-font), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
