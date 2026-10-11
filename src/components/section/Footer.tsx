@@ -78,11 +78,11 @@ export const Footer = () => {
         delay: 0.05,
       }}
     >
-      {/* Top Section: Elsewhere heading, description, and social icons */}
+      {/* Top Section: Asius heading, description, and social icons */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-2">
           <h2 className="font-caveat text-4xl sm:text-5xl font-medium tracking-wide text-foreground select-none">
-            Elsewhere
+            Asius
           </h2>
           <p className="max-w-md text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
             Open to building useful, well-made software with thoughtful people
