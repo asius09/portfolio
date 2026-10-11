@@ -1,11 +1,131 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import { cn } from "cn";
 import { formatDate } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import Link from "next/link";
-import { IconX, IconPointer, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconX,
+  IconPointer,
+  IconExternalLink,
+  IconLayoutGrid,
+  IconChartBar,
+} from "@tabler/icons-react";
+
+export type ContributionTheme =
+  | "blue"
+  | "green"
+  | "violet"
+  | "amber"
+  | "rose"
+  | "monochrome";
+
+export type ContributionViewMode = "timeline" | "grid";
+
+export interface ThemeConfig {
+  name: ContributionTheme;
+  label: string;
+  levels: [string, string, string, string, string];
+  glowBoxShadow: string;
+  glowRestingShadow: string;
+  accentText: string;
+  activeRing: string;
+}
+
+export const THEMES: Record<ContributionTheme, ThemeConfig> = {
+  blue: {
+    name: "blue",
+    label: "Blue",
+    levels: [
+      "bg-blue-950/5 dark:bg-blue-500/10",
+      "bg-blue-500/25 dark:bg-blue-500/30",
+      "bg-blue-500/50 dark:bg-blue-500/55",
+      "bg-blue-500/75 dark:bg-blue-500/85",
+      "bg-blue-600 shadow-[0_0_6px_rgba(37,99,235,0.35)] dark:bg-blue-500 dark:shadow-[0_0_6px_rgba(59,130,246,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(96, 165, 250, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(37, 99, 235, 0.35)",
+    accentText: "text-blue-600 dark:text-blue-400",
+    activeRing: "hover:ring-blue-400/70 dark:hover:ring-blue-400/70",
+  },
+  green: {
+    name: "green",
+    label: "Green",
+    levels: [
+      "bg-emerald-950/5 dark:bg-emerald-500/10",
+      "bg-emerald-500/25 dark:bg-emerald-500/30",
+      "bg-emerald-500/50 dark:bg-emerald-500/55",
+      "bg-emerald-500/75 dark:bg-emerald-500/85",
+      "bg-emerald-600 shadow-[0_0_6px_rgba(16,185,129,0.35)] dark:bg-emerald-500 dark:shadow-[0_0_6px_rgba(16,185,129,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(52, 211, 153, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(16, 185, 129, 0.35)",
+    accentText: "text-emerald-600 dark:text-emerald-400",
+    activeRing: "hover:ring-emerald-400/70 dark:hover:ring-emerald-400/70",
+  },
+  violet: {
+    name: "violet",
+    label: "Violet",
+    levels: [
+      "bg-purple-950/5 dark:bg-violet-500/10",
+      "bg-violet-500/25 dark:bg-violet-500/30",
+      "bg-violet-500/50 dark:bg-violet-500/55",
+      "bg-violet-500/75 dark:bg-violet-500/85",
+      "bg-violet-600 shadow-[0_0_6px_rgba(147,51,234,0.35)] dark:bg-violet-500 dark:shadow-[0_0_6px_rgba(168,85,247,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(192, 132, 252, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(147, 51, 234, 0.35)",
+    accentText: "text-violet-600 dark:text-violet-400",
+    activeRing: "hover:ring-violet-400/70 dark:hover:ring-violet-400/70",
+  },
+  amber: {
+    name: "amber",
+    label: "Amber",
+    levels: [
+      "bg-amber-950/5 dark:bg-amber-500/10",
+      "bg-amber-500/25 dark:bg-amber-500/30",
+      "bg-amber-500/50 dark:bg-amber-500/55",
+      "bg-amber-500/75 dark:bg-amber-500/85",
+      "bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.35)] dark:bg-amber-500 dark:shadow-[0_0_6px_rgba(245,158,11,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(251, 191, 36, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(245, 158, 11, 0.35)",
+    accentText: "text-amber-600 dark:text-amber-400",
+    activeRing: "hover:ring-amber-400/70 dark:hover:ring-amber-400/70",
+  },
+  rose: {
+    name: "rose",
+    label: "Rose",
+    levels: [
+      "bg-rose-950/5 dark:bg-rose-500/10",
+      "bg-rose-500/25 dark:bg-rose-500/30",
+      "bg-rose-500/50 dark:bg-rose-500/55",
+      "bg-rose-500/75 dark:bg-rose-500/85",
+      "bg-rose-600 shadow-[0_0_6px_rgba(225,29,72,0.35)] dark:bg-rose-500 dark:shadow-[0_0_6px_rgba(244,63,94,0.5)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(251, 113, 133, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(225, 29, 72, 0.35)",
+    accentText: "text-rose-600 dark:text-rose-400",
+    activeRing: "hover:ring-rose-400/70 dark:hover:ring-rose-400/70",
+  },
+  monochrome: {
+    name: "monochrome",
+    label: "Mono",
+    levels: [
+      "bg-zinc-950/5 dark:bg-white/5",
+      "bg-zinc-400/35 dark:bg-zinc-600/40",
+      "bg-zinc-500/60 dark:bg-zinc-400/60",
+      "bg-zinc-700/80 dark:bg-zinc-200/85",
+      "bg-zinc-900 shadow-[0_0_6px_rgba(24,24,27,0.25)] dark:bg-white dark:shadow-[0_0_6px_rgba(255,255,255,0.45)]",
+    ],
+    glowBoxShadow: "0 0 5px 1.5px rgba(115, 115, 115, 0.85)",
+    glowRestingShadow: "0 0 3px 0px rgba(115, 115, 115, 0.35)",
+    accentText: "text-neutral-900 dark:text-zinc-100",
+    activeRing: "hover:ring-neutral-400/70 dark:hover:ring-zinc-400/70",
+  },
+};
 
 export interface ContributionDay {
   date: string;
@@ -34,9 +154,14 @@ export interface GithubContributionCardProps {
   data?: ContributionDay[];
   totalContributions?: number;
   className?: string;
+  animate?: boolean;
+  theme?: ContributionTheme;
+  defaultView?: ContributionViewMode;
+  allowThemeSelection?: boolean;
+  onThemeChange?: (theme: ContributionTheme) => void;
+  onViewChange?: (view: ContributionViewMode) => void;
 }
 
-// Organic rotation map matching handwritten tally styling
 const ROTATIONS: Record<number, number> = {
   1: 5,
   3: -5,
@@ -56,6 +181,25 @@ const ROTATIONS: Record<number, number> = {
   49: -5,
 };
 
+const columnVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    filter: "blur(2px)",
+  },
+  visible: (i: number) => ({
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.08,
+      delay: i * 0.012,
+      ease: "linear",
+    },
+  }),
+};
+
+const COMPACT_QUERY = "(max-width: 639px)";
+const SCROLL_GRAPH_WIDTH = 640;
+
 function formatRangeShort(startStr: string, endStr: string): string {
   const start = new Date(startStr);
   const end = new Date(endStr);
@@ -72,18 +216,49 @@ function formatRangeLong(startStr: string, endStr: string): string {
   const start = new Date(startStr);
   const end = new Date(endStr);
   if (isNaN(start.getTime()) || isNaN(end.getTime())) return `${startStr} - ${endStr}`;
-  const startFormatted = start.toLocaleDateString("en-US", {
+  return `${start.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
-  const endFormatted = end.toLocaleDateString("en-US", {
+  })} - ${end.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
-  return `${startFormatted} - ${endFormatted}`;
+  })}`;
 }
+
+const TooltipBubble = ({
+  visible,
+  count,
+  date,
+  accentClass,
+}: {
+  visible: boolean;
+  count: number;
+  date: string;
+  accentClass: string;
+}) => (
+  <div
+    className={cn(
+      "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
+      visible
+        ? "translate-y-0 scale-100 opacity-100"
+        : "pointer-events-none translate-y-1 scale-95 opacity-0",
+    )}
+  >
+    <div className="border-border/70 bg-background/95 text-foreground flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
+      <span className={cn("font-semibold", accentClass)}>{count}</span>
+      <span className="text-muted-foreground">
+        {count === 1 ? "contribution" : "contributions"} on
+      </span>
+      <span className="text-foreground font-medium">
+        {date !== "No data" ? formatDate(date) : "No data"}
+      </span>
+
+      <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+    </div>
+  </div>
+);
 
 export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   username = "asius09",
@@ -91,20 +266,96 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   data: initialData,
   totalContributions: initialTotal,
   className,
+  animate = true,
+  theme = "blue",
+  defaultView = "timeline",
+  allowThemeSelection = true,
+  onThemeChange,
+  onViewChange,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const isCompact = useMediaQuery(COMPACT_QUERY);
+
+  const [viewMode, setViewMode] = useState<ContributionViewMode>(defaultView);
+  const [activeTheme, setActiveTheme] = useState<ContributionTheme>(theme);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [contributions, setContributions] = useState<ContributionDay[]>(
     initialData || [],
   );
   const [totalCount, setTotalCount] = useState<number>(initialTotal || 0);
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(false);
+
+  // Timeline view states
   const [activeWeekNumber, setActiveWeekNumber] = useState<number | null>(null);
   const [hoveredWeek, setHoveredWeek] = useState<{
     week: WeekData;
     x: number;
   } | null>(null);
 
+  // Grid view states
+  const [gridTooltip, setGridTooltip] = useState<{
+    visible: boolean;
+    isGliding: boolean;
+    x: number;
+    y: number;
+    count: number;
+    date: string;
+  }>({
+    visible: false,
+    isGliding: false,
+    x: 0,
+    y: 0,
+    count: 0,
+    date: "",
+  });
+
+  // Restore stored view mode if available
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("github-contributions-view") as ContributionViewMode;
+      if (stored === "timeline" || stored === "grid") {
+        setViewMode(stored);
+      }
+    } catch {}
+  }, []);
+
+  const handleViewModeChange = (mode: ContributionViewMode) => {
+    setViewMode(mode);
+    onViewChange?.(mode);
+    try {
+      localStorage.setItem("github-contributions-view", mode);
+    } catch {}
+  };
+
+  useEffect(() => {
+    setActiveTheme(theme);
+  }, [theme]);
+
+  // Click outside to close theme popover
+  useEffect(() => {
+    if (!isPopoverOpen) return;
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
+        setIsPopoverOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsPopoverOpen(false);
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPopoverOpen]);
+
+  // Fetch contributions
   useEffect(() => {
     if (initialData) {
       setContributions(initialData);
@@ -131,6 +382,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     fetchContributions();
   }, [endpoint, initialData, initialTotal]);
 
+  // Compute 52 weeks for Timeline view
   const weeksData = useMemo<WeekData[]>(() => {
     const totalSlots = 52 * 7;
     let daysSlice = contributions;
@@ -197,6 +449,122 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     return weeksData.find((w) => w.weekNumber === activeWeekNumber) ?? null;
   }, [activeWeekNumber, weeksData]);
 
+  // Compute month labels for Grid view
+  const monthLabels = useMemo(() => {
+    if (contributions.length === 0) return [];
+    const totalSlots = 52 * 7;
+    const startIndex = Math.max(0, contributions.length - totalSlots);
+    const visibleData = contributions.slice(startIndex);
+
+    const labels: { name: string; col: number }[] = [];
+    let lastMonth = -1;
+
+    for (let w = 0; w < 52; w++) {
+      const dayData = visibleData[w * 7];
+      if (dayData) {
+        const date = new Date(dayData.date);
+        const month = date.getMonth();
+        if (month !== lastMonth) {
+          labels.push({
+            name: date.toLocaleString("default", { month: "short" }),
+            col: w,
+          });
+          lastMonth = month;
+        }
+      }
+    }
+
+    return labels.filter((label, idx, arr) => {
+      if (idx === 0) {
+        const next = arr[1];
+        if (next && next.col - label.col < 3) return false;
+        return true;
+      }
+      return true;
+    });
+  }, [contributions]);
+
+  const weeks = Array.from({ length: 52 });
+  const days = Array.from({ length: 7 });
+
+  const currentThemeConfig = THEMES[activeTheme] || THEMES.blue;
+
+  const getLevelIndex = (count: number): number => {
+    if (count >= 10) return 4;
+    if (count >= 6) return 3;
+    if (count >= 3) return 2;
+    if (count >= 1) return 1;
+    return 0;
+  };
+
+  const getLevelClass = (count: number, themeKey: ContributionTheme) => {
+    const activeCfg = THEMES[themeKey] || THEMES.blue;
+    return activeCfg.levels[getLevelIndex(count)];
+  };
+
+  const getGlowAnimation = (count: number, weekIndex: number) => {
+    if (!animate || count < 10) return undefined;
+    return {
+      animate: {
+        boxShadow: [
+          "0 0 0px rgba(0, 0, 0, 0)",
+          currentThemeConfig.glowBoxShadow,
+          currentThemeConfig.glowRestingShadow,
+        ],
+        filter: ["brightness(1)", "brightness(1.4)", "brightness(1)"],
+      },
+      transition: {
+        delay: weekIndex * 0.012 + 0.01,
+        duration: 0.14,
+        times: [0, 0.35, 1],
+        ease: "easeOut" as const,
+      },
+    };
+  };
+
+  const getDayData = (weekIndex: number, dayIndex: number) => {
+    const totalSlots = 52 * 7;
+    const startIndex = contributions.length - totalSlots;
+    const currentIdx = startIndex + (weekIndex * 7 + dayIndex);
+
+    if (currentIdx < 0 || !contributions[currentIdx]) {
+      return { date: "No data", count: 0 };
+    }
+    return contributions[currentIdx];
+  };
+
+  const handleCellEnter = (
+    e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>,
+    dayData: ContributionDay,
+  ) => {
+    const target = e.currentTarget;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const targetRect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const x = targetRect.left - containerRect.left + targetRect.width / 2;
+    const y = targetRect.top - containerRect.top;
+
+    setGridTooltip((prev) => ({
+      visible: true,
+      isGliding: prev.visible,
+      x,
+      y,
+      count: dayData.count,
+      date: dayData.date,
+    }));
+  };
+
+  const handleGridLeave = () => {
+    setGridTooltip((prev) => ({
+      ...prev,
+      visible: false,
+      isGliding: false,
+    }));
+  };
+
   const handleBarEnter = (
     e: React.MouseEvent<HTMLButtonElement>,
     week: WeekData,
@@ -207,10 +575,6 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     const containerRect = container.getBoundingClientRect();
     const x = targetRect.left - containerRect.left + targetRect.width / 2;
     setHoveredWeek({ week, x });
-  };
-
-  const handleBarClick = (week: WeekData) => {
-    setActiveWeekNumber((prev) => (prev === week.weekNumber ? null : week.weekNumber));
   };
 
   if (error) return null;
@@ -227,193 +591,449 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
         }
       }}
     >
-      <div className="w-full">
-        {/* Tally Bar Strip Container */}
-        <div
-          ref={containerRef}
-          className="relative py-4 select-none"
-          onMouseLeave={() => setHoveredWeek(null)}
-        >
-          {/* Floating Hover Tooltip */}
-          <AnimatePresence>
-            {hoveredWeek && (
-              <motion.div
-                key="tooltip"
-                initial={{ opacity: 0, y: 4, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                transition={{ duration: 0.12, ease: "easeOut" }}
-                style={{
-                  left: `${hoveredWeek.x}px`,
-                  transform: "translate(-50%, -100%)",
-                }}
-                className="pointer-events-none absolute -top-3 z-50"
+      <div className="bg-background/40 w-full rounded-lg backdrop-blur-xs">
+        <div className="flex w-full flex-col gap-3">
+          {/* Header Bar with View Switcher */}
+          <div className="flex items-center justify-between px-1">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
+              <span className="text-foreground font-semibold">
+                {loading ? "..." : totalCount.toLocaleString()} contributions
+              </span>
+              <span className="opacity-40 select-none">•</span>
+              <Link
+                href={`https://github.com/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground inline-flex items-center gap-1 transition-colors hover:underline"
               >
-                <div className="relative flex w-36 flex-col rounded-lg border border-border/80 bg-background/95 p-2 shadow-xl backdrop-blur-md">
-                  <div className="space-y-0.5">
-                    <p className="text-foreground text-xs font-semibold">
-                      {hoveredWeek.week.rangeShort}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {hoveredWeek.week.commits}{" "}
-                      {hoveredWeek.week.commits === 1 ? "commit" : "commits"}
-                    </p>
-                    <p className="text-muted-foreground/80 text-[11px]">
-                      {hoveredWeek.week.activeDays}{" "}
-                      {hoveredWeek.week.activeDays === 1 ? "active day" : "active days"}
-                    </p>
-                  </div>
+                <span>GitHub</span>
+                <IconExternalLink className="size-3" />
+              </Link>
+            </div>
 
-                  <div className="my-1.5 h-px w-full bg-border/60" />
-
-                  <div className="text-muted-foreground flex items-center justify-between text-[11px]">
-                    <span>Click me!</span>
-                    <IconPointer className="size-3 text-muted-foreground" />
-                  </div>
-
-                  {/* Tooltip bottom pointer arrow */}
-                  <div className="border-border/80 bg-background/95 absolute -bottom-1 left-1/2 size-2 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* 52 Tally Bars */}
-          <div className="flex w-full items-center justify-between gap-[2px] sm:gap-1">
-            {weeksData.map((week) => {
-              const isActive = activeWeekNumber === week.weekNumber;
-              const hasActive = activeWeekNumber !== null;
-              const hasActivity = week.commits > 0;
-
-              return (
-                <button
-                  key={week.weekNumber}
-                  type="button"
-                  tabIndex={week.isFuture ? -1 : 0}
-                  onClick={() => handleBarClick(week)}
-                  onMouseEnter={(e) => handleBarEnter(e, week)}
-                  aria-label={`${week.rangeShort}: ${week.commits} commits`}
-                  className={cn(
-                    "group relative flex cursor-pointer items-center justify-center focus-visible:outline-none",
-                    week.isFuture && "pointer-events-none opacity-20",
-                  )}
-                >
-                  {/* Invisible expanded hit target (12px wide x 48px tall) for effortless hovering */}
-                  <span className="absolute -top-3 -bottom-3 -left-1 -right-1 z-10 block" />
-
-                  {/* Vertical Tally Line */}
-                  <span
-                    style={{
-                      transform: `rotate(${week.rotation}deg)`,
-                    }}
-                    className={cn(
-                      "block h-9 sm:h-9.5 w-0.5 lg:w-0.75 rounded-full transition-all duration-150 ease-out",
-                      // Color and Activity
-                      hasActivity
-                        ? "bg-blue-600 dark:bg-blue-500 shadow-[0_0_2px_rgba(59,130,246,0.25)]"
-                        : "bg-neutral-200 dark:bg-neutral-800",
-                      // Hover state
-                      "group-hover:scale-y-115 group-hover:brightness-125",
-                      // Active Selection
-                      isActive
-                        ? "!bg-blue-500 !opacity-100 !scale-y-120 shadow-[0_0_8px_rgba(59,130,246,0.6)] ring-1 ring-blue-400"
-                        : hasActive
-                          ? "opacity-35"
-                          : "opacity-100",
-                    )}
-                  />
-                </button>
-              );
-            })}
+            {/* View Mode Switcher Toggle */}
+            <div className="flex items-center rounded-lg border border-border/60 bg-muted/40 p-0.5 text-[11px] shadow-2xs select-none">
+              <button
+                type="button"
+                onClick={() => handleViewModeChange("timeline")}
+                className={cn(
+                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all",
+                  viewMode === "timeline"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+                title="Minimalist Timeline View"
+              >
+                <IconChartBar className="size-3.5" />
+                <span>Timeline</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleViewModeChange("grid")}
+                className={cn(
+                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all",
+                  viewMode === "grid"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+                title="Classic Grid View"
+              >
+                <IconLayoutGrid className="size-3.5" />
+                <span>Grid</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Expandable Details Drawer */}
-        <AnimatePresence>
-          {activeWeek && (
-            <motion.div
-              key="active-week-details"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-              className="overflow-hidden"
+          {/* VIEW: TIMELINE (Minimalist Tally Ticks) */}
+          {viewMode === "timeline" && (
+            <div
+              ref={containerRef}
+              className="relative py-4 select-none"
+              onMouseLeave={() => setHoveredWeek(null)}
             >
-              <div className="border-border/60 bg-card/40 mt-3 rounded-lg border p-4 backdrop-blur-xs">
-                {/* Drawer Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-border/40">
-                  <span className="text-sm font-medium text-foreground">
-                    {activeWeek.rangeLong}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveWeekNumber(null)}
-                    aria-label="Close details"
-                    className="text-muted-foreground hover:text-foreground cursor-pointer rounded-sm p-1 transition-colors"
+              {/* Floating Hover Tooltip */}
+              <AnimatePresence>
+                {hoveredWeek && (
+                  <motion.div
+                    key="tooltip"
+                    initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                    transition={{ duration: 0.12, ease: "easeOut" }}
+                    style={{
+                      left: `${hoveredWeek.x}px`,
+                      transform: "translate(-50%, -100%)",
+                    }}
+                    className="pointer-events-none absolute -top-3 z-50"
                   >
-                    <IconX className="size-4" />
-                  </button>
-                </div>
+                    <div className="border-border/80 bg-background/95 relative flex w-36 flex-col rounded-lg border p-2 shadow-xl backdrop-blur-md">
+                      <div className="space-y-0.5">
+                        <p className="text-foreground text-xs font-semibold">
+                          {hoveredWeek.week.rangeShort}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {hoveredWeek.week.commits}{" "}
+                          {hoveredWeek.week.commits === 1 ? "commit" : "commits"}
+                        </p>
+                        <p className="text-muted-foreground/80 text-[11px]">
+                          {hoveredWeek.week.activeDays}{" "}
+                          {hoveredWeek.week.activeDays === 1 ? "active day" : "active days"}
+                        </p>
+                      </div>
 
-                {/* Drawer Body Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3.5 text-xs">
-                  {/* Left Column: Code Activity */}
-                  <div className="space-y-1.5">
-                    <p className="font-semibold text-foreground text-[11px] uppercase tracking-wider">
-                      Code Activity
-                    </p>
-                    <p className="text-muted-foreground">
-                      <span className="text-foreground font-medium">
-                        {activeWeek.commits}
-                      </span>{" "}
-                      {activeWeek.commits === 1 ? "commit" : "commits"} across repositories
-                    </p>
-                    <p className="text-muted-foreground">
-                      <span className="text-foreground font-medium">
-                        {activeWeek.activeDays}
-                      </span>{" "}
-                      out of 7 active days this week
-                    </p>
-                    {activeWeek.maxDayCount > 0 && (
-                      <p className="text-muted-foreground">
-                        Peak:{" "}
-                        <span className="text-foreground font-medium">
-                          {activeWeek.maxDayCount}
-                        </span>{" "}
-                        contributions in a single day
-                      </p>
-                    )}
-                  </div>
+                      <div className="bg-border/60 my-1.5 h-px w-full" />
 
-                  {/* Right Column: GitHub Link & Year Overview */}
-                  <div className="space-y-1.5 sm:border-l sm:border-border/40 sm:pl-4">
-                    <p className="font-semibold text-foreground text-[11px] uppercase tracking-wider">
-                      GitHub Profile
-                    </p>
-                    <p className="text-muted-foreground">
-                      Total yearly activity:{" "}
-                      <span className="text-foreground font-medium">
-                        {loading ? "..." : totalCount.toLocaleString()}
-                      </span>{" "}
-                      contributions
-                    </p>
-                    <div className="pt-1">
-                      <Link
-                        href={`https://github.com/${username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                      <div className="text-muted-foreground flex items-center justify-between text-[11px]">
+                        <span>Click me!</span>
+                        <IconPointer className="text-muted-foreground size-3" />
+                      </div>
+
+                      <div className="border-border/80 bg-background/95 absolute -bottom-1 left-1/2 size-2 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* 52 Tally Bars */}
+              <div className="flex w-full items-center justify-between gap-[2px] sm:gap-1">
+                {weeksData.map((week) => {
+                  const isActive = activeWeekNumber === week.weekNumber;
+                  const hasActive = activeWeekNumber !== null;
+                  const hasActivity = week.commits > 0;
+
+                  return (
+                    <button
+                      key={week.weekNumber}
+                      type="button"
+                      tabIndex={week.isFuture ? -1 : 0}
+                      onClick={() =>
+                        setActiveWeekNumber((prev) =>
+                          prev === week.weekNumber ? null : week.weekNumber,
+                        )
+                      }
+                      onMouseEnter={(e) => handleBarEnter(e, week)}
+                      aria-label={`${week.rangeShort}: ${week.commits} commits`}
+                      className={cn(
+                        "group relative flex cursor-pointer items-center justify-center focus-visible:outline-none",
+                        week.isFuture && "pointer-events-none opacity-20",
+                      )}
+                    >
+                      <span className="absolute -top-3 -bottom-3 -left-1 -right-1 z-10 block" />
+
+                      <span
+                        style={{
+                          transform: `rotate(${week.rotation}deg)`,
+                        }}
+                        className={cn(
+                          "block h-9 sm:h-9.5 w-0.5 lg:w-0.75 rounded-full transition-all duration-150 ease-out",
+                          hasActivity
+                            ? "bg-blue-600 dark:bg-blue-500 shadow-[0_0_2px_rgba(59,130,246,0.25)]"
+                            : "bg-neutral-200 dark:bg-neutral-800",
+                          "group-hover:scale-y-115 group-hover:brightness-125",
+                          isActive
+                            ? "!bg-blue-500 !opacity-100 !scale-y-120 ring-1 ring-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+                            : hasActive
+                              ? "opacity-35"
+                              : "opacity-100",
+                        )}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Expandable Details Drawer */}
+              <AnimatePresence>
+                {activeWeek && (
+                  <motion.div
+                    key="active-week-details"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="border-border/60 bg-card/40 mt-3 rounded-lg border p-4 backdrop-blur-xs">
+                      <div className="border-border/40 flex items-center justify-between border-b pb-3">
+                        <span className="text-foreground text-sm font-medium">
+                          {activeWeek.rangeLong}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveWeekNumber(null)}
+                          aria-label="Close details"
+                          className="text-muted-foreground hover:text-foreground cursor-pointer rounded-sm p-1 transition-colors"
+                        >
+                          <IconX className="size-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4 pt-3.5 text-xs sm:grid-cols-2">
+                        <div className="space-y-1.5">
+                          <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                            Code Activity
+                          </p>
+                          <p className="text-muted-foreground">
+                            <span className="text-foreground font-medium">
+                              {activeWeek.commits}
+                            </span>{" "}
+                            {activeWeek.commits === 1 ? "commit" : "commits"} across repositories
+                          </p>
+                          <p className="text-muted-foreground">
+                            <span className="text-foreground font-medium">
+                              {activeWeek.activeDays}
+                            </span>{" "}
+                            out of 7 active days this week
+                          </p>
+                          {activeWeek.maxDayCount > 0 && (
+                            <p className="text-muted-foreground">
+                              Peak:{" "}
+                              <span className="text-foreground font-medium">
+                                {activeWeek.maxDayCount}
+                              </span>{" "}
+                              contributions in a single day
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="space-y-1.5 sm:border-border/40 sm:border-l sm:pl-4">
+                          <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                            GitHub Profile
+                          </p>
+                          <p className="text-muted-foreground">
+                            Total yearly activity:{" "}
+                            <span className="text-foreground font-medium">
+                              {loading ? "..." : totalCount.toLocaleString()}
+                            </span>{" "}
+                            contributions
+                          </p>
+                          <div className="pt-1">
+                            <Link
+                              href={`https://github.com/${username}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline dark:text-blue-400"
+                            >
+                              <span>View profile on GitHub</span>
+                              <IconExternalLink className="size-3.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* VIEW: GRID (Classic Matrix with Theme Switcher) */}
+          {viewMode === "grid" && (
+            <div className="w-full">
+              <div
+                className={cn(
+                  "text-muted-foreground flex items-center gap-1.5 pb-0.5 text-[10px] sm:hidden",
+                  isCompact ? "opacity-100" : "hidden",
+                )}
+              >
+                <span className="opacity-60 select-none">&#8596;</span>
+                Swipe to see the full year
+              </div>
+
+              <div
+                className={cn(
+                  "-mx-1 overflow-x-auto px-1",
+                  "[-webkit-overflow-scrolling:touch] [scrollbar-width:thin]",
+                  isCompact && "snap-x",
+                )}
+              >
+                <div
+                  className="w-full"
+                  style={isCompact ? { minWidth: SCROLL_GRAPH_WIDTH } : undefined}
+                >
+                  <motion.div
+                    initial={animate ? { opacity: 0, y: -4 } : false}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="relative h-4 w-full"
+                  >
+                    {monthLabels.map((month, idx) => (
+                      <span
+                        key={`${month.name}-${idx}`}
+                        className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
+                        style={{ left: `${(month.col / 52) * 100}%` }}
                       >
-                        <span>View profile on GitHub</span>
-                        <IconExternalLink className="size-3.5" />
-                      </Link>
+                        {month.name}
+                      </span>
+                    ))}
+                  </motion.div>
+
+                  <div
+                    ref={containerRef}
+                    className="relative flex gap-1"
+                    onMouseLeave={handleGridLeave}
+                  >
+                    {isCompact ? (
+                      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 select-none">
+                        <TooltipBubble
+                          visible={gridTooltip.visible}
+                          count={gridTooltip.count}
+                          date={gridTooltip.date}
+                          accentClass={currentThemeConfig.accentText}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={cn(
+                          "pointer-events-none absolute top-0 left-0 z-50 select-none",
+                          gridTooltip.isGliding
+                            ? "transition-transform duration-150 ease-out will-change-transform"
+                            : "transition-none",
+                        )}
+                        style={{
+                          transform: `translate3d(${gridTooltip.x}px, ${gridTooltip.y - 8}px, 0) translate(-50%, -100%)`,
+                        }}
+                      >
+                        <TooltipBubble
+                          visible={gridTooltip.visible}
+                          count={gridTooltip.count}
+                          date={gridTooltip.date}
+                          accentClass={currentThemeConfig.accentText}
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
+                      {weeks.map((_, weekIndex) => (
+                        <motion.div
+                          key={weekIndex}
+                          custom={weekIndex}
+                          initial={animate ? "hidden" : false}
+                          animate="visible"
+                          variants={columnVariants}
+                          className="flex flex-1 flex-col gap-px sm:gap-0.5"
+                        >
+                          {days.map((_, dayIndex) => {
+                            const dayData = getDayData(weekIndex, dayIndex);
+                            const glow = getGlowAnimation(dayData.count, weekIndex);
+                            const isTop = dayData.count >= 10;
+                            return (
+                              <motion.div
+                                key={dayIndex}
+                                animate={glow?.animate}
+                                transition={glow?.transition}
+                                onMouseEnter={(e) => handleCellEnter(e, dayData)}
+                                onPointerDown={(e) => handleCellEnter(e, dayData)}
+                                aria-label={`${dayData.count} contributions on ${dayData.date}`}
+                                className={cn(
+                                  "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
+                                  currentThemeConfig.activeRing,
+                                  isTop && "z-10",
+                                  getLevelClass(dayData.count, activeTheme),
+                                )}
+                              />
+                            );
+                          })}
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </motion.div>
+
+              {/* Grid Bottom Bar: Palette Picker & Level Legend */}
+              <div className="mt-3 flex flex-row items-center justify-end px-1">
+                <div className="relative flex items-center" ref={popoverRef}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      allowThemeSelection && setIsPopoverOpen((prev) => !prev)
+                    }
+                    className={cn(
+                      "text-muted-foreground flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[9px] transition-colors select-none",
+                      allowThemeSelection &&
+                        "hover:text-foreground cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/80",
+                    )}
+                    title={
+                      allowThemeSelection
+                        ? "Change contribution color theme"
+                        : undefined
+                    }
+                  >
+                    <span className="opacity-50">Less</span>
+                    <div className="flex gap-0.5">
+                      {[0, 1, 3, 6, 10].map((level) => (
+                        <div
+                          key={level}
+                          className={cn(
+                            "size-2 rounded-[1px] transition-colors duration-200 sm:size-2.5",
+                            getLevelClass(level, activeTheme),
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <span className="opacity-50">More</span>
+                  </button>
+
+                  <AnimatePresence>
+                    {allowThemeSelection && isPopoverOpen && (
+                      <motion.div
+                        key="theme-popover"
+                        initial={{ opacity: 0, scale: 0.94, y: 6 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.94, y: 6 }}
+                        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                        className="border-border bg-card/95 text-foreground absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
+                      >
+                        <div className="text-muted-foreground mb-1.5 flex items-center justify-between px-1 text-[10px] font-medium">
+                          <span>Palette</span>
+                          <span className="text-foreground font-semibold capitalize">
+                            {THEMES[activeTheme]?.label}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-1">
+                          {Object.entries(THEMES).map(([key, cfg]) => {
+                            const isSelected = activeTheme === key;
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => {
+                                  setActiveTheme(key as ContributionTheme);
+                                  onThemeChange?.(key as ContributionTheme);
+                                  setIsPopoverOpen(false);
+                                }}
+                                className={cn(
+                                  "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
+                                  isSelected
+                                    ? "text-foreground bg-neutral-100 shadow-xs ring-1 ring-neutral-300 dark:bg-neutral-800 dark:ring-neutral-700"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/60",
+                                )}
+                              >
+                                <div className="flex gap-0.5">
+                                  {cfg.levels.map((lvlClass, idx) => (
+                                    <div
+                                      key={idx}
+                                      className={cn(
+                                        "size-1.5 rounded-[1px]",
+                                        lvlClass,
+                                      )}
+                                    />
+                                  ))}
+                                </div>
+                                <span>{cfg.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
       </div>
     </section>
   );
