@@ -1,14 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence, type Variants } from "motion/react";
+import { motion, AnimatePresence, type Variants, type Transition } from "motion/react";
 import { cn } from "cn";
 import { formatDate } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import Link from "next/link";
 import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/Tooltip";
+import {
   IconX,
-  IconPointer,
   IconExternalLink,
   IconLayoutGrid,
   IconChartBar,
@@ -197,6 +201,20 @@ const columnVariants: Variants = {
   }),
 };
 
+// Snappy spring transition matching Project.tsx
+const projectSpringTransition: Transition = {
+  duration: 0.18,
+  ease: [0.4, 0, 0.2, 1],
+  type: "spring",
+  stiffness: 160,
+  damping: 16,
+};
+
+const VIEW_MODES = [
+  { id: "timeline", label: "Timeline", Icon: IconChartBar },
+  { id: "grid", label: "Grid", Icon: IconLayoutGrid },
+] as const;
+
 const COMPACT_QUERY = "(max-width: 639px)";
 const SCROLL_GRAPH_WIDTH = 640;
 
@@ -227,39 +245,6 @@ function formatRangeLong(startStr: string, endStr: string): string {
   })}`;
 }
 
-const TooltipBubble = ({
-  visible,
-  count,
-  date,
-  accentClass,
-}: {
-  visible: boolean;
-  count: number;
-  date: string;
-  accentClass: string;
-}) => (
-  <div
-    className={cn(
-      "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
-      visible
-        ? "translate-y-0 scale-100 opacity-100"
-        : "pointer-events-none translate-y-1 scale-95 opacity-0",
-    )}
-  >
-    <div className="border-border/70 bg-background/95 text-foreground flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
-      <span className={cn("font-semibold", accentClass)}>{count}</span>
-      <span className="text-muted-foreground">
-        {count === 1 ? "contribution" : "contributions"} on
-      </span>
-      <span className="text-foreground font-medium">
-        {date !== "No data" ? formatDate(date) : "No data"}
-      </span>
-
-      <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
-    </div>
-  </div>
-);
-
 export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   username = "asius09",
   endpoint = "/api/github/contributions",
@@ -287,29 +272,8 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(false);
 
-  // Timeline view states
+  // Active week in Timeline view
   const [activeWeekNumber, setActiveWeekNumber] = useState<number | null>(null);
-  const [hoveredWeek, setHoveredWeek] = useState<{
-    week: WeekData;
-    x: number;
-  } | null>(null);
-
-  // Grid view states
-  const [gridTooltip, setGridTooltip] = useState<{
-    visible: boolean;
-    isGliding: boolean;
-    x: number;
-    y: number;
-    count: number;
-    date: string;
-  }>({
-    visible: false,
-    isGliding: false,
-    x: 0,
-    y: 0,
-    count: 0,
-    date: "",
-  });
 
   // Restore stored view mode if available
   useEffect(() => {
@@ -533,50 +497,6 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     return contributions[currentIdx];
   };
 
-  const handleCellEnter = (
-    e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>,
-    dayData: ContributionDay,
-  ) => {
-    const target = e.currentTarget;
-    const container = containerRef.current;
-    if (!container) return;
-
-    const targetRect = target.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    const x = targetRect.left - containerRect.left + targetRect.width / 2;
-    const y = targetRect.top - containerRect.top;
-
-    setGridTooltip((prev) => ({
-      visible: true,
-      isGliding: prev.visible,
-      x,
-      y,
-      count: dayData.count,
-      date: dayData.date,
-    }));
-  };
-
-  const handleGridLeave = () => {
-    setGridTooltip((prev) => ({
-      ...prev,
-      visible: false,
-      isGliding: false,
-    }));
-  };
-
-  const handleBarEnter = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    week: WeekData,
-  ) => {
-    const container = containerRef.current;
-    if (!container) return;
-    const targetRect = e.currentTarget.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const x = targetRect.left - containerRect.left + targetRect.width / 2;
-    setHoveredWeek({ week, x });
-  };
-
   if (error) return null;
 
   return (
@@ -587,13 +507,12 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
       onKeyDown={(e) => {
         if (e.key === "Escape") {
           setActiveWeekNumber(null);
-          setHoveredWeek(null);
         }
       }}
     >
       <div className="bg-background/40 w-full rounded-lg backdrop-blur-xs">
         <div className="flex w-full flex-col gap-3">
-          {/* Header Bar with View Switcher */}
+          {/* Header Bar with View Switcher styled cleanly matching Project section */}
           <div className="flex items-center justify-between px-1">
             <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <span className="text-foreground font-semibold">
@@ -611,428 +530,389 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
               </Link>
             </div>
 
-            {/* View Mode Switcher Toggle */}
-            <div className="flex items-center rounded-lg border border-border/60 bg-muted/40 p-0.5 text-[11px] shadow-2xs select-none">
-              <button
-                type="button"
-                onClick={() => handleViewModeChange("timeline")}
-                className={cn(
-                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all",
-                  viewMode === "timeline"
-                    ? "bg-background text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-                title="Minimalist Timeline View"
-              >
-                <IconChartBar className="size-3.5" />
-                <span>Timeline</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleViewModeChange("grid")}
-                className={cn(
-                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all",
-                  viewMode === "grid"
-                    ? "bg-background text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-                title="Classic Grid View"
-              >
-                <IconLayoutGrid className="size-3.5" />
-                <span>Grid</span>
-              </button>
+            {/* View Mode Switcher Toggle matching Project section */}
+            <div className="relative flex items-center gap-0.5 rounded-md border border-border/50 bg-card p-0.5 shadow-xs dark:border-white/10 dark:bg-neutral-900">
+              {VIEW_MODES.map(({ id, label, Icon }) => {
+                const isSelected = viewMode === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => handleViewModeChange(id as ContributionViewMode)}
+                    aria-label={`${label} view`}
+                    className={cn(
+                      "relative z-10 flex cursor-pointer items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground select-none",
+                      isSelected && "text-foreground font-medium",
+                    )}
+                  >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="active-contribution-view-tab"
+                        className="absolute inset-0 z-[-1] rounded bg-neutral-200/60 dark:bg-neutral-800"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+                      />
+                    )}
+                    <Icon className="size-3.5" />
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* VIEW: TIMELINE (Minimalist Tally Ticks) */}
-          {viewMode === "timeline" && (
-            <div
-              ref={containerRef}
-              className="relative py-4 select-none"
-              onMouseLeave={() => setHoveredWeek(null)}
-            >
-              {/* Floating Hover Tooltip */}
-              <AnimatePresence>
-                {hoveredWeek && (
-                  <motion.div
-                    key="tooltip"
-                    initial={{ opacity: 0, y: 4, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                    transition={{ duration: 0.12, ease: "easeOut" }}
-                    style={{
-                      left: `${hoveredWeek.x}px`,
-                      transform: "translate(-50%, -100%)",
-                    }}
-                    className="pointer-events-none absolute -top-3 z-50"
-                  >
-                    <div className="border-border/80 bg-background/95 relative flex w-36 flex-col rounded-lg border p-2 shadow-xl backdrop-blur-md">
-                      <div className="space-y-0.5">
-                        <p className="text-foreground text-xs font-semibold">
-                          {hoveredWeek.week.rangeShort}
-                        </p>
-                        <p className="text-muted-foreground text-xs">
-                          {hoveredWeek.week.commits}{" "}
-                          {hoveredWeek.week.commits === 1 ? "commit" : "commits"}
-                        </p>
-                        <p className="text-muted-foreground/80 text-[11px]">
-                          {hoveredWeek.week.activeDays}{" "}
-                          {hoveredWeek.week.activeDays === 1 ? "active day" : "active days"}
-                        </p>
-                      </div>
-
-                      <div className="bg-border/60 my-1.5 h-px w-full" />
-
-                      <div className="text-muted-foreground flex items-center justify-between text-[11px]">
-                        <span>Click me!</span>
-                        <IconPointer className="text-muted-foreground size-3" />
-                      </div>
-
-                      <div className="border-border/80 bg-background/95 absolute -bottom-1 left-1/2 size-2 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* 52 Tally Bars */}
-              <div className="flex w-full items-center justify-between gap-[2px] sm:gap-1">
-                {weeksData.map((week) => {
-                  const isActive = activeWeekNumber === week.weekNumber;
-                  const hasActive = activeWeekNumber !== null;
-                  const hasActivity = week.commits > 0;
-
-                  return (
-                    <button
-                      key={week.weekNumber}
-                      type="button"
-                      tabIndex={week.isFuture ? -1 : 0}
-                      onClick={() =>
-                        setActiveWeekNumber((prev) =>
-                          prev === week.weekNumber ? null : week.weekNumber,
-                        )
-                      }
-                      onMouseEnter={(e) => handleBarEnter(e, week)}
-                      aria-label={`${week.rangeShort}: ${week.commits} commits`}
-                      className={cn(
-                        "group relative flex cursor-pointer items-center justify-center focus-visible:outline-none",
-                        week.isFuture && "pointer-events-none opacity-20",
-                      )}
-                    >
-                      <span className="absolute -top-3 -bottom-3 -left-1 -right-1 z-10 block" />
-
-                      <span
-                        style={{
-                          transform: `rotate(${week.rotation}deg)`,
-                        }}
-                        className={cn(
-                          "block h-9 sm:h-9.5 w-0.5 lg:w-0.75 rounded-full transition-all duration-150 ease-out",
-                          hasActivity
-                            ? "bg-blue-600 dark:bg-blue-500 shadow-[0_0_2px_rgba(59,130,246,0.25)]"
-                            : "bg-neutral-200 dark:bg-neutral-800",
-                          "group-hover:scale-y-115 group-hover:brightness-125",
-                          isActive
-                            ? "!bg-blue-500 !opacity-100 !scale-y-120 ring-1 ring-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.6)]"
-                            : hasActive
-                              ? "opacity-35"
-                              : "opacity-100",
-                        )}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Expandable Details Drawer */}
-              <AnimatePresence>
-                {activeWeek && (
-                  <motion.div
-                    key="active-week-details"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="border-border/60 bg-card/40 mt-3 rounded-lg border p-4 backdrop-blur-xs">
-                      <div className="border-border/40 flex items-center justify-between border-b pb-3">
-                        <span className="text-foreground text-sm font-medium">
-                          {activeWeek.rangeLong}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setActiveWeekNumber(null)}
-                          aria-label="Close details"
-                          className="text-muted-foreground hover:text-foreground cursor-pointer rounded-sm p-1 transition-colors"
-                        >
-                          <IconX className="size-4" />
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 gap-4 pt-3.5 text-xs sm:grid-cols-2">
-                        <div className="space-y-1.5">
-                          <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
-                            Code Activity
-                          </p>
-                          <p className="text-muted-foreground">
-                            <span className="text-foreground font-medium">
-                              {activeWeek.commits}
-                            </span>{" "}
-                            {activeWeek.commits === 1 ? "commit" : "commits"} across repositories
-                          </p>
-                          <p className="text-muted-foreground">
-                            <span className="text-foreground font-medium">
-                              {activeWeek.activeDays}
-                            </span>{" "}
-                            out of 7 active days this week
-                          </p>
-                          {activeWeek.maxDayCount > 0 && (
-                            <p className="text-muted-foreground">
-                              Peak:{" "}
-                              <span className="text-foreground font-medium">
-                                {activeWeek.maxDayCount}
-                              </span>{" "}
-                              contributions in a single day
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="space-y-1.5 sm:border-border/40 sm:border-l sm:pl-4">
-                          <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
-                            GitHub Profile
-                          </p>
-                          <p className="text-muted-foreground">
-                            Total yearly activity:{" "}
-                            <span className="text-foreground font-medium">
-                              {loading ? "..." : totalCount.toLocaleString()}
-                            </span>{" "}
-                            contributions
-                          </p>
-                          <div className="pt-1">
-                            <Link
-                              href={`https://github.com/${username}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline dark:text-blue-400"
-                            >
-                              <span>View profile on GitHub</span>
-                              <IconExternalLink className="size-3.5" />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {/* VIEW: GRID (Classic Matrix with Theme Switcher) */}
-          {viewMode === "grid" && (
-            <div className="w-full">
-              <div
-                className={cn(
-                  "text-muted-foreground flex items-center gap-1.5 pb-0.5 text-[10px] sm:hidden",
-                  isCompact ? "opacity-100" : "hidden",
-                )}
-              >
-                <span className="opacity-60 select-none">&#8596;</span>
-                Swipe to see the full year
-              </div>
-
-              <div
-                className={cn(
-                  "-mx-1 overflow-x-auto px-1",
-                  "[-webkit-overflow-scrolling:touch] [scrollbar-width:thin]",
-                  isCompact && "snap-x",
-                )}
+          {/* Clean animated view transition matching Project section */}
+          <AnimatePresence mode="wait">
+            {viewMode === "timeline" ? (
+              <motion.div
+                key="timeline-view"
+                initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                transition={projectSpringTransition}
+                className="w-full"
               >
                 <div
-                  className="w-full"
-                  style={isCompact ? { minWidth: SCROLL_GRAPH_WIDTH } : undefined}
+                  ref={containerRef}
+                  className="relative py-4 select-none"
                 >
-                  <motion.div
-                    initial={animate ? { opacity: 0, y: -4 } : false}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="relative h-4 w-full"
-                  >
-                    {monthLabels.map((month, idx) => (
-                      <span
-                        key={`${month.name}-${idx}`}
-                        className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
-                        style={{ left: `${(month.col / 52) * 100}%` }}
-                      >
-                        {month.name}
-                      </span>
-                    ))}
-                  </motion.div>
+                  {/* 52 Tally Bars with our own Tooltip component */}
+                  <div className="flex w-full items-center justify-between gap-[2px] sm:gap-1">
+                    {weeksData.map((week) => {
+                      const isActive = activeWeekNumber === week.weekNumber;
+                      const hasActive = activeWeekNumber !== null;
+                      const hasActivity = week.commits > 0;
 
-                  <div
-                    ref={containerRef}
-                    className="relative flex gap-1"
-                    onMouseLeave={handleGridLeave}
-                  >
-                    {isCompact ? (
-                      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 select-none">
-                        <TooltipBubble
-                          visible={gridTooltip.visible}
-                          count={gridTooltip.count}
-                          date={gridTooltip.date}
-                          accentClass={currentThemeConfig.accentText}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className={cn(
-                          "pointer-events-none absolute top-0 left-0 z-50 select-none",
-                          gridTooltip.isGliding
-                            ? "transition-transform duration-150 ease-out will-change-transform"
-                            : "transition-none",
-                        )}
-                        style={{
-                          transform: `translate3d(${gridTooltip.x}px, ${gridTooltip.y - 8}px, 0) translate(-50%, -100%)`,
-                        }}
-                      >
-                        <TooltipBubble
-                          visible={gridTooltip.visible}
-                          count={gridTooltip.count}
-                          date={gridTooltip.date}
-                          accentClass={currentThemeConfig.accentText}
-                        />
-                      </div>
-                    )}
-
-                    <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
-                      {weeks.map((_, weekIndex) => (
-                        <motion.div
-                          key={weekIndex}
-                          custom={weekIndex}
-                          initial={animate ? "hidden" : false}
-                          animate="visible"
-                          variants={columnVariants}
-                          className="flex flex-1 flex-col gap-px sm:gap-0.5"
+                      return (
+                        <Tooltip
+                          key={week.weekNumber}
+                          delayDuration={0}
+                          disabled={week.isFuture}
                         >
-                          {days.map((_, dayIndex) => {
-                            const dayData = getDayData(weekIndex, dayIndex);
-                            const glow = getGlowAnimation(dayData.count, weekIndex);
-                            const isTop = dayData.count >= 10;
-                            return (
-                              <motion.div
-                                key={dayIndex}
-                                animate={glow?.animate}
-                                transition={glow?.transition}
-                                onMouseEnter={(e) => handleCellEnter(e, dayData)}
-                                onPointerDown={(e) => handleCellEnter(e, dayData)}
-                                aria-label={`${dayData.count} contributions on ${dayData.date}`}
-                                className={cn(
-                                  "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
-                                  currentThemeConfig.activeRing,
-                                  isTop && "z-10",
-                                  getLevelClass(dayData.count, activeTheme),
-                                )}
-                              />
-                            );
-                          })}
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              tabIndex={week.isFuture ? -1 : 0}
+                              onClick={() =>
+                                setActiveWeekNumber((prev) =>
+                                  prev === week.weekNumber ? null : week.weekNumber,
+                                )
+                              }
+                              aria-label={`${week.rangeShort}: ${week.commits} commits`}
+                              className={cn(
+                                "group relative flex cursor-pointer items-center justify-center focus-visible:outline-none",
+                                week.isFuture && "pointer-events-none opacity-20",
+                              )}
+                            >
+                              {/* Invisible hit target for smooth hover tracking */}
+                              <span className="absolute -top-3 -bottom-3 -left-1 -right-1 z-10 block" />
 
-              {/* Grid Bottom Bar: Palette Picker & Level Legend */}
-              <div className="mt-3 flex flex-row items-center justify-end px-1">
-                <div className="relative flex items-center" ref={popoverRef}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      allowThemeSelection && setIsPopoverOpen((prev) => !prev)
-                    }
-                    className={cn(
-                      "text-muted-foreground flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[9px] transition-colors select-none",
-                      allowThemeSelection &&
-                        "hover:text-foreground cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/80",
-                    )}
-                    title={
-                      allowThemeSelection
-                        ? "Change contribution color theme"
-                        : undefined
-                    }
-                  >
-                    <span className="opacity-50">Less</span>
-                    <div className="flex gap-0.5">
-                      {[0, 1, 3, 6, 10].map((level) => (
-                        <div
-                          key={level}
-                          className={cn(
-                            "size-2 rounded-[1px] transition-colors duration-200 sm:size-2.5",
-                            getLevelClass(level, activeTheme),
-                          )}
-                        />
-                      ))}
-                    </div>
-                    <span className="opacity-50">More</span>
-                  </button>
-
-                  <AnimatePresence>
-                    {allowThemeSelection && isPopoverOpen && (
-                      <motion.div
-                        key="theme-popover"
-                        initial={{ opacity: 0, scale: 0.94, y: 6 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.94, y: 6 }}
-                        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                        className="border-border bg-card/95 text-foreground absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
-                      >
-                        <div className="text-muted-foreground mb-1.5 flex items-center justify-between px-1 text-[10px] font-medium">
-                          <span>Palette</span>
-                          <span className="text-foreground font-semibold capitalize">
-                            {THEMES[activeTheme]?.label}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-1">
-                          {Object.entries(THEMES).map(([key, cfg]) => {
-                            const isSelected = activeTheme === key;
-                            return (
-                              <button
-                                key={key}
-                                type="button"
-                                onClick={() => {
-                                  setActiveTheme(key as ContributionTheme);
-                                  onThemeChange?.(key as ContributionTheme);
-                                  setIsPopoverOpen(false);
+                              {/* Vertical Tally Line */}
+                              <span
+                                style={{
+                                  transform: `rotate(${week.rotation}deg)`,
                                 }}
                                 className={cn(
-                                  "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
-                                  isSelected
-                                    ? "text-foreground bg-neutral-100 shadow-xs ring-1 ring-neutral-300 dark:bg-neutral-800 dark:ring-neutral-700"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/60",
+                                  "block h-9 sm:h-9.5 w-0.5 lg:w-0.75 rounded-full transition-all duration-150 ease-out",
+                                  hasActivity
+                                    ? "bg-blue-600 dark:bg-blue-500 shadow-[0_0_2px_rgba(59,130,246,0.25)]"
+                                    : "bg-neutral-200 dark:bg-neutral-800",
+                                  "group-hover:scale-y-115 group-hover:brightness-125",
+                                  isActive
+                                    ? "!bg-blue-500 !opacity-100 !scale-y-120 ring-1 ring-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+                                    : hasActive
+                                      ? "opacity-35"
+                                      : "opacity-100",
                                 )}
-                              >
-                                <div className="flex gap-0.5">
-                                  {cfg.levels.map((lvlClass, idx) => (
-                                    <div
-                                      key={idx}
-                                      className={cn(
-                                        "size-1.5 rounded-[1px]",
-                                        lvlClass,
-                                      )}
-                                    />
-                                  ))}
-                                </div>
-                                <span>{cfg.label}</span>
-                              </button>
-                            );
-                          })}
+                              />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="px-2.5 py-1.5 shadow-xl">
+                            <div className="flex flex-col gap-0.5 text-left">
+                              <span className="font-semibold text-[11px] text-zinc-100 dark:text-zinc-900 leading-tight">
+                                {week.rangeShort}
+                              </span>
+                              <span className="text-[10px] text-zinc-400 dark:text-zinc-600">
+                                {week.commits} {week.commits === 1 ? "commit" : "commits"}
+                                {week.activeDays > 0 ? ` • ${week.activeDays}d active` : ""}
+                              </span>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
+
+                  {/* Expandable Details Drawer */}
+                  <AnimatePresence>
+                    {activeWeek && (
+                      <motion.div
+                        key="active-week-details"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="border-border/50 bg-card/60 mt-3 rounded-lg border p-4 shadow-xs backdrop-blur-xs dark:border-white/10 dark:bg-neutral-900/60">
+                          <div className="border-border/40 flex items-center justify-between border-b pb-3">
+                            <span className="text-foreground text-sm font-medium">
+                              {activeWeek.rangeLong}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setActiveWeekNumber(null)}
+                              aria-label="Close details"
+                              className="text-muted-foreground hover:text-foreground cursor-pointer rounded-sm p-1 transition-colors"
+                            >
+                              <IconX className="size-4" />
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-4 pt-3.5 text-xs sm:grid-cols-2">
+                            <div className="space-y-1.5">
+                              <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                                Code Activity
+                              </p>
+                              <p className="text-muted-foreground">
+                                <span className="text-foreground font-medium">
+                                  {activeWeek.commits}
+                                </span>{" "}
+                                {activeWeek.commits === 1 ? "commit" : "commits"} across repositories
+                              </p>
+                              <p className="text-muted-foreground">
+                                <span className="text-foreground font-medium">
+                                  {activeWeek.activeDays}
+                                </span>{" "}
+                                out of 7 active days this week
+                              </p>
+                              {activeWeek.maxDayCount > 0 && (
+                                <p className="text-muted-foreground">
+                                  Peak:{" "}
+                                  <span className="text-foreground font-medium">
+                                    {activeWeek.maxDayCount}
+                                  </span>{" "}
+                                  contributions in a single day
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="space-y-1.5 sm:border-border/40 sm:border-l sm:pl-4">
+                              <p className="text-foreground text-[11px] font-semibold tracking-wider uppercase">
+                                GitHub Profile
+                              </p>
+                              <p className="text-muted-foreground">
+                                Total yearly activity:{" "}
+                                <span className="text-foreground font-medium">
+                                  {loading ? "..." : totalCount.toLocaleString()}
+                                </span>{" "}
+                                contributions
+                              </p>
+                              <div className="pt-1">
+                                <Link
+                                  href={`https://github.com/${username}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                >
+                                  <span>View profile on GitHub</span>
+                                  <IconExternalLink className="size-3.5" />
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="grid-view"
+                initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                transition={projectSpringTransition}
+                className="w-full"
+              >
+                <div className="w-full">
+                  <div
+                    className={cn(
+                      "text-muted-foreground flex items-center gap-1.5 pb-0.5 text-[10px] sm:hidden",
+                      isCompact ? "opacity-100" : "hidden",
+                    )}
+                  >
+                    <span className="opacity-60 select-none">&#8596;</span>
+                    Swipe to see the full year
+                  </div>
+
+                  <div
+                    className={cn(
+                      "-mx-1 overflow-x-auto px-1",
+                      "[-webkit-overflow-scrolling:touch] [scrollbar-width:thin]",
+                      isCompact && "snap-x",
+                    )}
+                  >
+                    <div
+                      className="w-full"
+                      style={isCompact ? { minWidth: SCROLL_GRAPH_WIDTH } : undefined}
+                    >
+                      <div className="relative h-4 w-full">
+                        {monthLabels.map((month, idx) => (
+                          <span
+                            key={`${month.name}-${idx}`}
+                            className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
+                            style={{ left: `${(month.col / 52) * 100}%` }}
+                          >
+                            {month.name}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="relative flex gap-1">
+                        <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
+                          {weeks.map((_, weekIndex) => (
+                            <motion.div
+                              key={weekIndex}
+                              custom={weekIndex}
+                              initial={animate ? "hidden" : false}
+                              animate="visible"
+                              variants={columnVariants}
+                              className="flex flex-1 flex-col gap-px sm:gap-0.5"
+                            >
+                              {days.map((_, dayIndex) => {
+                                const dayData = getDayData(weekIndex, dayIndex);
+                                const glow = getGlowAnimation(dayData.count, weekIndex);
+                                const isTop = dayData.count >= 10;
+                                const formattedDate =
+                                  dayData.date !== "No data"
+                                    ? formatDate(dayData.date)
+                                    : "No data";
+
+                                return (
+                                  <Tooltip key={dayIndex} delayDuration={50}>
+                                    <TooltipTrigger asChild>
+                                      <motion.div
+                                        animate={glow?.animate}
+                                        transition={glow?.transition}
+                                        aria-label={`${dayData.count} contributions on ${dayData.date}`}
+                                        className={cn(
+                                          "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
+                                          currentThemeConfig.activeRing,
+                                          isTop && "z-10",
+                                          getLevelClass(dayData.count, activeTheme),
+                                        )}
+                                      />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                      <span className="font-semibold">{dayData.count}</span>{" "}
+                                      {dayData.count === 1 ? "contribution" : "contributions"} on{" "}
+                                      {formattedDate}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                );
+                              })}
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Grid Bottom Bar: Palette Picker & Level Legend */}
+                  <div className="mt-3 flex flex-row items-center justify-end px-1">
+                    <div className="relative flex items-center" ref={popoverRef}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          allowThemeSelection && setIsPopoverOpen((prev) => !prev)
+                        }
+                        className={cn(
+                          "text-muted-foreground flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[9px] transition-colors select-none",
+                          allowThemeSelection &&
+                            "hover:text-foreground cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/80",
+                        )}
+                        title={
+                          allowThemeSelection
+                            ? "Change contribution color theme"
+                            : undefined
+                        }
+                      >
+                        <span className="opacity-50">Less</span>
+                        <div className="flex gap-0.5">
+                          {[0, 1, 3, 6, 10].map((level) => (
+                            <div
+                              key={level}
+                              className={cn(
+                                "size-2 rounded-[1px] transition-colors duration-200 sm:size-2.5",
+                                getLevelClass(level, activeTheme),
+                              )}
+                            />
+                          ))}
+                        </div>
+                        <span className="opacity-50">More</span>
+                      </button>
+
+                      <AnimatePresence>
+                        {allowThemeSelection && isPopoverOpen && (
+                          <motion.div
+                            key="theme-popover"
+                            initial={{ opacity: 0, scale: 0.94, y: 6 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.94, y: 6 }}
+                            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                            className="border-border bg-card/95 text-foreground absolute right-0 bottom-full z-50 mb-2 w-48 origin-bottom-right rounded-lg border p-2 shadow-lg backdrop-blur-md"
+                          >
+                            <div className="text-muted-foreground mb-1.5 flex items-center justify-between px-1 text-[10px] font-medium">
+                              <span>Palette</span>
+                              <span className="text-foreground font-semibold capitalize">
+                                {THEMES[activeTheme]?.label}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-1">
+                              {Object.entries(THEMES).map(([key, cfg]) => {
+                                const isSelected = activeTheme === key;
+                                return (
+                                  <button
+                                    key={key}
+                                    type="button"
+                                    onClick={() => {
+                                      setActiveTheme(key as ContributionTheme);
+                                      onThemeChange?.(key as ContributionTheme);
+                                      setIsPopoverOpen(false);
+                                    }}
+                                    className={cn(
+                                      "flex cursor-pointer flex-col items-center gap-1 rounded-md p-1.5 text-[9px] font-medium transition-all",
+                                      isSelected
+                                        ? "text-foreground bg-neutral-100 shadow-xs ring-1 ring-neutral-300 dark:bg-neutral-800 dark:ring-neutral-700"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/60",
+                                    )}
+                                  >
+                                    <div className="flex gap-0.5">
+                                      {cfg.levels.map((lvlClass, idx) => (
+                                        <div
+                                          key={idx}
+                                          className={cn(
+                                            "size-1.5 rounded-[1px]",
+                                            lvlClass,
+                                          )}
+                                        />
+                                      ))}
+                                    </div>
+                                    <span>{cfg.label}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
