@@ -35,11 +35,20 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   const [mounted, setMounted] = useState(false);
+  const [viewMode, setViewMode] = useState<ContributionViewMode>(defaultView);
+
   useEffect(() => {
     setMounted(true);
+    try {
+      const stored = localStorage.getItem(
+        "github-contributions-view"
+      ) as ContributionViewMode | null;
+      if (stored === "timeline" || stored === "grid") {
+        setViewMode(stored);
+      }
+    } catch {}
   }, []);
 
-  const [viewMode, setViewMode] = useState<ContributionViewMode>(defaultView);
   const [activeTheme, setActiveTheme] = useState<ContributionTheme>(theme);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [activeWeekNumber, setActiveWeekNumber] = useState<number | null>(null);
@@ -63,17 +72,6 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
 
   const themeConfig = THEMES[activeTheme] ?? THEMES.blue;
   const shouldAnimate = animate && mounted && isInView;
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(
-        "github-contributions-view"
-      ) as ContributionViewMode | null;
-      if (stored === "timeline" || stored === "grid") {
-        setViewMode(stored);
-      }
-    } catch {}
-  }, []);
 
   const handleViewModeChange = useCallback(
     (mode: ContributionViewMode) => {
