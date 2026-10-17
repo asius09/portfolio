@@ -5,16 +5,18 @@ import { motion, type Transition } from "motion/react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 
 const fadeInUpInitial = {
-  y: 12,
+  y: 14,
   opacity: 0,
+  filter: "blur(6px)",
 };
 const fadeInUpAnimate = {
   y: 0,
   opacity: 1,
+  filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.45,
-  ease: [0.32, 0.72, 0, 1],
+  duration: 0.55,
+  ease: [0.22, 1, 0.36, 1],
 };
 
 export const Stack = () => {
@@ -22,19 +24,12 @@ export const Stack = () => {
   const step = 0.025;
 
   return (
-    <motion.section
+    <section
       id="stack-section"
       className="mt-12 w-full"
       aria-labelledby="stack-heading"
       tabIndex={-1}
       role="region"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpTransition,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         id="stack-heading"
@@ -67,14 +62,8 @@ export const Stack = () => {
             key={key}
             className="group relative flex cursor-pointer flex-col items-center justify-center hover:z-50"
             role="listitem"
-            initial={{
-              y: 10,
-              opacity: 0,
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-            }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
             viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpTransition,
@@ -111,6 +100,6 @@ export const Stack = () => {
           </motion.li>
         ))}
       </motion.ul>
-    </motion.section>
+    </section>
   );
 };

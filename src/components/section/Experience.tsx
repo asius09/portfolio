@@ -6,33 +6,28 @@ import { motion, type Transition } from "motion/react";
 
 export const Experience = () => {
   const fadeInUpInitial = {
-    y: 12,
+    y: 14,
     opacity: 0,
+    filter: "blur(6px)",
   };
   const fadeInUpAnimate = {
     y: 0,
     opacity: 1,
+    filter: "blur(0px)",
   };
   const fadeInUpTransition: Transition = {
-    duration: 0.45,
-    ease: [0.32, 0.72, 0, 1],
+    duration: 0.55,
+    ease: [0.22, 1, 0.36, 1],
   };
   const baseDelay = 0.01;
   const step = 0.03;
 
   return (
-    <motion.section
+    <section
       id="experience-section"
       className="mt-12 w-full"
       aria-labelledby="experience-heading"
       tabIndex={-1}
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpTransition,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         id="experience-heading"
@@ -62,14 +57,8 @@ export const Experience = () => {
         {experience.map((experience, idx) => (
           <motion.li
             key={experience.companyName}
-            initial={{
-              y: 12,
-              opacity: 0,
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-            }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
             viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpTransition,
@@ -100,6 +89,6 @@ export const Experience = () => {
           </Button>
         </motion.div>
       )}
-    </motion.section>
+    </section>
   );
 };

@@ -2,16 +2,18 @@
 import { motion, Transition } from "motion/react";
 
 const fadeInUpInitial = {
-  y: 12,
+  y: 14,
   opacity: 0,
+  filter: "blur(6px)",
 };
 const fadeInUpAnimate = {
   y: 0,
   opacity: 1,
+  filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.45,
-  ease: [0.32, 0.72, 0, 1],
+  duration: 0.55,
+  ease: [0.22, 1, 0.36, 1],
 };
 
 export const About = () => {
@@ -19,17 +21,7 @@ export const About = () => {
   const step = 0.13;
 
   return (
-    <motion.section
-      id="about-section"
-      className="mt-12 w-full"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpTransition,
-        delay: baseDelay,
-      }}
-    >
+    <section id="about-section" className="mt-12 w-full">
       <motion.h2
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
@@ -82,6 +74,6 @@ export const About = () => {
       >
         Always open to new challenges and conversations, so let’s connect.
       </motion.p>
-    </motion.section>
+    </section>
   );
 };

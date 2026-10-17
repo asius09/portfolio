@@ -27,10 +27,10 @@ export const Project = () => {
       id="project-section"
       aria-labelledby="projects-heading"
       tabIndex={-1}
-      initial={{ y: 12, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
+      initial={{ y: 14, opacity: 0, filter: "blur(6px)" }}
+      whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.45, ease: EASE }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className="mt-12 w-full overflow-x-clip"
     >
       <div className="flex items-center justify-between gap-3">

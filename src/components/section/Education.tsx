@@ -4,16 +4,18 @@ import { education } from "@/data/education";
 import { motion, type Transition } from "motion/react";
 
 const fadeInUpInitial = {
-  y: 12,
+  y: 14,
   opacity: 0,
+  filter: "blur(6px)",
 };
 const fadeInUpAnimate = {
   y: 0,
   opacity: 1,
+  filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.45,
-  ease: [0.32, 0.72, 0, 1],
+  duration: 0.55,
+  ease: [0.22, 1, 0.36, 1],
 };
 
 export const Education = () => {
@@ -21,16 +23,9 @@ export const Education = () => {
   const step = 0.035;
 
   return (
-    <motion.section
+    <section
       id="education-section"
       className="mt-12 w-full"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpTransition,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         className="text-foreground text-2xl font-semibold"
@@ -58,14 +53,8 @@ export const Education = () => {
           <motion.div
             key={idx}
             className="flex items-start gap-2"
-            initial={{
-              y: 12,
-              opacity: 0,
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-            }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
             viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpTransition,
@@ -95,6 +84,6 @@ export const Education = () => {
           </motion.div>
         ))}
       </motion.div>
-    </motion.section>
+    </section>
   );
 };

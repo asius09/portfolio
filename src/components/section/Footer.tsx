@@ -43,18 +43,20 @@ const footerSocials = [
 ];
 
 const fadeInUpInitial = {
-  y: 12,
+  y: 14,
   opacity: 0,
+  filter: "blur(6px)",
 };
 
 const fadeInUpAnimate = {
   y: 0,
   opacity: 1,
+  filter: "blur(0px)",
 };
 
 const fadeInUpTransition: Transition = {
-  duration: 0.45,
-  ease: [0.32, 0.72, 0, 1],
+  duration: 0.55,
+  ease: [0.22, 1, 0.36, 1],
 };
 
 export const Footer = () => {

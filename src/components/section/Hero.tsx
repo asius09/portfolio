@@ -12,6 +12,7 @@ import { Button } from "../ui/Button";
 type FadeInUp = {
   y: number;
   opacity: number;
+  filter: string;
 };
 type IconAnim = {
   scale: number;
@@ -20,16 +21,18 @@ type IconAnim = {
 };
 
 const fadeInUpInitial: FadeInUp = {
-  y: 12,
+  y: 14,
   opacity: 0,
+  filter: "blur(6px)",
 };
 const fadeInUpAnimate: FadeInUp = {
   y: 0,
   opacity: 1,
+  filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.45,
-  ease: [0.32, 0.72, 0, 1],
+  duration: 0.55,
+  ease: [0.22, 1, 0.36, 1],
 };
 
 const iconInitial: IconAnim = {
@@ -70,11 +73,13 @@ const itemVariants = {
   visible: {
     y: 0,
     opacity: 1,
+    filter: "blur(0px)",
     transition: fadeInUpTransition,
   },
   hidden: {
-    y: 12,
+    y: 14,
     opacity: 0,
+    filter: "blur(6px)",
     transition: fadeInUpTransition,
   },
 };
@@ -97,10 +102,12 @@ export const Hero = () => {
             initial={{
               scale: 0.92,
               opacity: 0,
+              filter: "blur(6px)",
             }}
             whileInView={{
               scale: 1,
               opacity: 1,
+              filter: "blur(0px)",
             }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{
@@ -295,11 +302,11 @@ function AnimateName() {
         className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
-        initial={{ opacity: 0, scale: 1.02 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, scale: 1.04, filter: "blur(8px)" }}
+        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{
-          duration: 0.35,
-          ease: [0.32, 0.72, 0, 1],
+          duration: 0.45,
+          ease: [0.22, 1, 0.36, 1],
         }}
       />
       <motion.h1
@@ -307,17 +314,19 @@ function AnimateName() {
         tabIndex={0}
         initial={{
           opacity: 0,
-          y: 18,
+          y: 20,
           scale: 0.96,
+          filter: "blur(8px)",
         }}
         animate={{
           opacity: 1,
           y: 0,
           scale: 1,
+          filter: "blur(0px)",
         }}
         transition={{
-          duration: 0.5,
-          ease: [0.32, 0.72, 0, 1],
+          duration: 0.55,
+          ease: [0.22, 1, 0.36, 1],
         }}
         aria-describedby="brand-tooltip"
       >
