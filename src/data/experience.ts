@@ -120,7 +120,7 @@ export const experience: ExperienceCompany[] = [
       {
         icon: IoCodeSlashOutline,
         role: "Full-Stack Developer",
-        employmentType: "Internship",
+        employmentType: "Full-time",
         start: "2025-09-15",
         end: "Present",
         status: "active",
