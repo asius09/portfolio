@@ -159,7 +159,6 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     setIsPopoverOpen(false);
   }, []);
 
-  const viewAnimState = shouldAnimate ? "animate" : "hidden";
   const waveInitialState = waveKey > 0 ? "themeShift" : "hidden";
 
   return (
@@ -210,7 +209,6 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                     activeTheme={activeTheme}
                     waveKey={waveKey}
                     waveInitialState={waveInitialState}
-                    viewAnimState={viewAnimState}
                     shouldAnimate={shouldAnimate}
                     activeWeekNumber={activeWeekNumber}
                     onSelectWeek={handleSelectWeek}
@@ -236,7 +234,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
                     activeTheme={activeTheme}
                     waveKey={waveKey}
                     waveInitialState={waveInitialState}
-                    viewAnimState={viewAnimState}
+                    shouldAnimate={shouldAnimate}
                     onShowTooltip={showTooltip}
                   />
                 </div>

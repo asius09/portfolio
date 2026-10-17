@@ -12,6 +12,8 @@ export interface ThemeConfig {
   name: ContributionTheme;
   label: string;
   levels: [string, string, string, string, string];
+  timelineGlows: [string, string, string, string, string];
+  gridGlows: [string, string, string, string, string];
   glowBoxShadow: string;
   glowRestingShadow: string;
   accentText: string;
