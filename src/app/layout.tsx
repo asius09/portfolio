@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Zain, Inter, Schibsted_Grotesk, Geist, Caveat } from "next/font/google";
+import {
+  Zain,
+  Inter,
+  Schibsted_Grotesk,
+  Geist,
+  Caveat,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
@@ -51,14 +57,10 @@ export const metadata: Metadata = {
     url: "https://asius.in",
     siteName: "Bobby",
     title: "Bobby - Full Stack Developer",
-    description:
-      "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Bobby - Full Stack Developer",
-    description:
-      "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
     creator: "@_asius",
   },
   robots: {
@@ -89,6 +91,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-font="geist"
       className={`${geist.variable} ${inter.variable} ${schibsted.variable} ${caveat.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >
@@ -144,8 +147,6 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "Bobby",
               url: "https://asius.in",
-              description:
-                "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
             }),
           }}
         />

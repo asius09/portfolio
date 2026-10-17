@@ -2,43 +2,23 @@
 import { ExperienceCard } from "@/components/ExperienceCard";
 import { Button } from "../ui/Button";
 import { experience } from "@/data/experience";
-import { motion, type Transition } from "motion/react";
+import { motion } from "motion/react";
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  getSectionItemTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Experience = () => {
-  const fadeInUpInitial = {
-    y: 12,
-    opacity: 0,
-    filter: "blur(4px)",
-  };
-  const fadeInUpAnimate = {
-    y: 0,
-    opacity: 1,
-    filter: "blur(0px)",
-  };
-  const fadeInUpSpring: Transition = {
-    duration: 0.5,
-    ease: [0.25, 0.1, 0.25, 1],
-    type: "spring",
-    stiffness: 120,
-    damping: 18,
-    filter: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] },
-  };
-  const baseDelay = 0.01;
-  const step = 0.03;
-
   return (
-    <motion.section
+    <section
       id="experience-section"
       className="mt-12 w-full"
       aria-labelledby="experience-heading"
       tabIndex={-1}
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         id="experience-heading"
@@ -46,11 +26,8 @@ export const Experience = () => {
         tabIndex={0}
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.04)}
       >
         Experience
       </motion.h2>
@@ -59,32 +36,18 @@ export const Experience = () => {
         aria-label="Experience list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.08)}
       >
-        {experience.map((experience, idx) => (
+        {experience.map((exp, idx) => (
           <motion.li
-            key={experience.companyName}
-            initial={{
-              y: 12,
-              opacity: 0,
-              filter: "blur(6px)",
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-            }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpSpring,
-              delay: baseDelay + step * (3 + idx),
-            }}
+            key={exp.companyName}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getSectionItemTransition(idx, 0.12)}
           >
-            <ExperienceCard {...experience} />
+            <ExperienceCard {...exp} />
           </motion.li>
         ))}
       </motion.ul>
@@ -93,11 +56,10 @@ export const Experience = () => {
           className="my-8 grid w-full place-content-center"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{
-            ...fadeInUpSpring,
-            delay: baseDelay + step * (3 + experience.length),
-          }}
+          viewport={DEFAULT_VIEWPORT}
+          transition={getFadeInUpTransition(
+            0.12 + experience.length * ANIMATION_CONFIG.staggerStep
+          )}
         >
           <Button
             variant="ghost"
@@ -108,6 +70,7 @@ export const Experience = () => {
           </Button>
         </motion.div>
       )}
-    </motion.section>
+    </section>
   );
 };
+

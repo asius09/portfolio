@@ -1,52 +1,27 @@
 "use client";
 import React from "react";
 import { education } from "@/data/education";
-import { motion, type Transition } from "motion/react";
-
-const fadeInUpInitial = {
-  y: 12,
-  opacity: 0,
-  filter: "blur(4px)",
-};
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpSpring: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
-};
+import { motion } from "motion/react";
+import {
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  getSectionItemTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Education = () => {
-  const baseDelay = 0.02;
-  const step = 0.035;
-
   return (
-    <motion.section
+    <section
       id="education-section"
       className="mt-12 w-full"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.04)}
       >
         Education
       </motion.h2>
@@ -54,31 +29,17 @@ export const Education = () => {
         className="mt-6 w-full space-y-4"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.08)}
       >
         {education.map((edu, idx) => (
           <motion.div
             key={idx}
             className="flex items-start gap-2"
-            initial={{
-              y: 12,
-              opacity: 0,
-              filter: "blur(6px)",
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-            }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpSpring,
-              delay: baseDelay + step * (3 + idx),
-            }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getSectionItemTransition(idx, 0.12)}
           >
             {/* Pointer/Arrow Icon */}
             <span
@@ -103,6 +64,7 @@ export const Education = () => {
           </motion.div>
         ))}
       </motion.div>
-    </motion.section>
+    </section>
   );
 };
+

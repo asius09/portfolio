@@ -51,7 +51,7 @@ export const AppHeader = () => {
 
   return (
     <header
-      className="bg-background border-border/30 fixed top-0 left-0 z-50 flex min-h-12 w-full items-center justify-center border-b"
+      className="bg-background/80 border-border/30 fixed top-0 left-0 z-50 flex min-h-12 w-full items-center justify-center border-b backdrop-blur-md"
       role="banner"
     >
       <div className="flex w-full max-w-3xl items-center justify-between px-6">
@@ -62,20 +62,16 @@ export const AppHeader = () => {
                 key="asius-header"
                 className="font-asius text-foreground text-3xl font-bold tracking-tight lowercase select-none"
                 initial={{
-                  y: 20,
+                  y: 16,
                   opacity: 0,
                   filter: "blur(8px)",
-                  scale: 0.92,
+                  scale: 0.94,
                 }}
                 animate={{ y: 0, opacity: 1, filter: "blur(0px)", scale: 1 }}
-                exit={{ y: 20, opacity: 0, filter: "blur(8px)", scale: 0.92 }}
+                exit={{ y: 16, opacity: 0, filter: "blur(8px)", scale: 0.94 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 320,
-                  damping: 28,
-                  duration: 0.48,
-                  filter: { duration: 0.42, ease: [0.22, 0.68, 0.36, 1] },
-                  scale: { duration: 0.42, ease: [0.22, 0.68, 0.36, 1] },
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
                 }}
               >
                 asius

@@ -8,7 +8,6 @@ import { Hero } from "@/components/section/Hero";
 import { Project } from "@/components/section/Project";
 import { Stack } from "@/components/section/Stack";
 import { GithubContributionCard } from "@/components/GithubContributionCard";
-import { motion } from "motion/react";
 
 export default function Home() {
   return (

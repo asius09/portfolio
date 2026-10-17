@@ -3,146 +3,131 @@ import React, { useState } from "react";
 import { ProjectCard } from "../ProjectCard";
 import { Button } from "../ui/Button";
 import { projects } from "@/data/project";
-import { motion, type Transition } from "motion/react";
+import { motion } from "motion/react";
 import { IconLayoutGrid, IconList } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
+
+// One calm tween shared by every animation on this section. No springs, no
+// blur filters: both caused the bouncy overshoot + repaint jank when toggling
+// grid/list. `layout` transitions reuse the same curve via `layoutTransition`.
+const EASE = [0.32, 0.72, 0, 1] as const;
+const LAYOUT_TRANSITION = {
+  type: "tween" as const,
+  duration: 0.28,
+  ease: EASE,
+};
+
+type ViewMode = "grid" | "list";
+
 export const Project = () => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  const fadeInUpInitial = {
-    y: 12,
-    opacity: 0,
-    filter: "blur(4px)",
-  };
-  const fadeInUpAnimate = {
-    y: 0,
-    opacity: 1,
-    filter: "blur(0px)",
-  };
-  const fadeInUpSpring: Transition = {
-    duration: 0.5,
-    ease: [0.25, 0.1, 0.25, 1],
-    type: "spring",
-    stiffness: 120,
-    damping: 18,
-    filter: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] },
-  };
-
-  const baseDelay = 0.02;
-  const step = 0.035;
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   return (
     <motion.section
       id="project-section"
-      className="mt-12 w-full"
       aria-labelledby="projects-heading"
       tabIndex={-1}
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: baseDelay,
-      }}
+      viewport={DEFAULT_VIEWPORT}
+      transition={getFadeInUpTransition(0.04)}
+      className="mt-12 w-full overflow-x-clip"
     >
-      <div className="flex items-center justify-between">
-        <motion.h2
+      <div className="flex items-center justify-between gap-3">
+        <h2
           id="projects-heading"
-          className="text-foreground text-2xl font-semibold"
           tabIndex={0}
-          initial={fadeInUpInitial}
-          whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{
-            ...fadeInUpSpring,
-            delay: baseDelay + step * 1,
-          }}
+          className="text-foreground text-2xl font-semibold"
         >
           Projects
-        </motion.h2>
-        
-        <motion.div 
-          className="relative flex items-center gap-0.5 rounded-md border border-border/50 bg-card p-0.5 shadow-xs dark:border-white/10 dark:bg-neutral-900"
-          initial={fadeInUpInitial}
-          whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ ...fadeInUpSpring, delay: baseDelay + step * 1 }}
+        </h2>
+
+        <div
+          role="tablist"
+          aria-label="Project view"
+          className="border-border/50 bg-card relative flex shrink-0 items-center gap-0.5 rounded-md border p-0.5 shadow-xs dark:border-white/10 dark:bg-neutral-900"
         >
-          {(["grid", "list"] as const).map((mode) => (
-            <motion.button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.94 }}
-              aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
-              className={cn(
-                "relative z-10 cursor-pointer rounded p-1.5 text-muted-foreground transition-colors hover:text-foreground",
-                viewMode === mode && "text-foreground"
-              )}
-            >
-              {viewMode === mode && (
-                <motion.div
-                  layoutId="active-view-tab"
-                  className="absolute inset-0 z-[-1] rounded bg-neutral-200/60 dark:bg-neutral-800"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              {mode === "grid" ? <IconLayoutGrid className="size-3.5" /> : <IconList className="size-3.5" />}
-            </motion.button>
-          ))}
-        </motion.div>
+          {(["grid", "list"] as const).map((mode) => {
+            const selected = viewMode === mode;
+            return (
+              <button
+                key={mode}
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setViewMode(mode)}
+                aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
+                className={cn(
+                  "relative z-10 cursor-pointer rounded p-1.5 transition-colors",
+                  selected
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {selected && (
+                  <motion.span
+                    layoutId="active-view-tab"
+                    transition={LAYOUT_TRANSITION}
+                    className="absolute inset-0 -z-10 rounded bg-neutral-200/60 dark:bg-neutral-800"
+                  />
+                )}
+                {mode === "grid" ? (
+                  <IconLayoutGrid className="size-3.5" aria-hidden />
+                ) : (
+                  <IconList className="size-3.5" aria-hidden />
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
+      {/*
+        `layout` on the list + items animates grid<->list reorder with the
+        same critically-damped tween (no spring bounce). The list clips
+        horizontally so mid-transition frames never cause page overflow.
+      */}
       <motion.ul
-        className={cn(
-          "mt-6",
-          viewMode === "grid" ? "grid grid-cols-1 gap-4 sm:grid-cols-2" : "flex flex-col gap-1"
-        )}
+        layout
+        layoutRoot
+        transition={LAYOUT_TRANSITION}
         aria-label="Project list"
-        initial={fadeInUpInitial}
-        whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 2,
-        }}
+        className={cn(
+          "mt-6 min-w-0 overflow-x-clip",
+          viewMode === "grid"
+            ? "grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2"
+            : "flex flex-col gap-1",
+        )}
       >
         {projects.map((project, idx) => (
           <motion.li
             layout
             key={project.name}
-            initial={{
-              y: 12,
-              opacity: 0,
-              filter: "blur(6px)",
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-            }}
-            viewport={{ once: true, amount: 0.15 }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
             transition={{
-              ...fadeInUpSpring,
-              delay: baseDelay + step * (3 + idx),
+              ...LAYOUT_TRANSITION,
+              delay: Math.min(idx * ANIMATION_CONFIG.staggerStep, 0.2),
             }}
+            // Capped stagger: cards fade in promptly instead of cascading.
+            style={{ overflowAnchor: "none" }}
+            className="min-w-0"
           >
             <ProjectCard {...project} viewMode={viewMode} />
           </motion.li>
         ))}
       </motion.ul>
+
       {projects.length > 4 && (
-        <motion.div
-          className="my-8 grid w-full place-content-center"
-          initial={fadeInUpInitial}
-          whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{
-            ...fadeInUpSpring,
-            delay: baseDelay + step * (3 + projects.length),
-          }}
-        >
+        <div className="my-8 grid w-full place-content-center">
           <Button
             variant="ghost"
             className="max-w-2xs hover:underline"
@@ -150,7 +135,7 @@ export const Project = () => {
           >
             See More <span aria-hidden="true">&#8594;</span>
           </Button>
-        </motion.div>
+        </div>
       )}
     </motion.section>
   );
