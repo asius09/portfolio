@@ -1,28 +1,19 @@
 "use client";
 import React from "react";
 import { stackItems } from "@/data/techStack";
-import { motion, type Transition } from "motion/react";
+import { motion } from "motion/react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
-
-const fadeInUpInitial = {
-  y: 14,
-  opacity: 0,
-  filter: "blur(6px)",
-};
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpTransition: Transition = {
-  duration: 0.55,
-  ease: [0.22, 1, 0.36, 1],
-};
+import {
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  microInitial,
+  microAnimate,
+  getSectionMicroTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Stack = () => {
-  const baseDelay = 0.02;
-  const step = 0.025;
-
   return (
     <section
       id="stack-section"
@@ -37,11 +28,8 @@ export const Stack = () => {
         tabIndex={0}
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpTransition,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.04)}
       >
         Stacks
       </motion.h2>
@@ -51,24 +39,18 @@ export const Stack = () => {
         role="list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpTransition,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.08)}
       >
         {stackItems.map(({ key, label, icon: Icon, className }, idx) => (
           <motion.li
             key={key}
             className="group relative flex cursor-pointer flex-col items-center justify-center hover:z-50"
             role="listitem"
-            initial={fadeInUpInitial}
-            whileInView={fadeInUpAnimate}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpTransition,
-              delay: baseDelay + step * (3 + idx),
-            }}
+            initial={microInitial}
+            whileInView={microAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getSectionMicroTransition(idx, 0.1)}
           >
             <Tooltip>
               <TooltipTrigger asChild>
@@ -103,3 +85,4 @@ export const Stack = () => {
     </section>
   );
 };
+

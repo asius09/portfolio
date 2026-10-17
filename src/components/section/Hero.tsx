@@ -4,85 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
-import { motion, Transition } from "motion/react";
+import { motion } from "motion/react";
 import { CopyButton } from "../ui/CopyButton";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 import { Button } from "../ui/Button";
 
-type FadeInUp = {
-  y: number;
-  opacity: number;
-  filter: string;
-};
-type IconAnim = {
-  scale: number;
-  opacity: number;
-  rotate: number;
-};
-
-const fadeInUpInitial: FadeInUp = {
-  y: 14,
-  opacity: 0,
-  filter: "blur(6px)",
-};
-const fadeInUpAnimate: FadeInUp = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpTransition: Transition = {
-  duration: 0.55,
-  ease: [0.22, 1, 0.36, 1],
-};
-
-const iconInitial: IconAnim = {
-  scale: 0.9,
-  opacity: 0,
-  rotate: -8,
-};
-const iconAnimate: IconAnim = {
-  scale: 1,
-  opacity: 1,
-  rotate: 0,
-};
-const iconTransition = (idx: number): Transition => ({
-  type: "spring",
-  stiffness: 180,
-  damping: 18,
-  delay: 0.14 + idx * 0.03,
-});
-
-const listVariants = {
-  visible: {
-    opacity: 1,
-    transition: {
-      when: "beforeChildren",
-      delayChildren: 0.12,
-      staggerChildren: 0.025,
-    },
-  },
-  hidden: {
-    opacity: 0,
-    transition: {
-      when: "afterChildren",
-    },
-  },
-};
-
-const itemVariants = {
-  visible: {
-    y: 0,
-    opacity: 1,
-    filter: "blur(0px)",
-    transition: fadeInUpTransition,
-  },
-  hidden: {
-    y: 14,
-    opacity: 0,
-    filter: "blur(6px)",
-    transition: fadeInUpTransition,
-  },
-};
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  microInitial,
+  microAnimate,
+  getMicroTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Hero = () => {
   return (
@@ -99,21 +35,10 @@ export const Hero = () => {
       >
         <div className="flex items-start justify-start gap-4">
           <motion.figure
-            initial={{
-              scale: 0.92,
-              opacity: 0,
-              filter: "blur(6px)",
-            }}
-            whileInView={{
-              scale: 1,
-              opacity: 1,
-              filter: "blur(0px)",
-            }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpTransition,
-              delay: 0.06,
-            }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getFadeInUpTransition(ANIMATION_CONFIG.hero.profile)}
             className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full shadow-xl drop-shadow-[0_6px_24px_rgba(0,0,0,0.18)]"
           >
             <Image
@@ -133,22 +58,20 @@ export const Hero = () => {
               className="text-2xl font-bold"
               initial={fadeInUpInitial}
               whileInView={fadeInUpAnimate}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{
-                ...fadeInUpTransition,
-                delay: 0.08,
-              }}
+              viewport={DEFAULT_VIEWPORT}
+              transition={getFadeInUpTransition(
+                ANIMATION_CONFIG.hero.profile + 0.04
+              )}
             >
               Bobby
             </motion.h2>
             <motion.span
               initial={fadeInUpInitial}
               whileInView={fadeInUpAnimate}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{
-                ...fadeInUpTransition,
-                delay: 0.11,
-              }}
+              viewport={DEFAULT_VIEWPORT}
+              transition={getFadeInUpTransition(
+                ANIMATION_CONFIG.hero.profile + 0.08
+              )}
               className={cn(
                 "w-full",
                 "text-foreground/60 text-base font-normal",
@@ -165,19 +88,19 @@ export const Hero = () => {
           aria-label="Social links"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{
-            ...fadeInUpTransition,
-            delay: 0.14,
-          }}
+          viewport={DEFAULT_VIEWPORT}
+          transition={getFadeInUpTransition(ANIMATION_CONFIG.hero.socials)}
         >
           {socials.map(({ href, ariaLabel, Icon }, idx) => (
             <motion.div
               key={href}
-              initial={iconInitial}
-              whileInView={iconAnimate}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={iconTransition(idx)}
+              initial={microInitial}
+              whileInView={microAnimate}
+              viewport={DEFAULT_VIEWPORT}
+              transition={getMicroTransition(
+                ANIMATION_CONFIG.hero.socials +
+                  idx * ANIMATION_CONFIG.microStaggerStep
+              )}
             >
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -188,7 +111,7 @@ export const Hero = () => {
                       rel="noopener noreferrer"
                       aria-label={ariaLabel}
                     >
-                      <Icon className="size-4.5 text-foreground" />
+                      <Icon className="size-4.5 text-foreground transition-transform duration-200 group-hover:scale-110" />
                     </Link>
                   </Button>
                 </TooltipTrigger>
@@ -201,40 +124,32 @@ export const Hero = () => {
 
       {/* Key Points */}
       <section aria-label="Key information" className="w-full">
-        <motion.ul
-          className="flex w-full flex-col items-start justify-center gap-1"
-          variants={listVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-        >
+        <ul className="flex w-full flex-col items-start justify-center gap-1">
           {keyPoints.map((item, idx) => {
             const Icon = item.icon;
             const iconClass = item.iconClass;
 
-            if (item.href) {
-              return (
-                <motion.li
-                  key={idx}
-                  className="flex items-center gap-2 text-sm text-foreground"
-                  variants={itemVariants}
+            return (
+              <motion.li
+                key={idx}
+                className="flex items-center gap-2 text-sm text-foreground"
+                initial={fadeInUpInitial}
+                whileInView={fadeInUpAnimate}
+                viewport={DEFAULT_VIEWPORT}
+                transition={getFadeInUpTransition(
+                  ANIMATION_CONFIG.hero.keyPoints +
+                    idx * ANIMATION_CONFIG.microStaggerStep
+                )}
+              >
+                <span
+                  className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
+                  aria-hidden="true"
                 >
-                  <motion.span
-                    initial={iconInitial}
-                    whileInView={iconAnimate}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={iconTransition(idx)}
-                    className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
-                    aria-hidden="true"
-                  >
-                    <Icon className={cn(iconClass, "size-4.5")} />
-                  </motion.span>
+                  <Icon className={cn(iconClass, "size-4.5")} />
+                </span>
 
-                  <motion.span
-                    initial={false}
-                    animate={false}
-                    className="group flex items-center justify-start gap-1"
-                  >
+                {item.href ? (
+                  <span className="group flex items-center justify-start gap-1">
                     <Link
                       href={item.href}
                       className="hover:text-foreground text-foreground underline-offset-2 transition-colors hover:underline"
@@ -258,34 +173,14 @@ export const Hero = () => {
                       {item.text}
                     </Link>
                     {item.copyValue && <CopyButton value={item.copyValue} />}
-                  </motion.span>
-                </motion.li>
-              );
-            } else {
-              return (
-                <motion.li
-                  key={idx}
-                  className="flex items-center gap-2 text-sm text-foreground"
-                  variants={itemVariants}
-                >
-                  <motion.span
-                    initial={iconInitial}
-                    whileInView={iconAnimate}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={iconTransition(idx)}
-                    className="border-border/70 text-foreground flex size-8 items-center justify-center rounded-lg border bg-neutral-100 shadow-xs dark:border-white/10 dark:bg-neutral-800"
-                    aria-hidden="true"
-                  >
-                    <Icon className={cn(iconClass, "size-4.5")} />
-                  </motion.span>
-                  <motion.span initial={false} animate={false}>
-                    {item.text}
-                  </motion.span>
-                </motion.li>
-              );
-            }
+                  </span>
+                ) : (
+                  <span>{item.text}</span>
+                )}
+              </motion.li>
+            );
           })}
-        </motion.ul>
+        </ul>
       </section>
     </section>
   );
@@ -302,21 +197,22 @@ function AnimateName() {
         className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
-        initial={{ opacity: 0, scale: 1.04, filter: "blur(8px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={{
-          duration: 0.45,
-          ease: [0.22, 1, 0.36, 1],
+        initial={{
+          opacity: 0,
+          scale: 1.04,
+          filter: `blur(${ANIMATION_CONFIG.blur})`,
         }}
+        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        transition={getFadeInUpTransition(ANIMATION_CONFIG.hero.title)}
       />
       <motion.h1
         className="group font-asius text-foreground selection:text-foreground relative z-10 w-full cursor-pointer text-center text-9xl font-bold tracking-wide lowercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-[8rem]"
         tabIndex={0}
         initial={{
           opacity: 0,
-          y: 20,
+          y: ANIMATION_CONFIG.y,
           scale: 0.96,
-          filter: "blur(8px)",
+          filter: `blur(${ANIMATION_CONFIG.blur})`,
         }}
         animate={{
           opacity: 1,
@@ -324,10 +220,10 @@ function AnimateName() {
           scale: 1,
           filter: "blur(0px)",
         }}
-        transition={{
-          duration: 0.55,
-          ease: [0.22, 1, 0.36, 1],
-        }}
+        transition={getFadeInUpTransition(
+          ANIMATION_CONFIG.hero.title + 0.04,
+          ANIMATION_CONFIG.duration
+        )}
         aria-describedby="brand-tooltip"
       >
         asius

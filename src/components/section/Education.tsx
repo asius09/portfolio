@@ -1,27 +1,16 @@
 "use client";
 import React from "react";
 import { education } from "@/data/education";
-import { motion, type Transition } from "motion/react";
-
-const fadeInUpInitial = {
-  y: 14,
-  opacity: 0,
-  filter: "blur(6px)",
-};
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpTransition: Transition = {
-  duration: 0.55,
-  ease: [0.22, 1, 0.36, 1],
-};
+import { motion } from "motion/react";
+import {
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  getSectionItemTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Education = () => {
-  const baseDelay = 0.02;
-  const step = 0.035;
-
   return (
     <section
       id="education-section"
@@ -31,11 +20,8 @@ export const Education = () => {
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpTransition,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.04)}
       >
         Education
       </motion.h2>
@@ -43,11 +29,8 @@ export const Education = () => {
         className="mt-6 w-full space-y-4"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpTransition,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.08)}
       >
         {education.map((edu, idx) => (
           <motion.div
@@ -55,11 +38,8 @@ export const Education = () => {
             className="flex items-start gap-2"
             initial={fadeInUpInitial}
             whileInView={fadeInUpAnimate}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpTransition,
-              delay: baseDelay + step * (3 + idx),
-            }}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getSectionItemTransition(idx, 0.12)}
           >
             {/* Pointer/Arrow Icon */}
             <span
@@ -87,3 +67,4 @@ export const Education = () => {
     </section>
   );
 };
+

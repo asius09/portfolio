@@ -7,6 +7,14 @@ import { motion } from "motion/react";
 import { IconLayoutGrid, IconList } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
+
 // One calm tween shared by every animation on this section. No springs, no
 // blur filters: both caused the bouncy overshoot + repaint jank when toggling
 // grid/list. `layout` transitions reuse the same curve via `layoutTransition`.
@@ -27,10 +35,10 @@ export const Project = () => {
       id="project-section"
       aria-labelledby="projects-heading"
       tabIndex={-1}
-      initial={{ y: 14, opacity: 0, filter: "blur(6px)" }}
-      whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      initial={fadeInUpInitial}
+      whileInView={fadeInUpAnimate}
+      viewport={DEFAULT_VIEWPORT}
+      transition={getFadeInUpTransition(0.04)}
       className="mt-12 w-full overflow-x-clip"
     >
       <div className="flex items-center justify-between gap-3">
@@ -102,12 +110,12 @@ export const Project = () => {
           <motion.li
             layout
             key={project.name}
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
             transition={{
               ...LAYOUT_TRANSITION,
-              delay: Math.min(idx * 0.03, 0.15),
+              delay: Math.min(idx * ANIMATION_CONFIG.staggerStep, 0.2),
             }}
             // Capped stagger: cards fade in promptly instead of cascading.
             style={{ overflowAnchor: "none" }}
