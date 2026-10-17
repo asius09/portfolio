@@ -75,8 +75,8 @@ export const ContributionGrid: React.FC<ContributionGridProps> = React.memo(
 
                 const boxTransition = shouldAnimate
                   ? {
-                      duration: 0.36,
-                      delay: weekIndex * 0.016,
+                      duration: 0.42,
+                      delay: weekIndex * 0.022,
                       times: [0, 0.5, 1],
                       ease: "easeInOut" as const,
                     }
@@ -105,7 +105,7 @@ export const ContributionGrid: React.FC<ContributionGridProps> = React.memo(
                       onShowTooltip(e.currentTarget, label, count);
                     }}
                     className={cn(
-                      "aspect-square w-full origin-center cursor-pointer touch-manipulation rounded-[2px] shadow-xs transition-transform duration-150 ease-out sm:hover:z-20 sm:hover:scale-125 sm:hover:ring-1",
+                      "aspect-square w-full origin-center cursor-pointer touch-manipulation rounded-xs shadow-xs transition-transform duration-150 ease-out sm:hover:z-20 sm:hover:scale-125 sm:hover:ring-1",
                       themeConfig.activeRing,
                       themeConfig.levels[lvl],
                       !hasDate && "pointer-events-none opacity-20"

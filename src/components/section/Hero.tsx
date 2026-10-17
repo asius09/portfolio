@@ -12,7 +12,6 @@ import { Button } from "../ui/Button";
 type FadeInUp = {
   y: number;
   opacity: number;
-  filter: string;
 };
 type IconAnim = {
   scale: number;
@@ -23,24 +22,14 @@ type IconAnim = {
 const fadeInUpInitial: FadeInUp = {
   y: 12,
   opacity: 0,
-  filter: "blur(4px)",
 };
 const fadeInUpAnimate: FadeInUp = {
   y: 0,
   opacity: 1,
-  filter: "blur(0px)",
 };
 const fadeInUpTransition: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-};
-
-const fadeInUpSpring: Transition = {
-  ...fadeInUpTransition,
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
+  duration: 0.45,
+  ease: [0.32, 0.72, 0, 1],
 };
 
 const iconInitial: IconAnim = {
@@ -81,18 +70,12 @@ const itemVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    filter: "blur(0px)",
-    transition: {
-      ...fadeInUpSpring,
-    },
+    transition: fadeInUpTransition,
   },
   hidden: {
     y: 12,
     opacity: 0,
-    filter: "blur(4px)",
-    transition: {
-      ...fadeInUpSpring,
-    },
+    transition: fadeInUpTransition,
   },
 };
 
@@ -112,18 +95,16 @@ export const Hero = () => {
         <div className="flex items-start justify-start gap-4">
           <motion.figure
             initial={{
-              scale: 0.85,
+              scale: 0.92,
               opacity: 0,
-              filter: "blur(6px)",
             }}
             whileInView={{
               scale: 1,
               opacity: 1,
-              filter: "blur(0px)",
             }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{
-              ...fadeInUpSpring,
+              ...fadeInUpTransition,
               delay: 0.06,
             }}
             className="h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-full shadow-xl drop-shadow-[0_6px_24px_rgba(0,0,0,0.18)]"
@@ -147,7 +128,7 @@ export const Hero = () => {
               whileInView={fadeInUpAnimate}
               viewport={{ once: true, amount: 0.15 }}
               transition={{
-                ...fadeInUpSpring,
+                ...fadeInUpTransition,
                 delay: 0.08,
               }}
             >
@@ -158,7 +139,7 @@ export const Hero = () => {
               whileInView={fadeInUpAnimate}
               viewport={{ once: true, amount: 0.15 }}
               transition={{
-                ...fadeInUpSpring,
+                ...fadeInUpTransition,
                 delay: 0.11,
               }}
               className={cn(
@@ -179,7 +160,7 @@ export const Hero = () => {
           whileInView={fadeInUpAnimate}
           viewport={{ once: true, amount: 0.15 }}
           transition={{
-            ...fadeInUpSpring,
+            ...fadeInUpTransition,
             delay: 0.14,
           }}
         >
@@ -314,11 +295,11 @@ function AnimateName() {
         className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
         tabIndex={-1}
-        initial={{ opacity: 0, scale: 1.04, filter: "blur(8px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        initial={{ opacity: 0, scale: 1.02 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{
           duration: 0.35,
-          ease: [0.22, 1, 0.36, 1],
+          ease: [0.32, 0.72, 0, 1],
         }}
       />
       <motion.h1
@@ -326,24 +307,17 @@ function AnimateName() {
         tabIndex={0}
         initial={{
           opacity: 0,
-          y: 28,
-          letterSpacing: "-0.22em",
-          scale: 0.95,
-          filter: "blur(8px)",
+          y: 18,
+          scale: 0.96,
         }}
         animate={{
           opacity: 1,
           y: 0,
-          letterSpacing: "-0.2rem",
           scale: 1,
-          filter: "blur(0px)",
         }}
         transition={{
-          type: "spring",
-          stiffness: 160,
-          damping: 18,
-          mass: 0.8,
-          filter: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+          duration: 0.5,
+          ease: [0.32, 0.72, 0, 1],
         }}
         aria-describedby="brand-tooltip"
       >

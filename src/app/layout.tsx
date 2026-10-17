@@ -91,6 +91,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-font="geist"
       className={`${geist.variable} ${inter.variable} ${schibsted.variable} ${caveat.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >

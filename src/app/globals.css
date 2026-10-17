@@ -12,7 +12,7 @@
 */
 
 :root {
-  --app-font: var(--font-ibm-plex-mono);
+  --app-font: var(--font-geist-sans);
   --background: theme(colors.neutral.50);
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);

@@ -48,8 +48,24 @@ export function useContributionData({
         if (!res.ok) return;
         const json = await res.json();
         if (json.contributions?.length > 0) {
-          setContributions(json.contributions);
-          setTotalCount(json.totalContributions ?? 0);
+          setTotalCount((prev) =>
+            json.totalContributions !== undefined &&
+            json.totalContributions !== prev
+              ? json.totalContributions
+              : prev
+          );
+          setContributions((prev) => {
+            if (
+              prev.length === json.contributions.length &&
+              prev[prev.length - 1]?.date ===
+                json.contributions[json.contributions.length - 1]?.date &&
+              prev[prev.length - 1]?.count ===
+                json.contributions[json.contributions.length - 1]?.count
+            ) {
+              return prev;
+            }
+            return json.contributions;
+          });
         }
       } catch {
       } finally {

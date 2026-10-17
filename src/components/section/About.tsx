@@ -4,20 +4,14 @@ import { motion, Transition } from "motion/react";
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
-  filter: "blur(4px)",
 };
 const fadeInUpAnimate = {
   y: 0,
   opacity: 1,
-  filter: "blur(0px)",
 };
-const fadeInUpSpring: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
+const fadeInUpTransition: Transition = {
+  duration: 0.45,
+  ease: [0.32, 0.72, 0, 1],
 };
 
 export const About = () => {
@@ -32,7 +26,7 @@ export const About = () => {
       whileInView={fadeInUpAnimate}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
-        ...fadeInUpSpring,
+        ...fadeInUpTransition,
         delay: baseDelay,
       }}
     >
@@ -42,7 +36,7 @@ export const About = () => {
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.15 }}
         transition={{
-          ...fadeInUpSpring,
+          ...fadeInUpTransition,
           delay: baseDelay + step * 1,
         }}
       >
@@ -54,7 +48,7 @@ export const About = () => {
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.15 }}
         transition={{
-          ...fadeInUpSpring,
+          ...fadeInUpTransition,
           delay: baseDelay + step * 2,
         }}
       >
@@ -67,7 +61,7 @@ export const About = () => {
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.15 }}
         transition={{
-          ...fadeInUpSpring,
+          ...fadeInUpTransition,
           delay: baseDelay + step * 3,
         }}
       >
@@ -82,7 +76,7 @@ export const About = () => {
         whileInView={fadeInUpAnimate}
         viewport={{ once: true, amount: 0.15 }}
         transition={{
-          ...fadeInUpSpring,
+          ...fadeInUpTransition,
           delay: baseDelay + step * 4,
         }}
       >
