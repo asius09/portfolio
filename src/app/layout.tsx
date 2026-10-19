@@ -49,21 +49,12 @@ export const metadata: Metadata = {
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: [
-      {
-        url: "/logo-512.png",
-        width: 512,
-        height: 512,
-        alt: "Bobby",
-      },
-    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Bobby - Full Stack Developer",
     description:
       "Full stack developer specializing in React, Next.js, Node.js, and modern web technologies.",
-    images: ["/logo-512.png"],
     creator: "@_asius",
   },
   robots: {
@@ -78,9 +69,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/logo-192.png",
-    apple: "/logo-512.png",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
   },
   alternates: {
     canonical: "https://asius.in",

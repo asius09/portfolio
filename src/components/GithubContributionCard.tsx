@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import { cn } from "cn";
 import { formatDate } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import Link from "next/link";
 
 export type ContributionTheme =
@@ -150,6 +151,48 @@ const columnVariants: Variants = {
   }),
 };
 
+/**
+ * Below `sm`, squeezing 52 columns into a phone viewport leaves ~6px cells,
+ * which are illegible and impossible to tap. Below this width the graph keeps
+ * a readable minimum cell size and scrolls horizontally instead.
+ */
+const COMPACT_QUERY = "(max-width: 639px)";
+/** 52 columns plus gaps; yields ~11px cells. */
+const SCROLL_GRAPH_WIDTH = 640;
+
+const TooltipBubble = ({
+  visible,
+  count,
+  date,
+  accentClass,
+}: {
+  visible: boolean;
+  count: number;
+  date: string;
+  accentClass: string;
+}) => (
+  <div
+    className={cn(
+      "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
+      visible
+        ? "translate-y-0 scale-100 opacity-100"
+        : "pointer-events-none translate-y-1 scale-95 opacity-0",
+    )}
+  >
+    <div className="border-border/70 bg-background/95 text-foreground flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
+      <span className={cn("font-semibold", accentClass)}>{count}</span>
+      <span className="text-muted-foreground">
+        {count === 1 ? "contribution" : "contributions"} on
+      </span>
+      <span className="text-foreground font-medium">
+        {date !== "No data" ? formatDate(date) : "No data"}
+      </span>
+
+      <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+    </div>
+  </div>
+);
+
 export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   username = "asius09",
   endpoint = "/api/github/contributions",
@@ -163,6 +206,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const isCompact = useMediaQuery(COMPACT_QUERY);
   const [activeTheme, setActiveTheme] = useState<ContributionTheme>(theme);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [contributions, setContributions] = useState<ContributionDay[]>(
@@ -325,7 +369,7 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
   };
 
   const handleCellEnter = (
-    e: React.MouseEvent<HTMLDivElement>,
+    e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>,
     dayData: ContributionDay,
   ) => {
     const target = e.currentTarget;
@@ -356,6 +400,27 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     }));
   };
 
+  /**
+   * Touch has no hover, so tapping a cell has to open the tooltip too. A tap
+   * that misses a cell, or any scroll, closes it again — otherwise it would
+   * stay stuck on screen with no way to dismiss it.
+   */
+  useEffect(() => {
+    if (!isCompact || !tooltip.visible) return;
+
+    const dismiss = () => handleContainerLeave();
+    const onPointerDown = (e: PointerEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) dismiss();
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("scroll", dismiss, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("scroll", dismiss, true);
+    };
+  }, [isCompact, tooltip.visible]);
+
   if (error) return null;
 
   return (
@@ -365,103 +430,116 @@ export const GithubContributionCard: React.FC<GithubContributionCardProps> = ({
     >
       <div className="bg-background/40 w-full rounded-lg backdrop-blur-sm">
         <div className="flex w-full flex-col gap-2">
-          <motion.div
-            initial={animate ? { opacity: 0, y: -4 } : false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="relative h-4 w-full"
+          <div
+            className={cn(
+              "text-muted-foreground flex items-center gap-1.5 pb-0.5 text-[10px] sm:hidden",
+              isCompact ? "opacity-100" : "hidden",
+            )}
           >
-            {monthLabels.map((month, idx) => (
-              <span
-                key={`${month.name}-${idx}`}
-                className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
-                style={{ left: `${(month.col / 52) * 100}%` }}
-              >
-                {month.name}
-              </span>
-            ))}
-          </motion.div>
+            <span className="opacity-60 select-none">&#8596;</span>
+            Swipe to see the full year
+          </div>
 
           <div
-            ref={containerRef}
-            className="relative flex gap-1"
-            onMouseLeave={handleContainerLeave}
+            className={cn(
+              "-mx-1 overflow-x-auto px-1",
+              "[-webkit-overflow-scrolling:touch] [scrollbar-width:thin]",
+              isCompact && "snap-x",
+            )}
           >
             <div
-              className={cn(
-                "pointer-events-none absolute top-0 left-0 z-50 select-none",
-                tooltip.isGliding
-                  ? "transition-transform duration-150 ease-out will-change-transform"
-                  : "transition-none",
-              )}
-              style={{
-                transform: `translate3d(${tooltip.x}px, ${tooltip.y - 8}px, 0) translate(-50%, -100%)`,
-              }}
+              className="w-full"
+              style={isCompact ? { minWidth: SCROLL_GRAPH_WIDTH } : undefined}
             >
-              <div
-                className={cn(
-                  "relative flex origin-bottom flex-col items-center transition-[opacity,transform] duration-150 ease-out",
-                  tooltip.visible
-                    ? "translate-y-0 scale-100 opacity-100"
-                    : "pointer-events-none translate-y-1 scale-95 opacity-0",
-                )}
+              <motion.div
+                initial={animate ? { opacity: 0, y: -4 } : false}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="relative h-4 w-full"
               >
-                <div className="border-border/70 bg-background/95 text-foreground relative flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-medium whitespace-nowrap shadow-sm backdrop-blur-md">
+                {monthLabels.map((month, idx) => (
                   <span
-                    className={cn(
-                      "font-semibold",
-                      currentThemeConfig.accentText,
-                    )}
+                    key={`${month.name}-${idx}`}
+                    className="text-muted-foreground absolute text-xs font-medium whitespace-nowrap"
+                    style={{ left: `${(month.col / 52) * 100}%` }}
                   >
-                    {tooltip.count}
+                    {month.name}
                   </span>
-                  <span className="text-muted-foreground">
-                    {tooltip.count === 1 ? "contribution" : "contributions"} on
-                  </span>
-                  <span className="text-foreground font-medium">
-                    {tooltip.date !== "No data"
-                      ? formatDate(tooltip.date)
-                      : "No data"}
-                  </span>
+                ))}
+              </motion.div>
 
-                  <div className="border-border/70 bg-background/95 absolute -bottom-1 left-1/2 size-1.5 -translate-x-1/2 rotate-45 border-r border-b backdrop-blur-md" />
+              <div
+                ref={containerRef}
+                className="relative flex gap-1"
+                onMouseLeave={handleContainerLeave}
+              >
+                {isCompact ? (
+                  <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 select-none">
+                    <TooltipBubble
+                      visible={tooltip.visible}
+                      count={tooltip.count}
+                      date={tooltip.date}
+                      accentClass={currentThemeConfig.accentText}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      "pointer-events-none absolute top-0 left-0 z-50 select-none",
+                      tooltip.isGliding
+                        ? "transition-transform duration-150 ease-out will-change-transform"
+                        : "transition-none",
+                    )}
+                    style={{
+                      transform: `translate3d(${tooltip.x}px, ${tooltip.y - 8}px, 0) translate(-50%, -100%)`,
+                    }}
+                  >
+                    <TooltipBubble
+                      visible={tooltip.visible}
+                      count={tooltip.count}
+                      date={tooltip.date}
+                      accentClass={currentThemeConfig.accentText}
+                    />
+                  </div>
+                )}
+
+                <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
+                  {weeks.map((_, weekIndex) => (
+                    <motion.div
+                      key={weekIndex}
+                      custom={weekIndex}
+                      initial={animate ? "hidden" : false}
+                      whileInView="visible"
+                      viewport={{ once: true, amount: 0.1 }}
+                      variants={columnVariants}
+                      className="flex flex-1 flex-col gap-px sm:gap-0.5"
+                    >
+                      {days.map((_, dayIndex) => {
+                        const dayData = getDayData(weekIndex, dayIndex);
+                        const glow = getGlowAnimation(dayData.count, weekIndex);
+                        const isTop = dayData.count >= 10;
+                        return (
+                          <motion.div
+                            key={dayIndex}
+                            animate={glow?.animate}
+                            transition={glow?.transition}
+                            onMouseEnter={(e) => handleCellEnter(e, dayData)}
+                            onPointerDown={(e) => handleCellEnter(e, dayData)}
+                            aria-label={`${dayData.count} contributions on ${dayData.date}`}
+                            className={cn(
+                              "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1 active:z-20 active:scale-110 active:ring-1",
+                              currentThemeConfig.activeRing,
+                              isTop && "z-10",
+                              getLevelClass(dayData.count, activeTheme),
+                            )}
+                          />
+                        );
+                      })}
+                    </motion.div>
+                  ))}
                 </div>
               </div>
-            </div>
-
-            <div className="flex flex-1 justify-between gap-px sm:gap-0.5">
-              {weeks.map((_, weekIndex) => (
-                <motion.div
-                  key={weekIndex}
-                  custom={weekIndex}
-                  initial={animate ? "hidden" : false}
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.1 }}
-                  variants={columnVariants}
-                  className="flex flex-1 flex-col gap-px sm:gap-0.5"
-                >
-                  {days.map((_, dayIndex) => {
-                    const dayData = getDayData(weekIndex, dayIndex);
-                    const glow = getGlowAnimation(dayData.count, weekIndex);
-                    const isTop = dayData.count >= 10;
-                    return (
-                      <motion.div
-                        key={dayIndex}
-                        animate={glow?.animate}
-                        transition={glow?.transition}
-                        onMouseEnter={(e) => handleCellEnter(e, dayData)}
-                        className={cn(
-                          "aspect-square w-full origin-center cursor-pointer rounded-xs shadow-xs transition-[transform,background-color,box-shadow] duration-150 ease-out hover:z-20 hover:scale-110 hover:ring-1",
-                          currentThemeConfig.activeRing,
-                          isTop && "z-10",
-                          getLevelClass(dayData.count, activeTheme),
-                        )}
-                      />
-                    );
-                  })}
-                </motion.div>
-              ))}
             </div>
           </div>
 

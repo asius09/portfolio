@@ -13,7 +13,14 @@ interface PopoverProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function Popover({ children, content, align = "end", className, isOpen: controlledIsOpen, onOpenChange }: PopoverProps) {
+export function Popover({
+  children,
+  content,
+  align = "end",
+  className,
+  isOpen: controlledIsOpen,
+  onOpenChange,
+}: PopoverProps) {
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
@@ -27,26 +34,42 @@ export function Popover({ children, content, align = "end", className, isOpen: c
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const triggerChildProps = React.isValidElement(children)
+    ? (
+        children as React.ReactElement<{
+          onClick?: (e: React.MouseEvent) => void;
+        }>
+      ).props
+    : {};
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         handleSetIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isControlled, onOpenChange]);
+  });
 
-  const trigger = React.isValidElement(children)
-    ? React.cloneElement(children as React.ReactElement<any>, {
+  const trigger = React.isValidElement(children) ? (
+    React.cloneElement(
+      children as React.ReactElement<{
+        onClick?: (e: React.MouseEvent) => void;
+      }>,
+      {
         onClick: (e: React.MouseEvent) => {
           handleSetIsOpen(!isOpen);
-          if ((children.props as any).onClick) {
-            (children.props as any).onClick(e);
-          }
+          triggerChildProps.onClick?.(e);
         },
-      })
-    : <span onClick={() => handleSetIsOpen(!isOpen)}>{children}</span>;
+      },
+    )
+  ) : (
+    <span onClick={() => handleSetIsOpen(!isOpen)}>{children}</span>
+  );
 
   const alignments = {
     start: "left-0 origin-top-left",
@@ -65,9 +88,9 @@ export function Popover({ children, content, align = "end", className, isOpen: c
             exit={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
             className={cn(
-              "absolute top-full z-50 mt-2 rounded-xl border border-border bg-card p-1.5 shadow-lg",
+              "border-border bg-card absolute top-full z-50 mt-2 rounded-xl border p-1.5 shadow-lg",
               alignments[align],
-              className
+              className,
             )}
           >
             {content}
