@@ -11,6 +11,8 @@ import { motion } from "framer-motion";
 import { flushSync } from "react-dom";
 
 const fonts: { id: FontOption; name: string }[] = [
+  { id: "zain", name: "Zain" },
+  { id: "outfit", name: "Outfit" },
   { id: "geist", name: "Geist Sans" },
   { id: "inter", name: "Inter" },
   { id: "schibsted", name: "Schibsted Grotesk" },
@@ -40,7 +42,7 @@ export const FontSwitcher = () => {
   return (
     <Popover
       align="end"
-      className="w-44"
+      className="w-48"
       isOpen={isPopoverOpen}
       onOpenChange={setIsPopoverOpen}
       content={
@@ -56,7 +58,12 @@ export const FontSwitcher = () => {
                   : "text-foreground hover:bg-mute hover:text-foreground",
               )}
               style={{
-                fontFamily: `var(--font-${f.id === "geist" ? "geist-sans" : f.id})`,
+                fontFamily:
+                  f.id === "geist"
+                    ? "var(--font-geist-sans)"
+                    : f.id === "zain"
+                      ? "var(--font-asius)"
+                      : `var(--font-${f.id})`,
               }}
             >
               {font === f.id && (
