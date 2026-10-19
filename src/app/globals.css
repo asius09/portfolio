@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
@@ -12,7 +12,7 @@
 */
 
 :root {
-  --app-font: var(--font-geist-sans);
+  --app-font: var(--font-asius);
   --background: theme(colors.neutral.50);
   --background-hover: theme(colors.neutral.300);
   --foreground: theme(colors.neutral.900);
@@ -29,10 +29,11 @@
   --border-hover: theme(colors.zinc.400);
 }
 
+:root[data-font="outfit"] { --app-font: var(--font-outfit); }
+:root[data-font="zain"] { --app-font: var(--font-asius); }
 :root[data-font="geist"] { --app-font: var(--font-geist-sans); }
 :root[data-font="inter"] { --app-font: var(--font-inter); }
 :root[data-font="schibsted"] { --app-font: var(--font-schibsted); }
-:root[data-font="space"] { --app-font: var(--font-space); }
 :root[data-font="ibm"] { --app-font: var(--font-ibm-plex-mono); }
 
 
@@ -91,7 +92,8 @@
   --color-border-hover: var(--border-hover);
   --color-button-outline-shadow: var(--button-outline-shadow);
   --font-caveat: var(--font-caveat), "Caveat", cursive;
-  --font-asius: "Zain", sans-serif;
+  --font-outfit: var(--font-outfit), "Outfit", sans-serif;
+  --font-asius: var(--font-asius), "Zain", sans-serif;
   --font-sans: var(--app-font), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 /* Use CSS variables for Tailwind utility classes */

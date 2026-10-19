@@ -5,10 +5,19 @@ import {
   Schibsted_Grotesk,
   Geist,
   Caveat,
+  Outfit,
 } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
+
+export const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  preload: true,
+});
 
 export const zain = Zain({
   variable: "--font-asius",
@@ -91,8 +100,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-font="geist"
-      className={`${geist.variable} ${inter.variable} ${schibsted.variable} ${caveat.variable} bg-background font-app text-foreground antialiased`}
+      data-font="zain"
+      className={`${geist.variable} ${inter.variable} ${schibsted.variable} ${caveat.variable} ${zain.variable} ${outfit.variable} bg-background font-app text-foreground antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -102,7 +111,7 @@ export default function RootLayout({
               try {
                 let font = localStorage.getItem('app-font');
                 if (!font) {
-                  font = 'geist';
+                  font = 'zain';
                   localStorage.setItem('app-font', font);
                 }
                 document.documentElement.setAttribute('data-font', font);

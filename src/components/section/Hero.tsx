@@ -1,13 +1,15 @@
 "use client";
-import { cn } from "@/lib/utils";
+
 import Image from "next/image";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { socials } from "@/data/social";
 import { keyPoints } from "@/data/keyPoints";
 import { motion } from "motion/react";
 import { CopyButton } from "../ui/CopyButton";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 import { Button } from "../ui/Button";
+import { DottedWordmark } from "../DottedWordmark";
 
 import {
   ANIMATION_CONFIG,
@@ -29,7 +31,7 @@ export const Hero = () => {
     >
       <AnimateName />
       <header
-        className="flex h-full w-full flex-col justify-between gap-6 py-4 md:flex-row"
+        className="flex h-full w-full flex-col justify-between gap-6 pt-1 pb-4 md:flex-row"
         id="personal-details"
         aria-label="Personal details"
       >
@@ -47,6 +49,7 @@ export const Hero = () => {
               className="object-cover"
               width={64}
               height={64}
+              priority
             />
           </motion.figure>
           <div
@@ -60,7 +63,7 @@ export const Hero = () => {
               whileInView={fadeInUpAnimate}
               viewport={DEFAULT_VIEWPORT}
               transition={getFadeInUpTransition(
-                ANIMATION_CONFIG.hero.profile + 0.04
+                ANIMATION_CONFIG.hero.profile + 0.04,
               )}
             >
               Bobby
@@ -70,7 +73,7 @@ export const Hero = () => {
               whileInView={fadeInUpAnimate}
               viewport={DEFAULT_VIEWPORT}
               transition={getFadeInUpTransition(
-                ANIMATION_CONFIG.hero.profile + 0.08
+                ANIMATION_CONFIG.hero.profile + 0.08,
               )}
               className={cn(
                 "w-full",
@@ -99,19 +102,24 @@ export const Hero = () => {
               viewport={DEFAULT_VIEWPORT}
               transition={getMicroTransition(
                 ANIMATION_CONFIG.hero.socials +
-                  idx * ANIMATION_CONFIG.microStaggerStep
+                  idx * ANIMATION_CONFIG.microStaggerStep,
               )}
             >
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="social" size="icon-sm" className="group" asChild>
+                  <Button
+                    variant="social"
+                    size="icon-sm"
+                    className="group"
+                    asChild
+                  >
                     <Link
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={ariaLabel}
                     >
-                      <Icon className="size-4.5 text-foreground transition-transform duration-200 group-hover:scale-110" />
+                      <Icon className="text-foreground size-4.5 transition-transform duration-200 group-hover:scale-110" />
                     </Link>
                   </Button>
                 </TooltipTrigger>
@@ -132,13 +140,13 @@ export const Hero = () => {
             return (
               <motion.li
                 key={idx}
-                className="flex items-center gap-2 text-sm text-foreground"
+                className="text-foreground flex items-center gap-2 text-sm"
                 initial={fadeInUpInitial}
                 whileInView={fadeInUpAnimate}
                 viewport={DEFAULT_VIEWPORT}
                 transition={getFadeInUpTransition(
                   ANIMATION_CONFIG.hero.keyPoints +
-                    idx * ANIMATION_CONFIG.microStaggerStep
+                    idx * ANIMATION_CONFIG.microStaggerStep,
                 )}
               >
                 <span
@@ -189,24 +197,11 @@ export const Hero = () => {
 function AnimateName() {
   return (
     <header
-      className="relative flex h-40 w-full items-center justify-center mask-[radial-gradient(circle_at_center,white_85%,transparent_100%)] md:h-56"
+      className="relative flex h-50 w-full items-center justify-center"
       aria-label="Hero name"
     >
-      {/* Animated background grid */}
-      <motion.div
-        className="bg-background bg-grid bg-size[16px_16px] absolute inset-0 z-0 h-full w-full"
-        aria-hidden="true"
-        tabIndex={-1}
-        initial={{
-          opacity: 0,
-          scale: 1.04,
-          filter: `blur(${ANIMATION_CONFIG.blur})`,
-        }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={getFadeInUpTransition(ANIMATION_CONFIG.hero.title)}
-      />
       <motion.h1
-        className="group font-asius text-foreground selection:text-foreground relative z-10 w-full cursor-pointer text-center text-9xl font-bold tracking-wide lowercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)] transition-colors duration-200 select-none selection:bg-none focus:outline-none md:text-[8rem]"
+        className="relative z-10 flex h-full w-full cursor-pointer items-center justify-center select-none focus:outline-none"
         tabIndex={0}
         initial={{
           opacity: 0,
@@ -222,22 +217,11 @@ function AnimateName() {
         }}
         transition={getFadeInUpTransition(
           ANIMATION_CONFIG.hero.title + 0.04,
-          ANIMATION_CONFIG.duration
+          ANIMATION_CONFIG.duration,
         )}
         aria-describedby="brand-tooltip"
       >
-        asius
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="sr-only">asius information</span>
-          </TooltipTrigger>
-          <TooltipContent
-            className="w-full max-w-xs text-center text-xs tracking-normal normal-case"
-            side="top"
-          >
-            A future brand name I intend to build showcasing my vision
-          </TooltipContent>
-        </Tooltip>
+        <DottedWordmark text="asius" scale={1.0} />
       </motion.h1>
     </header>
   );
