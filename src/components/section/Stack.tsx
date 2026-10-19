@@ -1,46 +1,26 @@
 "use client";
 import React from "react";
 import { stackItems } from "@/data/techStack";
-import { motion, type Transition } from "motion/react";
+import { motion } from "motion/react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
-
-const fadeInUpInitial = {
-  y: 12,
-  opacity: 0,
-  filter: "blur(4px)",
-};
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpSpring: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
-};
+import {
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  microInitial,
+  microAnimate,
+  getSectionMicroTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Stack = () => {
-  const baseDelay = 0.02;
-  const step = 0.025;
-
   return (
-    <motion.section
+    <section
       id="stack-section"
       className="mt-12 w-full"
       aria-labelledby="stack-heading"
       tabIndex={-1}
       role="region"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: baseDelay,
-      }}
     >
       <motion.h2
         id="stack-heading"
@@ -48,11 +28,8 @@ export const Stack = () => {
         tabIndex={0}
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.04)}
       >
         Stacks
       </motion.h2>
@@ -62,32 +39,18 @@ export const Stack = () => {
         role="list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.08)}
       >
         {stackItems.map(({ key, label, icon: Icon, className }, idx) => (
           <motion.li
             key={key}
             className="group relative flex cursor-pointer flex-col items-center justify-center hover:z-50"
             role="listitem"
-            initial={{
-              y: 10,
-              opacity: 0,
-              filter: "blur(6px)",
-            }}
-            whileInView={{
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-            }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              ...fadeInUpSpring,
-              delay: baseDelay + step * (3 + idx),
-            }}
+            initial={microInitial}
+            whileInView={microAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getSectionMicroTransition(idx, 0.1)}
           >
             <Tooltip>
               <TooltipTrigger asChild>
@@ -119,6 +82,7 @@ export const Stack = () => {
           </motion.li>
         ))}
       </motion.ul>
-    </motion.section>
+    </section>
   );
 };
+

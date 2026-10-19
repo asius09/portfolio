@@ -15,8 +15,7 @@ const ProjectLinks = ({
   project: Project;
   isList: boolean;
 }) => (
-  <motion.div
-    layout
+  <div
     className={cn(
       "flex shrink-0 items-center",
       isList ? "gap-1.5 pt-0.5" : "gap-1",
@@ -68,14 +67,20 @@ const ProjectLinks = ({
         </Button>
       </Link>
     )}
-  </motion.div>
+  </div>
 );
 
 export const ProjectCard = (
   project: Project & { viewMode?: "grid" | "list" },
 ) => {
   const isList = project.viewMode === "list";
-  const transition = { type: "spring" as const, bounce: 0.2, duration: 0.6 };
+  // Critically-damped tween shared with the parent list: no spring overshoot,
+  // no blur/scale (both forced repaints and read as "bouncy" on toggle).
+  const transition = {
+    type: "tween" as const,
+    duration: 0.28,
+    ease: [0.32, 0.72, 0, 1] as const,
+  };
 
   return (
     <motion.article
@@ -96,13 +101,12 @@ export const ProjectCard = (
         animate={{
           height: isList ? 0 : "auto",
           opacity: isList ? 0 : 1,
-          scale: isList ? 0.9 : 1,
-          filter: isList ? "blur(8px)" : "blur(0px)",
           marginBottom: isList ? 0 : 12,
         }}
         className={cn(
           "border-border/50 bg-background-hover/30 relative w-full shrink-0 overflow-hidden border",
           !isList && "aspect-16/10 rounded-lg",
+          isList && "border-transparent",
         )}
       >
         <Image
@@ -123,19 +127,9 @@ export const ProjectCard = (
           isList ? "w-full" : "px-0.5",
         )}
       >
-        <motion.div
-          layout
-          transition={transition}
-          className="flex w-full items-start justify-between gap-3"
-        >
-          <motion.div
-            layout
-            transition={transition}
-            className="flex min-w-0 flex-1 flex-col"
-          >
-            <motion.h3
-              layout
-              transition={transition}
+        <div className="flex w-full items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <h3
               id={`project-title-${project.name.toLowerCase().replace(/\s+/g, "-")}`}
               className={cn(
                 "text-foreground font-semibold tracking-tight transition-colors",
@@ -145,11 +139,9 @@ export const ProjectCard = (
               )}
             >
               {project.name}
-            </motion.h3>
+            </h3>
 
-            <motion.p
-              layout
-              transition={transition}
+            <p
               className={cn(
                 "text-muted-foreground leading-relaxed tracking-tight",
                 isList
@@ -158,17 +150,15 @@ export const ProjectCard = (
               )}
             >
               {project.description}
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
 
           <ProjectLinks project={project} isList={isList} />
-        </motion.div>
+        </div>
 
-        <motion.div
-          layout
-          transition={transition}
+        <div
           className={cn(
-            "flex items-center overflow-visible",
+            "flex items-center overflow-hidden",
             isList
               ? "mt-1 flex-wrap"
               : "border-border/50 mt-3 flex-wrap border-t pt-3",
@@ -184,7 +174,7 @@ export const ProjectCard = (
               idx={idx}
             />
           ))}
-        </motion.div>
+        </div>
       </motion.div>
     </motion.article>
   );

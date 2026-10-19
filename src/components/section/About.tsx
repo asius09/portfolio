@@ -1,50 +1,22 @@
 "use client";
-import { motion, Transition } from "motion/react";
-
-const fadeInUpInitial = {
-  y: 12,
-  opacity: 0,
-  filter: "blur(4px)",
-};
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-const fadeInUpSpring: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
-};
+import { motion } from "motion/react";
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const About = () => {
-  const baseDelay = 0.18;
-  const step = 0.13;
-
   return (
-    <motion.section
-      id="about-section"
-      className="mt-12 w-full"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: baseDelay,
-      }}
-    >
+    <section id="about-section" className="mt-12 w-full">
       <motion.h2
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 1,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(ANIMATION_CONFIG.about.heading)}
       >
         About
       </motion.h2>
@@ -52,11 +24,11 @@ export const About = () => {
         className="text-foreground mt-3 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 2,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(
+          ANIMATION_CONFIG.about.heading +
+            ANIMATION_CONFIG.about.paragraphStep * 1
+        )}
       >
         Hi, I’m Bobby — a full stack developer who turns 1 AM ideas into working
         apps.
@@ -65,11 +37,11 @@ export const About = () => {
         className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 3,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(
+          ANIMATION_CONFIG.about.heading +
+            ANIMATION_CONFIG.about.paragraphStep * 2
+        )}
       >
         I like building simple, animated interfaces with React, Next.js,
         TailwindCSS, and Framer Motion. On the backend, I work with Node.js,
@@ -80,14 +52,15 @@ export const About = () => {
         className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{
-          ...fadeInUpSpring,
-          delay: baseDelay + step * 4,
-        }}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(
+          ANIMATION_CONFIG.about.heading +
+            ANIMATION_CONFIG.about.paragraphStep * 3
+        )}
       >
         Always open to new challenges and conversations, so let’s connect.
       </motion.p>
-    </motion.section>
+    </section>
   );
 };
+

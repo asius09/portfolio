@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion, type Transition } from "motion/react";
+import { motion } from "motion/react";
 import {
   IconBrandGithub,
   IconBrandX,
@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/Tooltip";
+import { Button } from "@/components/ui/Button";
 
 const footerSocials = [
   {
@@ -42,97 +43,118 @@ const footerSocials = [
   },
 ];
 
-const fadeInUpInitial = {
-  y: 12,
-  opacity: 0,
-  filter: "blur(4px)",
-};
-
-const fadeInUpAnimate = {
-  y: 0,
-  opacity: 1,
-  filter: "blur(0px)",
-};
-
-const fadeInUpSpring: Transition = {
-  duration: 0.55,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 80,
-  damping: 18,
-  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
-};
+import {
+  ANIMATION_CONFIG,
+  fadeInUpInitial,
+  fadeInUpAnimate,
+  getFadeInUpTransition,
+  microInitial,
+  microAnimate,
+  getMicroTransition,
+  DEFAULT_VIEWPORT,
+} from "@/lib/animations";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <motion.footer
+    <footer
       id="footer-section"
       className="mt-16 w-full border-t border-border/40 pt-12 pb-16 sm:mt-24 sm:pt-14"
       aria-label="Footer"
-      initial={fadeInUpInitial}
-      whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        ...fadeInUpSpring,
-        delay: 0.04,
-      }}
     >
-      {/* Top Section: Asius heading, description, and social icons */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-2">
-          <h2 className="font-caveat text-4xl sm:text-5xl font-medium tracking-wide text-foreground select-none">
+          <motion.h2
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getFadeInUpTransition(0.04)}
+            className="font-caveat text-4xl sm:text-5xl font-medium tracking-wide text-foreground select-none"
+          >
             Asius
-          </h2>
-          <p className="max-w-md text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+          </motion.h2>
+
+          <motion.p
+            initial={fadeInUpInitial}
+            whileInView={fadeInUpAnimate}
+            viewport={DEFAULT_VIEWPORT}
+            transition={getFadeInUpTransition(0.1)}
+            className="max-w-md text-sm sm:text-base text-muted-foreground font-normal leading-relaxed"
+          >
             Open to building useful, well-made software with thoughtful people
-          </p>
+          </motion.p>
         </div>
 
         {/* Social Links */}
-        <div className="flex items-center gap-4 text-muted-foreground">
-          {footerSocials.map(({ href, ariaLabel, title, Icon }) => (
-            <Tooltip key={href}>
-              <TooltipTrigger asChild>
-                <Link
-                  href={href}
-                  target={href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={
-                    href.startsWith("mailto:")
-                      ? undefined
-                      : "noopener noreferrer"
-                  }
-                  aria-label={ariaLabel}
-                  className="group rounded-md p-1.5 text-muted-foreground transition-all duration-200 hover:-translate-y-0.5 hover:text-foreground active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
-                >
-                  <Icon
-                    className="size-5 transition-colors group-hover:text-foreground"
-                    stroke={1.75}
-                  />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="top">{title}</TooltipContent>
-            </Tooltip>
+        <div className="flex items-center gap-2 text-muted-foreground">
+          {footerSocials.map(({ href, ariaLabel, title, Icon }, idx) => (
+            <motion.div
+              key={href}
+              initial={microInitial}
+              whileInView={microAnimate}
+              viewport={DEFAULT_VIEWPORT}
+              transition={getMicroTransition(
+                0.08 + idx * ANIMATION_CONFIG.microStaggerStep
+              )}
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="social"
+                    size="icon-sm"
+                    className="group"
+                    asChild
+                  >
+                    <Link
+                      href={href}
+                      target={href.startsWith("mailto:") ? undefined : "_blank"}
+                      rel={
+                        href.startsWith("mailto:")
+                          ? undefined
+                          : "noopener noreferrer"
+                      }
+                      aria-label={ariaLabel}
+                    >
+                      <Icon className="size-4.5 text-foreground transition-transform duration-200 group-hover:scale-110" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top">{title}</TooltipContent>
+              </Tooltip>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Bottom Sub-bar: Copyright & Location */}
-      <div className="mt-12 flex items-center justify-between text-xs sm:text-sm text-muted-foreground sm:mt-16">
+      {/* Bottom Sub-bar */}
+      <motion.div
+        initial={fadeInUpInitial}
+        whileInView={fadeInUpAnimate}
+        viewport={DEFAULT_VIEWPORT}
+        transition={getFadeInUpTransition(0.18)}
+        className="mt-12 flex flex-col gap-3 border-t border-border/40 pt-6 text-xs sm:flex-row sm:items-center sm:justify-between sm:text-sm text-muted-foreground sm:mt-16 sm:pt-8"
+      >
         <p className="select-none">
           &copy; {currentYear}{" "}
           <Link
             href="https://x.com/_asius"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-foreground hover:underline"
+            className="text-foreground font-medium transition-colors hover:underline"
           >
             Bobby
           </Link>
         </p>
-        <p className="select-none">New Delhi, India</p>
-      </div>
-    </motion.footer>
+
+        <div className="flex items-center gap-2 text-xs text-muted-foreground select-none">
+          <span className="relative flex size-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+          </span>
+          <span>New Delhi, India</span>
+        </div>
+      </motion.div>
+    </footer>
   );
 };
