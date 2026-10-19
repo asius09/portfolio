@@ -13,25 +13,24 @@ export const Project = () => {
   const fadeInUpInitial = {
     y: 12,
     opacity: 0,
-    filter: "blur(8px)",
+    filter: "blur(4px)",
   };
   const fadeInUpAnimate = {
     y: 0,
     opacity: 1,
     filter: "blur(0px)",
   };
-  // Make animation even snappier and faster
   const fadeInUpSpring: Transition = {
-    duration: 0.18,
-    ease: [0.4, 0, 0.2, 1],
+    duration: 0.5,
+    ease: [0.25, 0.1, 0.25, 1],
     type: "spring",
-    stiffness: 160,
-    damping: 16,
+    stiffness: 120,
+    damping: 18,
+    filter: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] },
   };
 
-  // Reduce delays for much faster stagger
-  const baseDelay = 0.01;
-  const step = 0.03;
+  const baseDelay = 0.02;
+  const step = 0.035;
 
   return (
     <motion.section
@@ -41,7 +40,7 @@ export const Project = () => {
       tabIndex={-1}
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
         delay: baseDelay,
@@ -54,7 +53,7 @@ export const Project = () => {
           tabIndex={0}
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{
             ...fadeInUpSpring,
             delay: baseDelay + step * 1,
@@ -67,16 +66,18 @@ export const Project = () => {
           className="relative flex items-center gap-0.5 rounded-md border border-border/50 bg-card p-0.5 shadow-xs dark:border-white/10 dark:bg-neutral-900"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ ...fadeInUpSpring, delay: baseDelay + step * 1 }}
         >
           {(["grid", "list"] as const).map((mode) => (
-            <button
+            <motion.button
               key={mode}
               onClick={() => setViewMode(mode)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.94 }}
               aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
               className={cn(
-                "relative z-10 rounded p-1.5 text-muted-foreground transition-colors hover:text-foreground",
+                "relative z-10 cursor-pointer rounded p-1.5 text-muted-foreground transition-colors hover:text-foreground",
                 viewMode === mode && "text-foreground"
               )}
             >
@@ -84,11 +85,11 @@ export const Project = () => {
                 <motion.div
                   layoutId="active-view-tab"
                   className="absolute inset-0 z-[-1] rounded bg-neutral-200/60 dark:bg-neutral-800"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               {mode === "grid" ? <IconLayoutGrid className="size-3.5" /> : <IconList className="size-3.5" />}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
       </div>
@@ -101,7 +102,7 @@ export const Project = () => {
         aria-label="Project list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 2,
@@ -112,16 +113,16 @@ export const Project = () => {
             layout
             key={project.name}
             initial={{
-              y: 16,
+              y: 12,
               opacity: 0,
-              filter: "blur(8px)",
+              filter: "blur(6px)",
             }}
             whileInView={{
               y: 0,
               opacity: 1,
               filter: "blur(0px)",
             }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpSpring,
               delay: baseDelay + step * (3 + idx),
@@ -136,7 +137,7 @@ export const Project = () => {
           className="my-8 grid w-full place-content-center"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{
             ...fadeInUpSpring,
             delay: baseDelay + step * (3 + projects.length),

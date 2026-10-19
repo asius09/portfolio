@@ -1,14 +1,13 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
 import { stackItems } from "@/data/techStack";
-import { motion, Transition, useAnimation } from "motion/react";
+import { motion, type Transition } from "motion/react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
 
-// Animation configs (inspired by About.tsx, but for horizontal stretch)
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
-  filter: "blur(8px)",
+  filter: "blur(4px)",
 };
 const fadeInUpAnimate = {
   y: 0,
@@ -16,77 +15,28 @@ const fadeInUpAnimate = {
   filter: "blur(0px)",
 };
 const fadeInUpSpring: Transition = {
-  duration: 0.6,
+  duration: 0.55,
   ease: [0.25, 0.1, 0.25, 1],
   type: "spring",
   stiffness: 80,
+  damping: 18,
+  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
 };
-
-const listInitial = {
-  scaleX: 0,
-  opacity: 0,
-  originX: 0,
-  filter: "blur(8px)",
-};
-const listAnimate = {
-  scaleX: 1,
-  opacity: 1,
-  originX: 0,
-  filter: "blur(0px)",
-};
-const listTransition: Transition = {
-  duration: 0.7,
-  ease: [0.25, 0.1, 0.25, 1],
-  type: "spring",
-  stiffness: 60,
-};
-
-function isElementInViewport(el: HTMLElement | null) {
-  if (!el) return false;
-  const rect = el.getBoundingClientRect();
-  return rect.top < window.innerHeight && rect.bottom > 0;
-}
 
 export const Stack = () => {
-  const baseDelay = 0.18;
-  const step = 0.09;
-  const controls = useAnimation();
-  const sectionRef = useRef<HTMLElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-
-  useEffect(() => {
-    function handleScroll() {
-      if (!hasAnimated && isElementInViewport(sectionRef.current)) {
-        controls.start("animate");
-        setHasAnimated(true);
-      }
-    }
-
-    handleScroll();
-    if (!hasAnimated) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      window.addEventListener("resize", handleScroll, { passive: true });
-    }
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, [hasAnimated, controls]);
+  const baseDelay = 0.02;
+  const step = 0.025;
 
   return (
     <motion.section
-      ref={sectionRef}
       id="stack-section"
       className="mt-12 w-full"
       aria-labelledby="stack-heading"
       tabIndex={-1}
       role="region"
-      initial="initial"
-      animate={controls}
-      variants={{
-        initial: fadeInUpInitial,
-        animate: fadeInUpAnimate,
-      }}
+      initial={fadeInUpInitial}
+      whileInView={fadeInUpAnimate}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
         delay: baseDelay,
@@ -96,12 +46,9 @@ export const Stack = () => {
         id="stack-heading"
         className="text-foreground text-2xl font-semibold"
         tabIndex={0}
-        initial="initial"
-        animate={controls}
-        variants={{
-          initial: fadeInUpInitial,
-          animate: fadeInUpAnimate,
-        }}
+        initial={fadeInUpInitial}
+        whileInView={fadeInUpAnimate}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 1,
@@ -110,40 +57,33 @@ export const Stack = () => {
         Stacks
       </motion.h2>
       <motion.ul
-        className="mt-3 flex flex-wrap gap-4"
+        className="mt-4 flex flex-wrap gap-4"
         aria-label="Technology stack"
         role="list"
-        initial="initial"
-        animate={controls}
-        variants={{
-          initial: listInitial,
-          animate: listAnimate,
-        }}
+        initial={fadeInUpInitial}
+        whileInView={fadeInUpAnimate}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
-          ...listTransition,
+          ...fadeInUpSpring,
           delay: baseDelay + step * 2,
         }}
-        style={{ willChange: "transform, opacity, filter" }}
       >
         {stackItems.map(({ key, label, icon: Icon, className }, idx) => (
           <motion.li
             key={key}
             className="group relative flex cursor-pointer flex-col items-center justify-center hover:z-50"
             role="listitem"
-            initial="initial"
-            animate={controls}
-            variants={{
-              initial: {
-                x: -24,
-                opacity: 0,
-                filter: "blur(8px)",
-              },
-              animate: {
-                x: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-              },
+            initial={{
+              y: 10,
+              opacity: 0,
+              filter: "blur(6px)",
             }}
+            whileInView={{
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+            }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpSpring,
               delay: baseDelay + step * (3 + idx),

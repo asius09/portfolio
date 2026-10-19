@@ -8,7 +8,7 @@ export const Experience = () => {
   const fadeInUpInitial = {
     y: 12,
     opacity: 0,
-    filter: "blur(8px)",
+    filter: "blur(4px)",
   };
   const fadeInUpAnimate = {
     y: 0,
@@ -16,24 +16,25 @@ export const Experience = () => {
     filter: "blur(0px)",
   };
   const fadeInUpSpring: Transition = {
-    duration: 0.18,
-    ease: [0.4, 0, 0.2, 1],
+    duration: 0.5,
+    ease: [0.25, 0.1, 0.25, 1],
     type: "spring",
-    stiffness: 160,
-    damping: 16,
+    stiffness: 120,
+    damping: 18,
+    filter: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] },
   };
   const baseDelay = 0.01;
   const step = 0.03;
 
   return (
     <motion.section
-      id="project-section"
+      id="experience-section"
       className="mt-12 w-full"
       aria-labelledby="experience-heading"
       tabIndex={-1}
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
         delay: baseDelay,
@@ -45,7 +46,7 @@ export const Experience = () => {
         tabIndex={0}
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 1,
@@ -55,10 +56,10 @@ export const Experience = () => {
       </motion.h2>
       <motion.ul
         className="mt-6 grid grid-cols-1 gap-4 space-y-2"
-        aria-label="Project list"
+        aria-label="Experience list"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 2,
@@ -68,16 +69,16 @@ export const Experience = () => {
           <motion.li
             key={experience.companyName}
             initial={{
-              y: 16,
+              y: 12,
               opacity: 0,
-              filter: "blur(8px)",
+              filter: "blur(6px)",
             }}
             whileInView={{
               y: 0,
               opacity: 1,
               filter: "blur(0px)",
             }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{
               ...fadeInUpSpring,
               delay: baseDelay + step * (3 + idx),
@@ -92,7 +93,7 @@ export const Experience = () => {
           className="my-8 grid w-full place-content-center"
           initial={fadeInUpInitial}
           whileInView={fadeInUpAnimate}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{
             ...fadeInUpSpring,
             delay: baseDelay + step * (3 + experience.length),

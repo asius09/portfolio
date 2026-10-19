@@ -4,7 +4,7 @@ import { motion, Transition } from "motion/react";
 const fadeInUpInitial = {
   y: 12,
   opacity: 0,
-  filter: "blur(8px)",
+  filter: "blur(4px)",
 };
 const fadeInUpAnimate = {
   y: 0,
@@ -12,10 +12,12 @@ const fadeInUpAnimate = {
   filter: "blur(0px)",
 };
 const fadeInUpSpring: Transition = {
-  duration: 0.6,
+  duration: 0.55,
   ease: [0.25, 0.1, 0.25, 1],
   type: "spring",
   stiffness: 80,
+  damping: 18,
+  filter: { duration: 0.38, ease: [0.25, 0.1, 0.25, 1] },
 };
 
 export const About = () => {
@@ -28,7 +30,7 @@ export const About = () => {
       className="mt-12 w-full"
       initial={fadeInUpInitial}
       whileInView={fadeInUpAnimate}
-      viewport={{ once: true, amount: 0.6 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
         ...fadeInUpSpring,
         delay: baseDelay,
@@ -38,7 +40,7 @@ export const About = () => {
         className="text-foreground text-2xl font-semibold"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 1,
@@ -50,7 +52,7 @@ export const About = () => {
         className="text-foreground mt-3 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 2,
@@ -63,7 +65,7 @@ export const About = () => {
         className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 3,
@@ -78,7 +80,7 @@ export const About = () => {
         className="text-foreground mt-2 text-sm font-normal"
         initial={fadeInUpInitial}
         whileInView={fadeInUpAnimate}
-        viewport={{ once: true, amount: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
         transition={{
           ...fadeInUpSpring,
           delay: baseDelay + step * 4,
